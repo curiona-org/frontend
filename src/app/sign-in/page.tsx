@@ -1,6 +1,5 @@
 "use client";
-
-import SignUpPage from "@/screens/sign-up";
+import SignInPage from "@/src/screens/sign-in";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -11,5 +10,5 @@ export default function Page() {
     redirect("/");
   }
 
-  return <SignUpPage />;
+  return <SignInPage />;
 }
