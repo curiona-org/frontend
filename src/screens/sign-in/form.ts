@@ -7,9 +7,9 @@ export const formSchemaSignIn = z.object({
   password: z.string().min(6),
 });
 
-export type FormTypeSignin = z.infer<typeof formSchemaSignIn>;
+export type FormTypeSignIn = z.infer<typeof formSchemaSignIn>;
 
 export const useFormSignIn = () =>
-  useForm<FormTypeSignin>({
+  useForm<FormTypeSignIn>({
     resolver: zodResolver(formSchemaSignIn),
   });

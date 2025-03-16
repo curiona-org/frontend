@@ -1,3 +1,3 @@
-import handler from "@/shared/auth";
+import { handlers } from "@/shared/auth";
 
-export { handler as GET, handler as POST };
+export const { GET, POST } = handlers;

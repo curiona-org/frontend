@@ -1,6 +1,6 @@
 import config from "@/shared/config";
 import { APIService } from "@/shared/services/api-service";
-import { AuthOutput } from "@/types/api-auth";
+import { AuthOutput, AuthRefreshOutput } from "@/types/api-auth";
 
 export class AuthService extends APIService {
   constructor() {
@@ -11,7 +11,7 @@ export class AuthService extends APIService {
     return this.post<AuthOutput>("/auth", { email, password })
       .then((res) => res?.data)
       .catch((err) => {
-        throw err?.response?.data;
+        throw err;
       });
   }
 
@@ -19,7 +19,7 @@ export class AuthService extends APIService {
     return this.post<AuthOutput>("/auth", { oauth_token: oauthToken })
       .then((res) => res?.data)
       .catch((err) => {
-        throw err?.response;
+        throw err;
       });
   }
 
@@ -27,15 +27,15 @@ export class AuthService extends APIService {
     return this.post<AuthOutput>("/auth", { name, email, password })
       .then((res) => res?.data)
       .catch((err) => {
-        throw err?.response?.data;
+        throw err;
       });
   }
 
   async refresh() {
-    return this.post<AuthOutput>("/auth/refresh")
+    return this.post<AuthRefreshOutput>("/auth/refresh")
       .then((res) => res?.data)
       .catch((err) => {
-        throw err?.response?.data;
+        throw err;
       });
   }
 }

@@ -1,56 +1,64 @@
 import { AuthService } from "@/shared/services/auth-service";
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
 const authService = new AuthService();
 
-export default NextAuth({
-  debug: true,
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  session: { strategy: "jwt" },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
-    CredentialsProvider({
+    Google,
+    Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        name: {},
+        email: {},
+        password: {},
       },
       async authorize(credentials) {
-        if (!credentials) return null;
-        const { email, password } = credentials;
-        if (!email || !password) {
-          throw new Error("Email and password are required");
-        }
-
         try {
-          const result = await authService.loginEmailPassword(
-            credentials.email,
-            credentials.password
-          );
+          console.log({ credentials });
+          let result;
+          if (credentials.name !== "") {
+            result = await authService.register(
+              credentials.name as string,
+              credentials.email as string,
+              credentials.password as string
+            );
+          } else {
+            result = await authService.loginEmailPassword(
+              credentials.email as string,
+              credentials.password as string
+            );
+          }
 
           if (!result.success) {
+            console.error(result.message);
             return null;
           }
 
           if (!result.data) {
+            console.error("No data returned");
             return null;
           }
 
           return {
             id: String(result.data.account.id),
+            method: result.data.account.method,
             email: result.data.account.email,
             name: result.data.account.name,
-            image: result.data.account.avatar,
+            avatar: result.data.account.avatar,
+            joined_at: new Date(result.data.account.joined_at),
+            tokens: {
+              access_token: result.data.access_token,
+              access_token_expires_at: new Date(
+                result.data.access_token_expires_at
+              ),
+            },
           };
         } catch (error) {
-          console.error(error);
+          console.error("Failed to authorize", error);
           return null;
         }
       },
@@ -73,20 +81,25 @@ export default NextAuth({
 
       return true;
     },
-    async jwt({ token, account }) {
-      if (account) {
-        token.id_token = account.id_token;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = Number(user.id);
+        token.name = user.name;
+        token.email = user.email;
+        token.avatar = user.avatar;
+        token.joined_at = user.joined_at;
+        token.method = user.method;
+        token.tokens = user.tokens;
       }
+
       return token;
     },
-    async session({ session, token, user }) {
-      if (token) {
-        session.user = user;
-        session.token = token;
-        session.id_token = token.id_token;
-        session.logged_in = user ? true : false;
-      }
-      return session;
+    async session({ session, token }) {
+      return {
+        ...session,
+        data: token,
+        isLoggedIn: !!token,
+      };
     },
   },
 

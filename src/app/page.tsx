@@ -1,10 +1,9 @@
-"use client";
 import HomeAuthenticated from "@/screens/home/authenticated";
 import HomeGuest from "@/screens/home/guest";
-import { useSession } from "next-auth/react";
+import { auth } from "@/shared/auth";
 
-export default function Page() {
-  const { data: session } = useSession();
+export default async function Page() {
+  const session = await auth();
 
   return session ? <HomeAuthenticated /> : <HomeGuest />;
 }

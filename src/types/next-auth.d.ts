@@ -1,15 +1,28 @@
 import { DefaultSession } from "next-auth";
+import Account from "./account";
 
+export type BackendJWT = {
+  access_token: string;
+  access_token_expires_at: Date;
+};
+
+export type AuthenticatedUser = Account & {
+  tokens: BackendJWT;
+};
+
+import "next-auth";
 declare module "next-auth" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  export interface User extends AuthenticatedUser {}
+
   interface Session extends DefaultSession {
-    token?: JWT;
-    id_token?: string;
-    logged_in?: boolean;
+    data: AuthenticatedUser;
+    isLoggedIn: boolean;
   }
 }
 
+import "next-auth/jwt";
 declare module "next-auth/jwt" {
-  interface JWT {
-    id_token?: string;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  export interface JWT extends AuthenticatedUser {}
 }

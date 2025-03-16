@@ -1,5 +1,5 @@
+import { auth } from "@/shared/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { getSession } from "next-auth/react";
 
 export type APIResponse<T = Record<string, unknown>> = {
   success: boolean;
@@ -69,9 +69,9 @@ export abstract class APIService {
   private attachInterceptors() {
     this.instance.interceptors.request.use(async (request) => {
       if (!this.isAuthorizationAttached()) {
-        const session = await getSession();
-        if (session && session.token) {
-          const authorization = `Bearer ${session.token}`;
+        const session = await auth();
+        if (session && session.data && session.data.tokens.access_token) {
+          const authorization = `Bearer ${session.data.tokens.access_token}`;
           request.headers["Authorization"] = authorization;
 
           this.instance.defaults.headers.common["Authorization"] =

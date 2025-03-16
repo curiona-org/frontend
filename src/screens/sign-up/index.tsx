@@ -1,22 +1,18 @@
-"use client";
-
-import { signIn } from "next-auth/react";
+import { signUp } from "./actions";
 import { useFormSignUp } from "./form";
 export default function SignUpPage() {
   const { register, handleSubmit } = useFormSignUp();
+
+  const onSubmit = handleSubmit(async ({ name, email, password }) => {
+    signUp("credentials", { name, email, password });
+  });
+
   return (
     <div className='relative w-screen h-screen overflow-y-auto'>
       <div className='flex flex-col items-center justify-center w-full h-full'>
         <div className='w-full max-w-md p-4 space-y-4 bg-white rounded-lg shadow-lg'>
           <h1 className='text-2xl font-bold text-center'>Sign up</h1>
-          <form
-            className='space-y-4'
-            onSubmit={handleSubmit(
-              ({ name, email, password, confirmPassword }) => {
-                console.log({ name, email, password, confirmPassword });
-              }
-            )}
-          >
+          <form className='space-y-4' onSubmit={onSubmit}>
             <div className='space-y-2'>
               <label htmlFor='name' className='block'>
                 Name
@@ -63,7 +59,7 @@ export default function SignUpPage() {
 
             {/* sign up with google */}
             <button
-              onClick={() => signIn("google")}
+              onClick={() => signUp("google")}
               type='button'
               className='flex items-center justify-center w-full px-4 py-2 text-white bg-blue-500 rounded-md focus:outline-none focus:ring focus:ring-blue-500'
             >

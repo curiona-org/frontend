@@ -14,9 +14,9 @@ export const formSchemaSignUp = z
     path: ["confirmPassword"],
   });
 
-export type FormTypeSignin = z.infer<typeof formSchemaSignUp>;
+export type FormTypeSignUp = z.infer<typeof formSchemaSignUp>;
 
 export const useFormSignUp = () =>
-  useForm<FormTypeSignin>({
+  useForm<FormTypeSignUp>({
     resolver: zodResolver(formSchemaSignUp),
   });

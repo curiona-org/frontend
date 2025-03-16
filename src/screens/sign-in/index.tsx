@@ -1,20 +1,26 @@
-"use client";
-import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { signIn } from "./actions";
 import { useFormSignIn } from "./form";
 
 export default function SignInPage() {
   const { register, handleSubmit } = useFormSignIn();
+
+  const { status } = useSession();
+  if (status === "authenticated") {
+    redirect("/");
+  }
+
+  const onSubmit = handleSubmit(async ({ email, password }) => {
+    signIn("credentials", { email, password });
+  });
+
   return (
     <div className='relative w-screen h-screen overflow-y-auto'>
       <div className='flex flex-col items-center justify-center w-full h-full'>
         <div className='w-full max-w-md p-4 space-y-4 bg-white rounded-lg shadow-lg'>
           <h1 className='text-2xl font-bold text-center'>Sign In</h1>
-          <form
-            className='space-y-4'
-            onSubmit={handleSubmit(({ email, password }) => {
-              signIn("credentials", { email, password });
-            })}
-          >
+          <form className='space-y-4' onSubmit={onSubmit}>
             <div className='space-y-2'>
               <label htmlFor='email' className='block'>
                 Email
