@@ -1,7 +1,7 @@
 "use server";
 
 import { signIn as baseSignIn } from "@/shared/auth";
-import { CurionaError } from "@/shared/helpers/error";
+import { CurionaError } from "@/shared/helpers/error.helper";
 import { unstable_rethrow } from "next/navigation";
 import { FormTypeSignUp } from "./form";
 

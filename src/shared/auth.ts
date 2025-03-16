@@ -1,8 +1,8 @@
-import { AuthService } from "@/shared/services/auth-service";
+import { AuthService } from "@/shared/services/auth.service";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { handleCurionaError } from "./helpers/error";
+import { handleCurionaError } from "./helpers/error.helper";
 
 const authService = new AuthService();
 

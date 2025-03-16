@@ -1,5 +1,5 @@
 import config from "@/shared/config";
-import { APIService } from "@/shared/services/api-service";
+import { APIService } from "@/shared/services/api.service";
 import { AuthOutput, AuthRefreshOutput } from "@/types/api-auth";
 
 export class AuthService extends APIService {

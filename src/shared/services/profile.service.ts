@@ -1,5 +1,5 @@
 import config from "@/shared/config";
-import { APIService } from "@/shared/services/api-service";
+import { APIService } from "@/shared/services/api.service";
 import { GetProfileOutput, UpdateProfileOutput } from "@/types/api-profile";
 
 export class ProfileService extends APIService {
