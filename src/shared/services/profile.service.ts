@@ -8,18 +8,12 @@ export class ProfileService extends APIService {
   }
 
   async profile() {
-    return this.get<GetProfileOutput>("/profile")
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err?.response?.data;
-      });
+    return this.get<GetProfileOutput>("/profile").then((res) => res?.data);
   }
 
   async updateProfile(name: string) {
-    return this.patch<UpdateProfileOutput>("/profile", { name })
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err?.response?.data;
-      });
+    return this.patch<UpdateProfileOutput>("/profile", { name }).then(
+      (res) => res?.data
+    );
   }
 }
