@@ -1,5 +1,5 @@
 "use client";
-import clsx from "clsx";
+import { cn } from "@/shared/helpers/common.helper";
 import { Toast as ToastPrimitive } from "radix-ui";
 import { forwardRef, useImperativeHandle, useState } from "react";
 
@@ -40,7 +40,7 @@ const Toast = forwardRef<ToastRef, ToastPrimitive.ToastProps>(
         {...props}
         open={open}
         onOpenChange={setIsOpened}
-        className={clsx(
+        className={cn(
           "grid grid-cols-[auto_max-content] items-center text-white border-[3px] rounded-2xl shadow-lg duration-200 hover:brightness-90 data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:animate-hide data-[state=open]:animate-fadeIn data-[swipe=end]:animate-swipeOut data-[swipe=cancel]:transition-[transform_200ms_ease-out]",
           {
             "border-blue-800 bg-blue-600": type === "info",
