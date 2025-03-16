@@ -1,7 +1,3 @@
-import {
-  CurionaErrorCodes,
-  defaultCurionaErrorMessages,
-} from "@/shared/helpers/error";
 import Toast, { ToastRef } from "@/ui/toast";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
@@ -24,11 +20,7 @@ export default function SignInPage() {
       toastRef.current?.open({
         type: "error",
         title: "Error",
-        description:
-          result.error ||
-          defaultCurionaErrorMessages[
-            result.code || CurionaErrorCodes.INVALID_CREDENTIALS
-          ],
+        description: result.error,
       });
       return;
     }
