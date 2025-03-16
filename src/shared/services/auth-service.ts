@@ -8,34 +8,26 @@ export class AuthService extends APIService {
   }
 
   async loginEmailPassword(email: string, password: string) {
-    return this.post<AuthOutput>("/auth", { email, password })
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err;
-      });
+    return this.post<AuthOutput>("/auth", { email, password }).then(
+      (res) => res?.data
+    );
   }
 
   async loginOAuth(oauthToken: string) {
-    return this.post<AuthOutput>("/auth", { oauth_token: oauthToken })
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err;
-      });
+    return this.post<AuthOutput>("/auth", { oauth_token: oauthToken }).then(
+      (res) => res?.data
+    );
   }
 
   async register(name: string, email: string, password: string) {
-    return this.post<AuthOutput>("/auth", { name, email, password })
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err;
-      });
+    return this.post<AuthOutput>("/auth", { name, email, password }).then(
+      (res) => res?.data
+    );
   }
 
   async refresh() {
-    return this.post<AuthRefreshOutput>("/auth/refresh")
-      .then((res) => res?.data)
-      .catch((err) => {
-        throw err;
-      });
+    return this.post<AuthRefreshOutput>("/auth/refresh").then(
+      (res) => res?.data
+    );
   }
 }

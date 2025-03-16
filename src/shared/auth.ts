@@ -2,6 +2,7 @@ import { AuthService } from "@/shared/services/auth-service";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { handleCurionaError } from "./helpers/error";
 
 const authService = new AuthService();
 
@@ -55,8 +56,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             },
           };
         } catch (error) {
-          console.error("Failed to authorize", error);
-          return null;
+          throw handleCurionaError(error);
         }
       },
     }),
