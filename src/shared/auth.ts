@@ -18,7 +18,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          console.log({ credentials });
           let result;
           if (credentials.name !== "") {
             result = await authService.register(
