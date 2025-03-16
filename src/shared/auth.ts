@@ -5,16 +5,12 @@ import GoogleProvider from "next-auth/providers/google";
 
 const authService = new AuthService();
 
-const authConfig = {
+export default NextAuth({
   debug: true,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-};
-
-export default NextAuth({
-  ...authConfig,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -34,7 +30,7 @@ export default NextAuth({
         }
 
         try {
-          const { data: result } = await authService.loginEmailPassword(
+          const result = await authService.loginEmailPassword(
             credentials.email,
             credentials.password
           );
@@ -48,7 +44,7 @@ export default NextAuth({
           }
 
           return {
-            id: result.data.account.id,
+            id: String(result.data.account.id),
             email: result.data.account.email,
             name: result.data.account.name,
             image: result.data.account.avatar,
@@ -60,16 +56,11 @@ export default NextAuth({
       },
     }),
   ],
-  debug: true,
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
   callbacks: {
     async signIn({ account }) {
       if (account?.provider === "google") {
         try {
-          const { data: result } = await authService.loginOAuth(
+          const result = await authService.loginOAuth(
             account.id_token as string
           );
 

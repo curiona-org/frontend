@@ -1,18 +1,6 @@
 import config from "@/shared/config";
 import { APIService } from "@/shared/services/api-service";
-
-export type AuthOutput = {
-  created: boolean;
-  access_token: string;
-  access_token_expires_at: string;
-  account: {
-    id: string;
-    email: string;
-    name: string;
-    avatar: string;
-    joined_at: Date;
-  };
-};
+import { AuthOutput } from "@/types/api-auth";
 
 export class AuthService extends APIService {
   constructor() {
@@ -20,20 +8,34 @@ export class AuthService extends APIService {
   }
 
   async loginEmailPassword(email: string, password: string) {
-    return this.post<AuthOutput>("/auth", { email, password });
+    return this.post<AuthOutput>("/auth", { email, password })
+      .then((res) => res?.data)
+      .catch((err) => {
+        throw err?.response?.data;
+      });
   }
 
   async loginOAuth(oauthToken: string) {
-    return this.post<AuthOutput>("/auth", {
-      oauth_token: oauthToken,
-    });
+    return this.post<AuthOutput>("/auth", { oauth_token: oauthToken })
+      .then((res) => res?.data)
+      .catch((err) => {
+        throw err?.response;
+      });
   }
 
   async register(name: string, email: string, password: string) {
-    return this.post<AuthOutput>("/auth", { name, email, password });
+    return this.post<AuthOutput>("/auth", { name, email, password })
+      .then((res) => res?.data)
+      .catch((err) => {
+        throw err?.response?.data;
+      });
   }
 
   async refresh() {
-    return this.post<AuthOutput>("/auth/refresh");
+    return this.post<AuthOutput>("/auth/refresh")
+      .then((res) => res?.data)
+      .catch((err) => {
+        throw err?.response?.data;
+      });
   }
 }

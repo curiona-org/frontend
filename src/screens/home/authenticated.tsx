@@ -1,5 +1,6 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default function HomeAuthenticated() {
@@ -11,7 +12,7 @@ export default function HomeAuthenticated() {
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-      <img
+      <Image
         src={session.user?.image as string}
         alt='Roadmap Generator Logo'
         width={200}
