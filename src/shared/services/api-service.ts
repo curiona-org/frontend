@@ -1,13 +1,19 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { getSession } from "next-auth/react";
 
-export type APIResponse<T = Record<string, any>> = {
+export type APIResponse<T = Record<string, unknown>> = {
   success: boolean;
   message: string;
-  data: T;
+  data?: T;
+  error?: ValidationError[] | string;
 };
 
-export abstract class API {
+export type ValidationError = {
+  field: string;
+  message: string;
+};
+
+export abstract class APIService {
   protected baseURL: string;
   private instance: AxiosInstance;
 
@@ -20,7 +26,7 @@ export abstract class API {
     this.attachInterceptors();
   }
 
-  async get<T = any>(
+  async get<T = unknown>(
     url: string,
     params = {},
     config: AxiosRequestConfig = {}
@@ -28,19 +34,27 @@ export abstract class API {
     return this.instance.get<APIResponse<T>>(url, { params, ...config });
   }
 
-  async post<T = any>(url: string, data = {}, config: AxiosRequestConfig = {}) {
+  async post<T = unknown>(
+    url: string,
+    data = {},
+    config: AxiosRequestConfig = {}
+  ) {
     return this.instance.post<APIResponse<T>>(url, data, config);
   }
 
-  async put<T = any>(url: string, data = {}, config: AxiosRequestConfig = {}) {
+  async put<T = unknown>(
+    url: string,
+    data = {},
+    config: AxiosRequestConfig = {}
+  ) {
     return this.instance.put<APIResponse<T>>(url, data, config);
   }
 
-  async delete<T = any>(url: string, config: AxiosRequestConfig = {}) {
+  async delete<T = unknown>(url: string, config: AxiosRequestConfig = {}) {
     return this.instance.delete<APIResponse<T>>(url, config);
   }
 
-  async patch<T = any>(
+  async patch<T = unknown>(
     url: string,
     data = {},
     config: AxiosRequestConfig = {}
@@ -48,7 +62,7 @@ export abstract class API {
     return this.instance.patch<APIResponse<T>>(url, data, config);
   }
 
-  async request<T = any>(config: AxiosRequestConfig) {
+  async request<T = unknown>(config: AxiosRequestConfig) {
     return this.instance.request<APIResponse<T>>(config);
   }
 

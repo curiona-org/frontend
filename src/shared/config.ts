@@ -1,3 +1,5 @@
-export const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+export const config = {
+    backendURL: process.env.NEXT_PUBLIC_BACKEND_URL || ""
+};
 
-export default { backendURL };
+export default config;

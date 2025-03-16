@@ -1,4 +1,4 @@
-import { AuthService } from "@/shared/services/auth";
+import { AuthService } from "@/shared/services/auth-service";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -43,11 +43,15 @@ export default NextAuth({
             return null;
           }
 
+          if (!result.data) {
+            return null;
+          }
+
           return {
-            id: result["data"]["account"].id,
-            email: result["data"]["account"].email,
-            name: result["data"]["account"].name,
-            image: result["data"]["account"].avatar,
+            id: result.data.account.id,
+            email: result.data.account.email,
+            name: result.data.account.name,
+            image: result.data.account.avatar,
           };
         } catch (error) {
           console.error(error);

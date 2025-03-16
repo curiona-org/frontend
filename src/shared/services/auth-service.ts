@@ -1,19 +1,20 @@
-import config from "../config";
-import { API } from "./api";
+import config from "@/shared/config";
+import { APIService } from "@/shared/services/api-service";
 
 export type AuthOutput = {
   created: boolean;
-  token: string;
+  access_token: string;
+  access_token_expires_at: string;
   account: {
     id: string;
     email: string;
     name: string;
     avatar: string;
-    joinedAt: string;
+    joined_at: Date;
   };
 };
 
-export class AuthService extends API {
+export class AuthService extends APIService {
   constructor() {
     super(config.backendURL);
   }
@@ -32,7 +33,7 @@ export class AuthService extends API {
     return this.post<AuthOutput>("/auth", { name, email, password });
   }
 
-  async profile() {
-    return this.get<AuthOutput["account"]>("/auth/profile");
+  async refresh() {
+    return this.post<AuthOutput>("/auth/refresh");
   }
 }
