@@ -3,7 +3,7 @@ import Account from "./account";
 
 export type BackendJWT = {
   access_token: string;
-  access_token_expires_at: Date;
+  access_token_expires_at: string;
 };
 
 export type AuthenticatedUser = Account & {

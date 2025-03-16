@@ -52,9 +52,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             joined_at: new Date(result.data.account.joined_at),
             tokens: {
               access_token: result.data.access_token,
-              access_token_expires_at: new Date(
-                result.data.access_token_expires_at
-              ),
+              access_token_expires_at: result.data.access_token_expires_at,
             },
           };
         } catch (error) {
@@ -90,6 +88,31 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.joined_at = user.joined_at;
         token.method = user.method;
         token.tokens = user.tokens;
+      }
+
+      const now = new Date();
+      const accessExpiresAt = new Date(token.tokens.access_token_expires_at);
+      if (accessExpiresAt < now) {
+        try {
+          const result = await authService.refresh();
+
+          if (!result.success) {
+            console.error(result.message);
+            return token;
+          }
+
+          if (!result.data) {
+            console.error("No data returned");
+            return token;
+          }
+
+          token.tokens.access_token = result.data.access_token;
+          token.tokens.access_token_expires_at =
+            result.data.access_token_expires_at;
+        } catch (error) {
+          console.error("Failed to refresh token", error);
+          return null;
+        }
       }
 
       return token;
