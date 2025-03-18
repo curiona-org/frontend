@@ -92,8 +92,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
           return result.success;
         } catch (error) {
-          console.error(error);
-          return false;
+          throw handleCurionaError(error);
         }
       }
 
@@ -109,12 +108,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.method = user.method;
         token.tokens = user.tokens;
       }
-
-      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-      console.log({ token, user });
 
       const now = new Date();
       const accessExpiresAt = new Date(token.tokens.access_token_expires_at);
@@ -154,5 +147,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
   pages: {
     signIn: "/sign-in",
+    error: "/sign-in",
   },
 });

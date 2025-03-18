@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export enum CurionaErrorCodes {
   INVALID_CREDENTIALS = "INVALID_CREDENTIALS",
   UNAUTHORIZED = "UNAUTHORIZED",
@@ -17,7 +19,7 @@ export enum CurionaErrorCodes {
   LLM_INVALID_DATA = "LLM_INVALID_DATA",
 }
 
-export const defaultCurionaErrorMessages: Record<CurionaErrorCodes, string> = {
+export const ERROR_MESSAGES: Record<CurionaErrorCodes, string> = {
   [CurionaErrorCodes.INVALID_CREDENTIALS]:
     "The credentials you entered are incorrect. Please try again.",
   [CurionaErrorCodes.UNAUTHORIZED]:
@@ -55,13 +57,14 @@ export class CurionaError extends Error {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function handleCurionaError(error: any) {
+export function handleCurionaError(
+  error: Error | AxiosError | CurionaError | unknown
+): CurionaError {
   if (error instanceof CurionaError) {
     return error;
   }
 
-  if (error.response?.data) {
+  if (error instanceof AxiosError && error.response?.data) {
     const { code, message } = error.response.data;
     return new CurionaError(code, message);
   }
@@ -72,6 +75,6 @@ export function handleCurionaError(error: any) {
 
   return new CurionaError(
     CurionaErrorCodes.INTERNAL_ERROR,
-    defaultCurionaErrorMessages[CurionaErrorCodes.INTERNAL_ERROR]
+    ERROR_MESSAGES[CurionaErrorCodes.INTERNAL_ERROR]
   );
 }
