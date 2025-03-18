@@ -62,12 +62,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ account }) {
+    async signIn({ account, user }) {
       if (account?.provider === "google") {
         try {
           const result = await authService.loginOAuth(
             account.id_token as string
           );
+
+          if (!result.success) {
+            console.error(result.message);
+            return false;
+          }
+
+          if (!result.data) {
+            console.error("No data returned");
+            return false;
+          }
+
+          user.id = String(result.data.account.id);
+          user.method = result.data.account.method;
+          user.email = result.data.account.email;
+          user.name = result.data.account.name;
+          user.avatar = result.data.account.avatar;
+          user.joined_at = new Date(result.data.account.joined_at);
+          user.tokens = {
+            access_token: result.data.access_token,
+            access_token_expires_at: result.data.access_token_expires_at,
+          };
 
           return result.success;
         } catch (error) {
@@ -88,6 +109,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.method = user.method;
         token.tokens = user.tokens;
       }
+
+      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+      console.log("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+      console.log({ token, user });
 
       const now = new Date();
       const accessExpiresAt = new Date(token.tokens.access_token_expires_at);
