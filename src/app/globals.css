@@ -3,8 +3,74 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--white-500);
+  --foreground: var(--black-500);
+
+  --black-50: #e9e9ea;
+  --black-100: #b9babc;
+  --black-200: #98999c;
+  --black-300: #686a6f;
+  --black-400: #4b4d53;
+  --black-500: #1e2128;
+  --black-600: #1b1e24;
+  --black-700: #15171c;
+  --black-800: #111216;
+  --black-900: #0d0e11;
+
+  --white-50: #ffffff;
+  --white-100: #fefeff;
+  --white-200: #fefeff;
+  --white-300: #fdfefe;
+  --white-400: #fdfdfe;
+  --white-500: #fcfdfe;
+  --white-600: #e5e6e7;
+  --white-700: #b3b4b4;
+  --white-800: #8b8b8c;
+  --white-900: #6a6a6b;
+
+  --red-50: #fdecf0;
+  --red-100: #f8c5d0;
+  --red-200: #f5a9b9;
+  --red-300: #f18299;
+  --red-400: #ee6a85;
+  --red-500: #ea4567;
+  --red-600: #d53f5e;
+  --red-700: #a63149;
+  --red-800: #812639;
+  --red-900: #621d2b;
+
+  --green-50: #f2fcf0;
+  --green-100: #d6f7d0;
+  --green-200: #c3f3ba;
+  --green-300: #a7ee9a;
+  --green-400: #96ea86;
+  --green-500: #7ce568;
+  --green-600: #71d05f;
+  --green-700: #58a34a;
+  --green-800: #447e39;
+  --green-900: #34602c;
+
+  --blue-50: #edf2fd;
+  --blue-100: #c7d6f8;
+  --blue-200: #acc3f4;
+  --blue-300: #86a7f0;
+  --blue-400: #6f96ed;
+  --blue-500: #4b7ce8;
+  --blue-600: #4471d3;
+  --blue-700: #3558a5;
+  --blue-800: #294480;
+  --blue-900: #203461;
+
+  --yellow-50: #fefaee;
+  --yellow-100: #fcf0ca;
+  --yellow-200: #fbe8b0;
+  --yellow-300: #f9de8c;
+  --yellow-400: #f8d875;
+  --yellow-500: #f6ce53;
+  --yellow-600: #e0bb4c;
+  --yellow-700: #af923b;
+  --yellow-800: #87712e;
+  --yellow-900: #675723;
 }
 
 body {
