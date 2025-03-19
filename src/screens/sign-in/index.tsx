@@ -1,9 +1,14 @@
+import { ERROR_MESSAGES } from "@/shared/helpers/error.helper";
 import Toast, { ToastRef } from "@/ui/toast";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { signIn } from "./actions";
 import { useFormSignIn } from "./form";
+
+const signInErrorMap: Record<string, string> = {
+  AccessDenied: ERROR_MESSAGES.SIGNUP_DIFFERENT_METHOD,
+};
 
 export default function SignInPage() {
   const { register, handleSubmit } = useFormSignIn();
@@ -14,6 +19,17 @@ export default function SignInPage() {
   }
 
   const toastRef = useRef<ToastRef>(null);
+
+  const search = useSearchParams();
+  const error = search.get("error");
+  if (error) {
+    toastRef.current?.open({
+      type: "error",
+      title: "Error",
+      description: signInErrorMap[error] || ERROR_MESSAGES.INTERNAL_ERROR,
+    });
+  }
+
   const onSubmit = handleSubmit(async ({ email, password }) => {
     const result = await signIn("credentials", { email, password });
     if (result && result.error) {
