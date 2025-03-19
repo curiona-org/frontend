@@ -1,5 +1,5 @@
+import Toast, { ToastRef } from "@/components/ui/toast";
 import { ERROR_MESSAGES } from "@/shared/helpers/error.helper";
-import Toast, { ToastRef } from "@/ui/toast";
 import { useSession } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useRef } from "react";

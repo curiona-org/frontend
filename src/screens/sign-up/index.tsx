@@ -1,4 +1,4 @@
-import Toast, { ToastRef } from "@/ui/toast";
+import Toast, { ToastRef } from "@/components/ui/toast";
 import { useRef } from "react";
 import { signUp } from "./actions";
 import { useFormSignUp } from "./form";
