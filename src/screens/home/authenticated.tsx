@@ -1,5 +1,5 @@
 import { auth } from "@/shared/auth";
-import ButtonSignOut from "@/ui/sign-out";
+import ButtonSignOut from "@/components/sign-out";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { redirect } from "next/navigation";
