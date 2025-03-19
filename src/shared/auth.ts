@@ -99,6 +99,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {
+      const now = new Date();
       if (user) {
         token.id = Number(user.id);
         token.name = user.name;
@@ -107,11 +108,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.joined_at = user.joined_at;
         token.method = user.method;
         token.tokens = user.tokens;
-      }
 
-      const now = new Date();
-      const accessExpiresAt = new Date(token.tokens.access_token_expires_at);
-      if (accessExpiresAt < now) {
+        return token;
+      } else if (now < new Date(token.tokens.access_token_expires_at)) {
+        return token;
+      } else {
         try {
           const result = await authService.refresh();
 
@@ -130,7 +131,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             result.data.access_token_expires_at;
         } catch (error) {
           console.error("Failed to refresh token", error);
-          return null;
+          return token;
         }
       }
 

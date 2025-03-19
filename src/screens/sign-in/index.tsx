@@ -2,7 +2,7 @@ import Toast, { ToastRef } from "@/components/ui/toast";
 import { ERROR_MESSAGES } from "@/shared/helpers/error.helper";
 import { useSession } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { signIn } from "./actions";
 import { useFormSignIn } from "./form";
 
@@ -18,17 +18,19 @@ export default function SignInPage() {
     redirect("/");
   }
 
-  const toastRef = useRef<ToastRef>(null);
-
   const search = useSearchParams();
   const error = search.get("error");
-  if (error) {
-    toastRef.current?.open({
-      type: "error",
-      title: "Error",
-      description: signInErrorMap[error] || ERROR_MESSAGES.INTERNAL_ERROR,
-    });
-  }
+  const toastRef = useRef<ToastRef>(null);
+
+  useEffect(() => {
+    if (error) {
+      toastRef.current?.open({
+        type: "error",
+        title: "Error",
+        description: signInErrorMap[error] || ERROR_MESSAGES.INTERNAL_ERROR,
+      });
+    }
+  }, [error]);
 
   const onSubmit = handleSubmit(async ({ email, password }) => {
     const result = await signIn("credentials", { email, password });
