@@ -1,15 +1,14 @@
 "use client";
-
 import { useAuth } from "@/components/providers/auth-provider";
-import SignUpPage from "@/screens/sign-up";
-import { redirect } from "next/navigation";
+import HomeAuthenticated from "@/screens/home/authenticated";
+import HomeGuest from "@/screens/home/guest";
 
 export default function Page() {
   const { isLoggedIn } = useAuth();
 
   if (isLoggedIn) {
-    redirect("/");
+    return <HomeAuthenticated />;
   }
 
-  return <SignUpPage />;
+  return <HomeGuest />;
 }

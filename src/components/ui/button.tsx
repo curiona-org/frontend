@@ -1,4 +1,4 @@
-import { cn } from "@/shared/helpers/common.helper";
+import { cn } from "@/lib/helpers/common.helper";
 import { Slot } from "radix-ui";
 import { forwardRef } from "react";
 

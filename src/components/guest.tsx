@@ -1,5 +1,6 @@
 "use client";
-import { useSession } from "next-auth/react";
+
+import { useAuth } from "@/components/providers/auth-provider";
 
 type GuestProps = {
   children: React.ReactNode;
@@ -8,10 +9,10 @@ type GuestProps = {
 /**
  * Component to render children only if the user is not signed in.
  */
-export const Guest: React.FC<GuestProps> = ({ children }) => {
-  const session = useSession();
+const Guest: React.FC<GuestProps> = ({ children }) => {
+  const { isLoggedIn } = useAuth();
 
-  if (session) {
+  if (isLoggedIn) {
     return null;
   }
 

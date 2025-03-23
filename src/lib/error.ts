@@ -48,11 +48,14 @@ export const ERROR_MESSAGES: Record<CurionaErrorCodes, string> = {
 };
 
 export class CurionaError extends Error {
-  code: CurionaErrorCodes;
-  errorMessage: string;
-  constructor(code: CurionaErrorCodes, message: string) {
+  public code: CurionaErrorCodes;
+  public statusCode: number = 500;
+  public errorMessage: string;
+
+  constructor(code: CurionaErrorCodes, message: string, statusCode = 500) {
     super(message);
     this.code = code;
+    this.statusCode = statusCode;
     this.errorMessage = message;
   }
 }
@@ -66,7 +69,7 @@ export function handleCurionaError(
 
   if (error instanceof AxiosError && error.response?.data) {
     const { code, message } = error.response.data;
-    return new CurionaError(code, message);
+    return new CurionaError(code, message, error.response.status);
   }
 
   if (error instanceof Error) {

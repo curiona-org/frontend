@@ -1,10 +1,10 @@
-import { auth } from "@/shared/auth";
+import { auth } from "@/lib/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export type APIResponse<T = Record<string, unknown>> = {
   success: boolean;
   message: string;
-  data?: T;
+  data: T;
   error?: ValidationError[] | string;
 };
 
@@ -70,8 +70,8 @@ export abstract class APIService {
     this.instance.interceptors.request.use(async (request) => {
       if (!this.isAuthorizationAttached()) {
         const session = await auth();
-        if (session && session.data && session.data.tokens.access_token) {
-          const authorization = `Bearer ${session.data.tokens.access_token}`;
+        if (session?.tokens) {
+          const authorization = `Bearer ${session.tokens.access_token}`;
           request.headers["Authorization"] = authorization;
 
           this.instance.defaults.headers.common["Authorization"] =
@@ -89,3 +89,8 @@ export abstract class APIService {
     else return true;
   }
 }
+
+export const apiClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
