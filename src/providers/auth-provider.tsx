@@ -2,7 +2,7 @@
 
 import { CurionaError, handleCurionaError } from "@/lib/error";
 import { apiClient } from "@/lib/services/api.service";
-import { Session } from "@/lib/session";
+import { Session, shouldRefreshToken } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -63,23 +63,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     if (!session) return;
 
     const checkTokenInterval = setInterval(() => {
-      if (session && isTokenNearExpiry(session)) {
+      if (session && shouldRefreshToken(session, 5 * 60 * 1000)) {
         refreshSession();
       }
     }, 60 * 1000); // Check every minute
 
-    // Check if token is within 5 minutes of expiry
-    const isTokenNearExpiry = (session: Session): boolean => {
-      if (!session.tokens?.access_token_expires_at) return false;
-
-      const expiryTime = new Date(
-        session.tokens.access_token_expires_at
-      ).getTime();
-      const currentTime = new Date().getTime();
-      const fiveMinutesInMs = 5 * 60 * 1000;
-
-      return expiryTime - currentTime < fiveMinutesInMs;
-    };
     return () => clearInterval(checkTokenInterval);
   }, [session]);
 
