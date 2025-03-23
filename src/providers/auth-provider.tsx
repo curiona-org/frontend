@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const [session, setSession] = useState<Session | null>(initialSession);
   const [error, setError] = useState<CurionaError | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(initialSession ? true : false);
 
   useEffect(() => {
     if (session) {
@@ -153,12 +153,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     setIsLoading(true);
 
     try {
-      const { data } = await apiClient.get("/api/auth/sign-out");
+      await apiClient.get("/api/auth/sign-out");
 
-      if (data.success) {
-        setSession(null);
-        setIsLoggedIn(false);
-      }
+      setSession(null);
+      setIsLoggedIn(false);
     } catch (error) {
       const err = handleCurionaError(error);
 

@@ -1,5 +1,5 @@
 "use client";
-import ButtonSignOut from "@/components/sign-out";
+import ButtonSignOut from "@/components/button-sign-out";
 import { useAuth } from "@/providers/auth-provider";
 import dayjs from "dayjs";
 import Image from "next/image";

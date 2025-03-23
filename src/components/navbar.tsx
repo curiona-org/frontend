@@ -1,12 +1,12 @@
-"use server";
-import { auth } from "@/lib/auth";
+"use client";
+import { useAuth } from "@/providers/auth-provider";
 import NavigationBarAuthenticated from "./navbar-authenticated";
 import NavigationBarGuest from "./navbar-guest";
 
-const NavigationBar = async () => {
-  const session = await auth();
+const NavigationBar = () => {
+  const { isLoggedIn } = useAuth();
 
-  if (session) {
+  if (isLoggedIn) {
     return <NavigationBarAuthenticated />;
   }
 

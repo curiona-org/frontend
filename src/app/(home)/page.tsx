@@ -1,9 +1,10 @@
-import { auth } from "@/lib/auth";
+"use client";
+import { useAuth } from "@/providers/auth-provider";
 import HomeAuthenticated from "@/screens/home/authenticated";
 import HomeGuest from "@/screens/home/guest";
 
-export default async function Page() {
-  const session = await auth();
+export default function Page() {
+  const { session } = useAuth();
 
   if (session) {
     return <HomeAuthenticated />;
