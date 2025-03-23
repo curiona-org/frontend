@@ -1,11 +1,10 @@
 "use client";
 
 import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
-import { signInAction } from "@/app/(auth)/sign-in/actions";
+import { signInAction, signInGoogleAction } from "@/app/(auth)/sign-in/actions";
 import { signUpAction } from "@/app/(auth)/sign-up/actions";
 import { handleCurionaError } from "@/lib/error";
 import { Session, shouldRefreshToken } from "@/lib/session";
-import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
@@ -140,8 +139,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   };
 
   // Login with OAuth token
-  const signInGoogle = () => {
-    redirect("/api/auth/sign-in/google");
+  const signInGoogle = async () => {
+    await signInGoogleAction();
   };
 
   // Logout

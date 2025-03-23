@@ -7,16 +7,7 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 
 // Routes that don't require authentication
-const publicRoutes = [
-  "/",
-  "/sign-in",
-  "/api/auth/sign-in",
-  "/api/auth/sign-in/google",
-  "/api/auth/sign-in/google/callback",
-  "/sign-up",
-  "/forgot-password",
-  "/reset-password",
-];
+const publicRoutes = ["/", "/sign-in", "/sign-up", "/sign-in/callback/google"];
 
 export default async function middleware(request: NextRequest) {
   const response = NextResponse.next();

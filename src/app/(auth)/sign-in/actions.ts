@@ -1,11 +1,14 @@
 "use server";
 import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
+import { google } from "@/lib/google_oauth";
 import { encrypt } from "@/lib/helpers/crypto.helper";
 import { APIResponse } from "@/lib/services/api.service";
 import { AuthService } from "@/lib/services/auth.service";
 import { AuthOutput } from "@/types/api-auth";
+import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const authService = new AuthService();
 
@@ -45,4 +48,34 @@ export async function signInAction({
   } catch (error) {
     throw handleCurionaError(error);
   }
+}
+
+export async function signInGoogleAction() {
+  const state = generateState();
+  const codeVerifier = generateCodeVerifier();
+  const authorizationURL = google.createAuthorizationURL(state, codeVerifier, [
+    "openid",
+    "profile",
+    "email",
+  ]);
+
+  const cookieStore = await cookies();
+
+  cookieStore.set("google_oauth_state", state, {
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 10, // 10 minutes
+    sameSite: "lax",
+  });
+
+  cookieStore.set("google_code_verifier", codeVerifier, {
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 10, // 10 minutes
+    sameSite: "lax",
+  });
+
+  redirect(authorizationURL.toString());
 }
