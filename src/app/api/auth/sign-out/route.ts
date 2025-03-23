@@ -1,5 +1,6 @@
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
-import { getSession, SESSION_COOKIE_NAME } from "@/lib/session";
+import { getSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     const cookieStore = await cookies();
-    cookieStore.delete(SESSION_COOKIE_NAME);
+    cookieStore.delete(config.SESSION_COOKIE_NAME);
     return new Response(null, {
       status: 302,
       headers: {

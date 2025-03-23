@@ -1,7 +1,7 @@
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
 import { encrypt } from "@/lib/helpers/crypto.helper";
 import { AuthService } from "@/lib/services/auth.service";
-import { SESSION_COOKIE_NAME } from "@/lib/session";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    cookieStore.set(SESSION_COOKIE_NAME, encodeURIComponent(session), {
+    cookieStore.set(config.SESSION_COOKIE_NAME, encodeURIComponent(session), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

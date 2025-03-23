@@ -1,9 +1,9 @@
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
 import { google } from "@/lib/google_oauth";
 import { encrypt } from "@/lib/helpers/crypto.helper";
 import { APIResponse } from "@/lib/services/api.service";
 import { AuthService } from "@/lib/services/auth.service";
-import { SESSION_COOKIE_NAME } from "@/lib/session";
 import { AuthOutput } from "@/types/api-auth";
 import { OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";
@@ -97,7 +97,7 @@ export async function GET(request: Request): Promise<Response> {
     },
   });
 
-  cookieStore.set(SESSION_COOKIE_NAME, encodeURIComponent(session), {
+  cookieStore.set(config.SESSION_COOKIE_NAME, encodeURIComponent(session), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

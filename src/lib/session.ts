@@ -1,3 +1,4 @@
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
 import { decrypt, encrypt } from "@/lib/helpers/crypto.helper";
 import { AuthService } from "@/lib/services/auth.service";
@@ -18,13 +19,11 @@ export type Session = {
   };
 };
 
-export const SESSION_COOKIE_NAME = "curiona_session";
-
 export async function createSession(response: Response, data: Session) {
   const payload = await encrypt(data);
 
   const cookie = serializeCookie(
-    SESSION_COOKIE_NAME,
+    config.SESSION_COOKIE_NAME,
     encodeURIComponent(payload),
     {
       httpOnly: true,
@@ -43,7 +42,7 @@ export async function createSession(response: Response, data: Session) {
 export async function getSession(
   request: NextRequest
 ): Promise<Session | null> {
-  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
+  const sessionCookie = request.cookies.get(config.SESSION_COOKIE_NAME);
 
   if (!sessionCookie?.value) {
     return null;
@@ -119,7 +118,7 @@ export function isSessionExpired(session: Session | null) {
 }
 
 export async function destroySession(response: Response) {
-  const cookie = serializeCookie(SESSION_COOKIE_NAME, "", {
+  const cookie = serializeCookie(config.SESSION_COOKIE_NAME, "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

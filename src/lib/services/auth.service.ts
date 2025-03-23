@@ -4,7 +4,7 @@ import { AuthOutput, AuthRefreshOutput } from "@/types/api-auth";
 
 export class AuthService extends APIService {
   constructor() {
-    super(config.backendURL);
+    super(config.BACKEND_URL);
   }
 
   async loginEmailPassword(data: { email: string; password: string }) {

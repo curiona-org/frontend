@@ -4,7 +4,7 @@ import { GetProfileOutput, UpdateProfileOutput } from "@/types/api-profile";
 
 export class ProfileService extends APIService {
   constructor() {
-    super(config.backendURL);
+    super(config.BACKEND_URL);
   }
 
   async profile() {
