@@ -52,12 +52,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialSession ? true : false);
 
-  useEffect(() => {
-    if (session) {
-      setIsLoggedIn(true);
-    }
-  }, [session]);
-
   // Periodically check if token needs refresh (every minute)
   useEffect(() => {
     if (!session) return;
