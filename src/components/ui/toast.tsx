@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/shared/helpers/common.helper";
+import { cn } from "@/lib/helpers/common.helper";
 import { Toast as ToastPrimitive } from "radix-ui";
 import { forwardRef, useImperativeHandle, useState } from "react";
 

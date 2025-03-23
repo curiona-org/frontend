@@ -1,12 +1,13 @@
 "use client";
+
+import { useAuth } from "@/providers/auth-provider";
 import SignInPage from "@/screens/sign-in";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  const { data: session } = useSession();
+  const { isLoggedIn } = useAuth();
 
-  if (session) {
+  if (isLoggedIn) {
     redirect("/");
   }
 
