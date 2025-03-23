@@ -1,9 +1,8 @@
 import Toast, { ToastRef } from "@/components/ui/toast";
-import { handleCurionaError } from "@/lib/error";
 import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormSignUp } from "./form";
 
 export default function SignUpPage() {
@@ -16,17 +15,42 @@ export default function SignUpPage() {
     authIsLoading,
   } = useAuth();
   const { register, handleSubmit } = useFormSignUp();
+  const [submitErrCount, setSubmitErrCount] = useState(0);
   const toastRef = useRef<ToastRef>(null);
 
   useEffect(() => {
     if (authError) {
+      // Increment error counter to ensure the effect runs again
+      // even if the error message is the same
+      setSubmitErrCount((prev) => prev + 1);
+
+      if (toastRef.current?.isOpened) {
+        toastRef.current?.close();
+      }
+
+      // Short timeout to ensure the toast is closed before opening a new one
+      setTimeout(() => {
+        toastRef.current?.open({
+          type: "error",
+          title: "Error",
+          description: authError,
+        });
+      }, 100);
+    }
+  }, [authError]);
+
+  useEffect(() => {
+    if (!authIsLoading && authError && submitErrCount > 0) {
+      if (toastRef.current?.isOpened) {
+        toastRef.current?.close();
+      }
       toastRef.current?.open({
         type: "error",
         title: "Error",
-        description: authError.message,
+        description: authError,
       });
     }
-  }, [authError]);
+  }, [authError, authIsLoading, submitErrCount]);
 
   useEffect(() => {
     if (isLoggedIn && session) {
@@ -35,21 +59,11 @@ export default function SignUpPage() {
   }, [isLoggedIn, session]);
 
   const onSubmit = handleSubmit(async ({ name, email, password }) => {
-    try {
-      await signUp({ name, email, password });
-    } catch (error) {
-      const err = handleCurionaError(error);
-      toastRef.current?.open({
-        type: "error",
-        title: "Error",
-        description: err.errorMessage,
-      });
-      return;
-    } finally {
-      if (toastRef.current?.isOpened) {
-        toastRef.current?.close();
-      }
+    if (toastRef.current?.isOpened) {
+      toastRef.current?.close();
     }
+
+    await signUp({ name, email, password });
   });
 
   return (

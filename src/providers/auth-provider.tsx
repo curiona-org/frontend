@@ -1,14 +1,16 @@
 "use client";
 
-import { CurionaError, handleCurionaError } from "@/lib/error";
-import { apiClient } from "@/lib/services/api.service";
+import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
+import { signInAction } from "@/app/(auth)/sign-in/actions";
+import { signUpAction } from "@/app/(auth)/sign-up/actions";
+import { handleCurionaError } from "@/lib/error";
 import { Session, shouldRefreshToken } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   session: Session | null;
-  authError: CurionaError | null;
+  authError: string | null;
   authIsLoading: boolean;
   isLoggedIn: boolean;
   signUp: (params: {
@@ -48,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   initialSession,
 }) => {
   const [session, setSession] = useState<Session | null>(initialSession);
-  const [error, setError] = useState<CurionaError | null>(null);
+  const [authError, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialSession ? true : false);
 
@@ -71,56 +73,68 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     email: string;
     password: string;
   }) => {
-    setIsLoading(true);
-
     try {
-      const { data } = await apiClient.post("/api/auth/sign-up", params);
+      setIsLoading(true);
+
+      const result = await signUpAction(params);
+
+      if (!result.success) {
+        setError(result.message);
+        setIsLoading(false);
+        return;
+      }
 
       setSession({
         tokens: {
-          access_token: data.access_token,
-          access_token_expires_at: data.access_token_expires_at,
+          access_token: result.data.access_token,
+          access_token_expires_at: new Date(
+            result.data.access_token_expires_at
+          ),
         },
         user: {
-          ...data.account,
+          ...result.data.account,
         },
       });
 
       setIsLoggedIn(true);
+      setIsLoading(false);
     } catch (error) {
       const err = handleCurionaError(error);
-
-      setError(err);
-      throw err;
-    } finally {
+      setError(err.message || "Failed to sign up");
       setIsLoading(false);
     }
   };
 
   // Login with email/password
   const signIn = async (params: { email: string; password: string }) => {
-    setIsLoading(true);
-
     try {
-      const { data } = await apiClient.post("/api/auth/sign-in", params);
+      setIsLoading(true);
+
+      const result = await signInAction(params);
+
+      if (!result.success) {
+        setError(result.message);
+        setIsLoading(false);
+        return;
+      }
 
       setSession({
         tokens: {
-          access_token: data.access_token,
-          access_token_expires_at: data.access_token_expires_at,
+          access_token: result.data.access_token,
+          access_token_expires_at: new Date(
+            result.data.access_token_expires_at
+          ),
         },
         user: {
-          ...data.account,
+          ...result.data.account,
         },
       });
 
       setIsLoggedIn(true);
+      setIsLoading(false);
     } catch (error) {
       const err = handleCurionaError(error);
-
-      setError(err);
-      throw err;
-    } finally {
+      setError(err.message || "Failed to sign in");
       setIsLoading(false);
     }
   };
@@ -133,39 +147,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   // Logout
   const signOut = async () => {
     setIsLoading(true);
-
-    try {
-      await apiClient.get("/api/auth/sign-out");
-
-      setSession(null);
-      setIsLoggedIn(false);
-    } catch (error) {
-      const err = handleCurionaError(error);
-
-      setError(err);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+    await signOutAction();
+    setSession(null);
+    setIsLoggedIn(false);
+    setIsLoading(false);
   };
 
   // Refresh session
   const refreshSession = async () => {
-    setIsLoading(true);
-
     try {
-      const { data } = await apiClient.get("/api/auth/refresh");
-
-      if (data.success) {
-        setSession(data.session);
-        setIsLoggedIn(true);
+      setIsLoading(true);
+      const result = await refreshSessionAction();
+      if (!result.success || !result.newSession) {
+        setError(result.message || "Failed to refresh session");
+        setIsLoading(false);
+        return;
       }
+      setSession(result.newSession);
+      setIsLoading(false);
     } catch (error) {
       const err = handleCurionaError(error);
-
-      setError(err);
-      throw err;
-    } finally {
+      setError(err.message || "Failed to refresh session");
       setIsLoading(false);
     }
   };
@@ -174,7 +176,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     <AuthContext.Provider
       value={{
         session,
-        authError: error,
+        authError,
         authIsLoading: isLoading,
         isLoggedIn,
         signUp,
