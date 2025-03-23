@@ -36,6 +36,8 @@ export async function createSession(response: Response, data: Session) {
   );
 
   response.headers.append("Set-Cookie", cookie);
+
+  return payload;
 }
 
 export async function getSession(
@@ -85,10 +87,7 @@ export async function refreshSession(
       },
     };
 
-    await createSession(response, newSession);
-
-    const encryptedSession = await encrypt(newSession);
-    return encryptedSession;
+    return await createSession(response, newSession);
   } catch (error) {
     const err = handleCurionaError(error);
     console.error(err);
