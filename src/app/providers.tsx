@@ -1,5 +1,5 @@
-import { AuthProvider } from "@/components/providers/auth-provider";
 import { auth } from "@/lib/auth";
+import { AuthProvider } from "@/providers/auth-provider";
 import { Toast } from "radix-ui";
 
 export default async function Providers({

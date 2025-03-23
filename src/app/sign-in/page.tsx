@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/components/providers/auth-provider";
+import { useAuth } from "@/providers/auth-provider";
 import SignInPage from "@/screens/sign-in";
 import { redirect } from "next/navigation";
 

@@ -1,6 +1,6 @@
-import { useAuth } from "@/components/providers/auth-provider";
 import Toast, { ToastRef } from "@/components/ui/toast";
 import { handleCurionaError } from "@/lib/error";
+import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useRef } from "react";

@@ -11,6 +11,11 @@ type AuthContextType = {
   authError: CurionaError | null;
   authIsLoading: boolean;
   isLoggedIn: boolean;
+  signUp: (params: {
+    name: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
   signIn: (params: { email: string; password: string }) => Promise<void>;
   signInGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -27,6 +32,7 @@ const AuthContext = createContext<AuthContextType>({
   authError: null,
   authIsLoading: true,
   isLoggedIn: false,
+  signUp: async () => {},
   signIn: async () => {},
   signInGoogle: async () => {},
   signOut: async () => {},
@@ -76,6 +82,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     };
     return () => clearInterval(checkTokenInterval);
   }, [session]);
+
+  // Register new user
+  const signUp = async (params: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    setIsLoading(true);
+
+    try {
+      const { data } = await apiClient.post("/api/auth/sign-up", params);
+
+      setSession({
+        tokens: {
+          access_token: data.access_token,
+          access_token_expires_at: data.access_token_expires_at,
+        },
+        user: {
+          ...data.account,
+        },
+      });
+
+      setIsLoggedIn(true);
+    } catch (error) {
+      const err = handleCurionaError(error);
+
+      setError(err);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Login with email/password
   const signIn = async (params: { email: string; password: string }) => {
@@ -159,6 +197,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         authError: error,
         authIsLoading: isLoading,
         isLoggedIn,
+        signUp,
         signIn,
         signInGoogle,
         signOut,

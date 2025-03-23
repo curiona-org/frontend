@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/components/providers/auth-provider";
+import { useAuth } from "@/providers/auth-provider";
 import SignUpPage from "@/screens/sign-up";
 import { redirect } from "next/navigation";
 

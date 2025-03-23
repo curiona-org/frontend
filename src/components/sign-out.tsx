@@ -1,6 +1,6 @@
 "use client";
-import { useAuth } from "@/components/providers/auth-provider";
 import Button from "@/components/ui/button";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function ButtonSignOut() {
   const { signOut } = useAuth();
