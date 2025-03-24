@@ -94,14 +94,26 @@ body::after {
   z-index: -1;
 }
 
-.dashedBorder {
-  border: 2px dashed transparent;
+.dashedBorder1 {
+  @apply border-2 border-transparent border-l-0 border-r-0;
   border-image: repeating-linear-gradient(
       90deg,
       var(--blue-500),
-      var(--blue-500) 10px,
+      var(--blue-500) 15px,
       transparent 10px,
-      transparent 20px
+      transparent 30px
     )
     10;
+}
+
+.dashedBorder2 {
+  @apply border-2 border-transparent border-t-0 border-b-0;
+  border-image: repeating-linear-gradient(
+      180deg,
+      var(--blue-500),
+      var(--blue-500) 15px,
+      transparent 10px,
+      transparent 30px
+    )
+    1;
 }
