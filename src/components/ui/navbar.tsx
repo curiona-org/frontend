@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/providers/auth-provider";
-import NavigationBarAuthenticated from "./navbar-authenticated";
-import NavigationBarGuest from "./navbar-guest";
+import NavigationBarAuthenticated from "../navbar-authenticated";
+import NavigationBarGuest from "../navbar-guest";
 
 const NavigationBar = () => {
   const { isLoggedIn } = useAuth();

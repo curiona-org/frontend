@@ -44,12 +44,12 @@ const NavigationBarGuest = () => {
       <Link href="/">
         <div className="flex gap-2 items-center">
           <Image src={Logo} alt="Logo" priority />
-          <p className="text-3xl text-blue-500">Curiona</p>
+          <span className="text-3xl font-medium text-blue-500">Curiona</span>
         </div>
       </Link>
 
       <Link href={pathname === "/sign-in" ? "/sign-up" : "/sign-in"}>
-        <Button className="w-32 py-3 bg-blue-500 hover:bg-blue-900 text-white-500 rounded-lg hidden lg:inline-block">
+        <Button className="w-[124px] h-11 bg-blue-500 hover:bg-blue-900 text-white-500 rounded-lg hidden lg:inline-block transition-transform duration-300 ease-out hover:scale-105 active:scale-95">
           {authButtonText}
         </Button>
       </Link>

@@ -4,6 +4,37 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      fontFamily: {
+        satoshi: "var(--font-satoshi)",
+      },
+      fontSize: {
+        // Desktop
+        "display-1": ["61px", { lineHeight: "120%", fontWeight: "700" }],
+        "display-2": ["49px", { lineHeight: "120%", fontWeight: "700" }],
+        "heading-1": ["39px", { lineHeight: "120%", fontWeight: "400" }],
+        "heading-2": ["31px", { lineHeight: "120%", fontWeight: "400" }],
+        "heading-3": ["25px", { lineHeight: "120%", fontWeight: "400" }],
+        "heading-4-regular": ["20px", { lineHeight: "120%", fontWeight: "400" }],
+        "heading-4-bold": ["20px", { lineHeight: "120%", fontWeight: "700" }],
+        "body-1-regular": ["16px", { lineHeight: "120%", fontWeight: "400" }],
+        "body-1-medium": ["16px", { lineHeight: "120%", fontWeight: "500" }],
+        "body-1-bold": ["16px", { lineHeight: "120%", fontWeight: "700" }],
+        "body-2": ["13px", { lineHeight: "120%", fontWeight: "400" }],
+        "caption": ["10px", { lineHeight: "120%", fontWeight: "400" }],
+        // Mobile
+        "mobile-display-1": ["34px", { lineHeight: "120%", fontWeight: "700" }],
+        "mobile-display-2": ["27px", { lineHeight: "120%", fontWeight: "700" }],
+        "mobile-heading-1": ["22px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-heading-2": ["18px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-heading-3": ["14px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-heading-4-regular": ["11px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-heading-4-bold": ["11px", { lineHeight: "120%", fontWeight: "700" }],
+        "mobile-body-1-regular": ["9px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-body-1-medium": ["9px", { lineHeight: "120%", fontWeight: "500" }],
+        "mobile-body-1-bold": ["9px", { lineHeight: "120%", fontWeight: "700" }],
+        "mobile-body-2": ["7px", { lineHeight: "120%", fontWeight: "400" }],
+        "mobile-caption": ["6px", { lineHeight: "120%", fontWeight: "400" }],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
