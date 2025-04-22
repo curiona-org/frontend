@@ -1,20 +1,53 @@
-import Link from "next/link";
+"use client";
+import RoadmapList from "@/components/roadmap/roadmap-list";
+import GenerateRoadmap from "@/components/roadmap/generate.roadmap";
 
 export default function HomeGuest() {
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-      <h1 className='text-2xl font-bold'>Welcome to Roadmap Generator</h1>
-      <p>Sign in to continue</p>
-      <Link href='/sign-in'>
-        <button className='px-4 py-2 mt-4 text-white bg-blue-500 rounded-md focus:outline-none focus:ring focus:ring-blue-500'>
-          Sign In
-        </button>
-      </Link>
-      <Link href='/sign-up'>
-        <button className='px-4 py-2 mt-4 text-white bg-blue-500 rounded-md focus:outline-none focus:ring focus:ring-blue-500'>
-          Sign Up
-        </button>
-      </Link>
+    <div className="justify-center min-h-screen px-6 lg:px-40 py-32">
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-4 items-center text-mobile-display-1 md:text-display-1">
+            <h1>Create Your </h1>
+            <span className="text-blue-500 dashedBorder px-5 py-1">
+              Learning Blueprint
+            </span>
+          </div>
+          <p className="text-mobile-heading-4-regular md:text-heading-4-regular">
+            Create a personalized roadmap that helps you learn new things
+            without the hassle.
+          </p>
+          <GenerateRoadmap />
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex justify-between items-center">
+            <h4 className="text-mobile-heading-4-regular md:text-heading-4-regular">
+              Type here to generate your roadmap
+            </h4>
+            <span className="text-mobile-body-1-regular md:text-body-1-regular flex items-center gap-1 cursor-pointer hover:text-blue-500">
+              See More
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m10 17l5-5m0 0l-5-5"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <RoadmapList />
+        </div>
+      </div>
     </div>
   );
 }
