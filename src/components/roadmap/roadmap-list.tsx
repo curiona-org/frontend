@@ -10,6 +10,11 @@ interface Roadmap {
 
 const RoadmapList = () => {
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
+  const [saved, setSaved] = useState(false);
+
+  const handleClick = () => {
+    setSaved(!saved);
+  };
 
   useEffect(() => {
     fetch("http://api.curiona.34.2.143.125.sslip.io/roadmaps")
@@ -31,77 +36,92 @@ const RoadmapList = () => {
         roadmaps.map((roadmap) => (
           <div
             key={roadmap.id}
-            className="relative border-2 border-blue-500 rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300 ease-out lg:hover:bg-blue-500 hover:text-white-500 cursor-pointer group"
+            className="group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300"
           >
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <h3 className="text-mobile-heading-4-bold md:text-heading-4-bold">
-                  {roadmap.title}
+            {/* Title */}
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex-grow">
+                <h3 className="text-lg font-semibold text-gray-800 truncate text-wrap">
+                  {roadmap.title.length > 30
+                    ? roadmap.title.slice(0, 50) + "..."
+                    : roadmap.title}
                 </h3>
-                <button className="absolute top-4 right-4 opacity-0 transform translate-y-[-20px] transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 md:text-white-500 md:block hidden">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
+              </div>
+              <div className="shrink-0">
+                <button
+                  onClick={handleClick}
+                  className={`${
+                    saved
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-400 hover:text-blue-500"
+                  } transition-all ease-out duration-300 rounded-lg`}
+                >
+                  <div
+                    className={`flex items-center gap-1 border ${
+                      saved
+                        ? "border-blue-500"
+                        : "border-gray-200 hover:border-blue-500"
+                    } rounded-lg p-2`}
                   >
-                    <path
-                      fill="currentColor"
-                      d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"
-                    />
-                  </svg>
-                </button>
-                <button className="absolute top-4 right-4 md:hidden text-gray-500 hover:text-blue-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="var(--blue-500)"
-                      d="m12 18l-4.2 1.8q-1 .425-1.9-.162T5 17.975V5q0-.825.588-1.412T7 3h10q.825 0 1.413.588T19 5v12.975q0 1.075-.9 1.663t-1.9.162zm0-2.2l5 2.15V5H7v12.95zM12 5H7h10z"
-                    />
-                  </svg>
+                    <span role="img" aria-label="folder">
+                      🗂️
+                    </span>
+                    <span
+                      className={`${
+                        saved ? "text-white-500" : "text-black-500"
+                      }`}
+                    >
+                      {saved ? "Saved!" : "Save"}
+                    </span>
+                  </div>
                 </button>
               </div>
-              <p className="text-mobile-body-2 md:text-body-2">
-                {roadmap.description}
-              </p>
-              <div className="flex gap-2 items-center">
-                <div className="bg-blue-100 px-2 py-1 rounded-lg">
-                  <span className="text-mobile-body-2 md:text-body-2 flex items-center gap-1 text-black-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M6 2h12v6l-4 4l4 4v6H6v-6l4-4l-4-4zm10 14.5l-4-4l-4 4V20h8zm-4-5l4-4V4H8v3.5zM10 6h4v.75l-2 2l-2-2z"
-                      />
-                    </svg>
-                    {roadmap.duration} 13 min
-                  </span>
-                </div>
-                <div className="bg-blue-100 px-2 py-1 rounded-lg">
-                  <span className="text-mobile-body-2 md:text-body-2 flex items-center gap-1 text-black-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 576 512"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M384 64c0-17.7 14.3-32 32-32h128c17.7 0 32 14.3 32 32s-14.3 32-32 32h-96v96c0 17.7-14.3 32-32 32h-96v96c0 17.7-14.3 32-32 32h-96v96c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h96v-96c0-17.7 14.3-32 32-32h96v-96c0-17.7 14.3-32 32-32h96z"
-                      />
-                    </svg>
-                    {roadmap.steps} 20 steps
-                  </span>
-                </div>
+            </div>
+
+            {/* Divider */}
+            <div className="relative my-4 h-[1px]">
+              <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+              <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+
+            {/* Description */}
+            <p className="text-sm text-gray-600 mb-4">
+              {roadmap.description.length > 60
+                ? roadmap.description.slice(0, 80) + "..."
+                : roadmap.description}
+            </p>
+
+            {/* Divider */}
+            <div className="relative my-4 h-[1px]">
+              <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+              <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            {/* Topics */}
+            <div className="flex items-center justify-between text-sm text-gray-700 my-2">
+              <div className="flex items-center gap-1">
+                <span role="img" aria-label="lightbulb">
+                  💡
+                </span>
+                <span>Total Topics</span>
               </div>
+              <span>{roadmap.steps}</span>
+            </div>
+
+            <div className="relative my-4 h-[1px]">
+              <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+              <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+
+            {/* Skill Level */}
+            <div className="flex items-center justify-between text-sm text-gray-700">
+              <div className="flex items-center gap-1">
+                <span role="img" aria-label="bicep">
+                  💪
+                </span>
+                <span>Skill Level</span>
+              </div>
+              <span>{roadmap.level || "Beginner"}</span>
             </div>
           </div>
         ))
