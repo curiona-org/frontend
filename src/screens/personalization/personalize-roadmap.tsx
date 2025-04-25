@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { RoadmapService } from "@/lib/services/roadmap.service";
+
+const roadmapService = new RoadmapService();
 
 export default function PersonalizeRoadmap() {
   const [step, setStep] = useState(1);
@@ -11,13 +14,17 @@ export default function PersonalizeRoadmap() {
   });
 
   const handleNext = () => {
-    // Validasi pada step 2
-    if (step === 2 && !formData.familiarity) {
-      alert("Please select your familiarity level before continuing.");
+    if (step === 1 && !formData.timeAvailability) {
+      alert("Please input your daily time availability.");
       return;
     }
 
-    if (step < 3) setStep(step + 1);
+    if (step === 2 && !formData.familiarity) {
+      alert("Please select your familiarity level.");
+      return;
+    }
+
+    setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -28,16 +35,16 @@ export default function PersonalizeRoadmap() {
     e.preventDefault();
 
     if (
-      formData.timeAvailability <= 0 ||
+      !formData.timeAvailability ||
       !formData.familiarity ||
-      formData.duration <= 0
+      !formData.duration
     ) {
       alert("Please complete all fields before submitting.");
       return;
     }
 
     const payload = {
-      topic: "Making a WhatsApp clone",
+      topic: "Thesis Mobile Application Front-End Development Using Next.js",
       personalization_options: {
         daily_time_availability: {
           value: Number(formData.timeAvailability),
@@ -47,29 +54,18 @@ export default function PersonalizeRoadmap() {
           value: Number(formData.duration),
           unit: "months",
         },
-        skill_level: formData.familiarity,
+        skill_level: formData.familiarity || "beginner",
       },
     };
 
     try {
-      const response = await fetch(
-        "http://api.curiona.34.2.143.125.sslip.io/roadmaps",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJleHAiOjE3NDU1MTMyNjcsImlhdCI6MTc0NTUwOTY2NywiaXNzIjoiaHR0cHM6Ly9jdXJpb25hLmNvbSJ9.qINM9nFVHluI1-gJedhV5UrIjfea9Zwnn8eCEDq2vFM",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await roadmapService.generateRoadmap(payload);
 
-      if (!response.ok) {
+      if (!response.success) {
         throw new Error("Failed to submit data");
       }
 
-      const result = await response.json();
+      const result = response.data;
       console.log("Success:", result);
     } catch (error) {
       console.error("Error submitting form:", error);

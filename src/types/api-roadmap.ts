@@ -17,3 +17,5 @@ export type ListRoadmapsOutput = FilteredList<
     personalization_options: PersonalizationOptions;
   }
 >;
+
+export type GenerateRoadmapOutput = { slug: string };
