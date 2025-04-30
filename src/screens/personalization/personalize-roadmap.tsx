@@ -5,7 +5,11 @@ import { RoadmapService } from "@/lib/services/roadmap.service";
 
 const roadmapService = new RoadmapService();
 
-export default function PersonalizeRoadmap() {
+interface PersonalizeRoadmapProps {
+  topic: string;
+}
+
+export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     timeAvailability: 0,
@@ -13,7 +17,8 @@ export default function PersonalizeRoadmap() {
     duration: 0,
   });
 
-  const handleNext = () => {
+  const handleNext = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (step === 1 && !formData.timeAvailability) {
       alert("Please input your daily time availability.");
       return;
@@ -37,14 +42,15 @@ export default function PersonalizeRoadmap() {
     if (
       !formData.timeAvailability ||
       !formData.familiarity ||
-      !formData.duration
+      !formData.duration ||
+      !topic
     ) {
-      alert("Please complete all fields before submitting.");
+      alert("Please complete all fields including topic before submitting.");
       return;
     }
 
     const payload = {
-      topic: "Thesis Mobile Application Front-End Development Using Next.js",
+      topic: topic,
       personalization_options: {
         daily_time_availability: {
           value: Number(formData.timeAvailability),
@@ -54,9 +60,11 @@ export default function PersonalizeRoadmap() {
           value: Number(formData.duration),
           unit: "months",
         },
-        skill_level: formData.familiarity || "beginner",
+        skill_level: formData.familiarity,
       },
     };
+
+    console.log("Topic: ", topic)
 
     try {
       const response = await roadmapService.generateRoadmap(payload);
@@ -86,11 +94,6 @@ export default function PersonalizeRoadmap() {
         onSubmit={handleSubmit}
         className=" p-6 bg-white shadow rounded-xl space-y-6"
       >
-        {/* Step Indicator */}
-        {/* <div className="text-center font-semibold text-gray-700">
-          Step {step} of 3
-        </div> */}
-
         {/* Step 1: Time Availability */}
         {step === 1 && (
           <div className="space-y-4">
@@ -101,13 +104,17 @@ export default function PersonalizeRoadmap() {
             <div className="grid grid-cols-3 gap-5 h-24">
               <input
                 type="number"
-                value={formData.timeAvailability}
-                onChange={
-                  (e) =>
-                    setFormData({
-                      ...formData,
-                      timeAvailability: +e.target.value || 0,
-                    }) // Gunakan + untuk konversi string ke number
+                value={
+                  formData.timeAvailability === 0
+                    ? ""
+                    : formData.timeAvailability
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    timeAvailability:
+                      e.target.value === "" ? 0 : +e.target.value,
+                  })
                 }
                 className="border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 text-center"
                 placeholder="0"
@@ -164,16 +171,17 @@ export default function PersonalizeRoadmap() {
             <div className="grid grid-cols-2 gap-5 h-24">
               <input
                 type="number"
-                value={formData.duration}
+                value={formData.duration === 0 ? "" : formData.duration}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    duration: parseFloat(e.target.value) || 0,
+                    duration: e.target.value === "" ? 0 : +e.target.value,
                   })
                 }
-                className="border border-gray-300 rounded-lg p-2 text-center"
+                className="border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 text-center"
                 placeholder="0"
               />
+
               <input
                 type="text"
                 value="Month"
@@ -185,7 +193,7 @@ export default function PersonalizeRoadmap() {
         )}
 
         {/* Buttons */}
-        <div className="flex gap-5 justify-between pt-4 h-24">
+        <div className="flex gap-10 justify-between pt-4 h-24">
           {step > 1 ? (
             <button
               type="button"
@@ -199,6 +207,7 @@ export default function PersonalizeRoadmap() {
           )}
           {step < 3 ? (
             <button
+              key={`next-${step}`}
               type="button"
               onClick={handleNext}
               className="w-full rounded-lg bg-blue-500 text-white-500 hover:bg-blue-900 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"

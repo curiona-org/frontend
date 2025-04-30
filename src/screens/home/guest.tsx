@@ -1,6 +1,6 @@
 "use client";
 import RoadmapList from "@/components/roadmap/roadmap-list";
-import GenerateRoadmap from "@/components/roadmap/generate.roadmap";
+import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 
 export default function HomeGuest() {
   return (
@@ -17,7 +17,7 @@ export default function HomeGuest() {
             Create a personalized roadmap that helps you learn new things
             without the hassle.
           </p>
-          <GenerateRoadmap />
+          {/* <GenerateRoadmap /> */}
         </div>
 
         <div className="flex flex-col">

@@ -4,7 +4,7 @@ import RoadmapCard from "@/components/roadmap/roadmap-card";
 
 const roadmapService = new RoadmapService();
 
-export interface RoadmapProps {
+interface Roadmap {
   created_at: Date;
   description: string;
   finished_topics: number;
@@ -27,41 +27,26 @@ export interface RoadmapProps {
   updated_at: Date;
 }
 
-const RoadmapList = () => {
-  const [roadmaps, setRoadmaps] = useState<RoadmapProps[]>([]);
-  const [saved, setSaved] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const handleClick = () => {
-    setSaved(!saved);
-  };
+const CommunityRoadmap = () => {
+  const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
       try {
-        const result = await roadmapService.listCommunityRoadmap();
-        console.log("API Response:", result);
-
-        if (result?.data?.items) {
-          setRoadmaps(result.data.items);
+        const response = await roadmapService.listCommunityRoadmap();
+        console.log("API Response:", response);
+        if (response && response.data) {
+          setRoadmaps(response.data.items);
         } else {
-          console.error("Items not found in response");
+          console.error("Data items not found in response");
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching data", error);
       }
     };
 
     fetchRoadmaps();
   }, []);
-
-  if (loading) {
-    return (
-      <p className="text-center col-span-full text-gray-500">Loading...</p>
-    );
-  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
@@ -78,4 +63,4 @@ const RoadmapList = () => {
   );
 };
 
-export default RoadmapList;
+export default CommunityRoadmap;

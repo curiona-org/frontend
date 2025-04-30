@@ -1,6 +1,6 @@
 "use client";
 import SearchRoadmap from "@/components/roadmap/search-roadmap";
-import CommunityRoadmapList from "@/components/roadmap/roadmap-community-list";
+import CommunityRoadmapList from "@/components/roadmap/community-roadmap";
 
 export default function CommunityRoadmap() {
   return (

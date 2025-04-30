@@ -1,6 +1,6 @@
 import config from "@/lib/config";
 import { APIService } from "@/lib/services/api.service";
-import { ListRoadmapsOutput, GenerateRoadmapOutput } from "@/types/api-roadmap";
+import { ListRoadmapsOutput, GenerateRoadmapOutput, GetRoadmapOutput } from "@/types/api-roadmap";
 
 export class RoadmapService extends APIService {
   constructor() {
@@ -12,10 +12,19 @@ export class RoadmapService extends APIService {
   }
 
   async listUserRoadmap() {
-    return this.get<ListRoadmapsOutput>("/profile/roadmaps").then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>("/profile/roadmaps").then(
+      (res) => res?.data
+    );
   }
 
   async generateRoadmap(data) {
-    return this.post<GenerateRoadmapOutput>("/roadmaps", data).then((res) => res?.data);
-  } 
+    return this.post<GenerateRoadmapOutput>("/roadmaps", data).then(
+      (res) => res?.data
+    );
+  }
+
+  async getRoadmapBySlug(slug: string) {
+    const response = await this.get<GetRoadmapOutput>(`/roadmaps/${slug}`);
+    return response.data;
+  }
 }

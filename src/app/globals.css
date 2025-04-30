@@ -72,9 +72,9 @@
 
 body {
   font-family: var(--font-satoshi);
-  /* background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3e%3cdefs%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' x='1' y='1' fill='none' stroke='rgba(75, 124, 232, 0.2)' stroke-width='1' stroke-dasharray='6, 6'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3e%3cdefs%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' x='1' y='1' fill='none' stroke='rgba(75, 124, 232, 0.1)' stroke-width='1' stroke-dasharray='6, 6'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)'/%3e%3c/svg%3e");
   background-size: 80px 80px;
-  background-position: -0.5px; */
+  background-position: -0.5px;
 }
 
 /* body::after {
@@ -218,4 +218,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Input type number spinner removal */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
