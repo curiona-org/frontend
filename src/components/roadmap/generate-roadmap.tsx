@@ -1,14 +1,18 @@
 import React from "react";
 
-const RoadmapInput = () => {
+interface GenerateRoadmapProps {
+  onTopicChange: (value: string) => void;
+}
+
+const GenerateRoadmap: React.FC<GenerateRoadmapProps> = ({ onTopicChange }) => {
   return (
     <div className="relative w-full">
       <input
         type="text"
         placeholder="Type here to generate your roadmap"
-        className="w-full h-[83px] rounded-lg dashedBorder bg-white px-5 py-7 text-gray-700 text-mobile-heading-4-regular md:text-heading-4-regular focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
+        onChange={(e) => onTopicChange(e.target.value)}
+        className="w-full h-[83px] shadow-lg rounded-lg dashedBorder bg-white px-5 py-7 text-gray-700 text-mobile-heading-4-regular md:text-heading-4-regular focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
       />
-
       <button className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg bg-blue-500 p-3 text-white hover:bg-blue-900 focus:outline-none transition-transform duration-300 ease-out hover:scale-105 active:scale-95">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,4 +28,4 @@ const RoadmapInput = () => {
   );
 };
 
-export default RoadmapInput;
+export default GenerateRoadmap;

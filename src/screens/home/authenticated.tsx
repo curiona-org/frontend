@@ -1,13 +1,14 @@
 "use client";
+import { useState } from "react";
 import ButtonSignOut from "@/components/button-sign-out";
 import { useAuth } from "@/providers/auth-provider";
-import RoadmapList from "@/components/roadmap/roadmap-list";
-import GenerateRoadmap from "@/components/roadmap/generate.roadmap";
-// import dayjs from "dayjs";
-// import Image from "next/image";
+import RoadmapList from "@/components/roadmap/user-roadmap-list";
+import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
+import PersonalizeRoadmap from "@/screens/personalization/personalize-roadmap";
 
 export default function HomeAuthenticated() {
   const { session } = useAuth();
+  const [topic, setTopic] = useState("");
 
   return (
     <div className="justify-center min-h-screen px-6 lg:px-40 py-32">
@@ -23,9 +24,16 @@ export default function HomeAuthenticated() {
             Create a personalized roadmap that helps you learn new things
             without the hassle.
           </p>
-          <GenerateRoadmap />
+          <GenerateRoadmap onTopicChange={setTopic} />
         </div>
 
+        {topic && (
+          <div className="flex flex-col">
+            <PersonalizeRoadmap topic={topic} />
+          </div>
+        )}
+
+        {/* Tetap tampilkan RoadmapList dan SignOut button */}
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <h4 className="font-satoshi text-heading-4-regular">
@@ -56,35 +64,5 @@ export default function HomeAuthenticated() {
         <ButtonSignOut />
       </div>
     </div>
-    // <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-    //   <Image
-    //     src={session?.user.avatar as string}
-    //     alt='Roadmap Generator Logo'
-    //     width={200}
-    //     height={200}
-    //     className='rounded-full'
-    //   />
-    //   <span className='text-lg'>
-    //     <span className='text-gray-500'>Name: </span>
-    //     <span className='font-bold text-black'>{session?.user.name}</span>
-    //   </span>
-    //   <span className='text-lg'>
-    //     <span className='text-gray-500'>Email: </span>
-    //     <span className='font-bold text-black'>{session?.user.email}</span>
-    //   </span>
-    //   <span className='text-lg'>
-    //     <span className='text-gray-500'>ID: </span>
-    //     <span className='font-bold text-black'>{session?.user.id}</span>
-    //   </span>
-    //   <span className='text-lg'>
-    //     <span className='text-gray-500'>Access Token Expires At: </span>
-    //     <span className='font-bold text-black'>
-    //       {dayjs(session?.tokens.access_token_expires_at).format(
-    //         "dddd, d MMMM YYYY HH:mm:ss"
-    //       )}
-    //     </span>
-    //   </span>
-      // <ButtonSignOut />
-    // </div>
   );
 }

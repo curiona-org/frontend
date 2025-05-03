@@ -69,7 +69,7 @@ export default function SignInPage() {
   return (
     <>
       <Toast ref={toastRef} />
-      <div className="flex items-center justify-center min-h-screen px-6 py-28 ">
+      <div className="flex items-center justify-center min-h-screen px-6 py-28">
         <div className="dashedBorder p-5 shadow-lg  flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
           <h1 className="text-mobile-display-2 md:text-display-2">Sign In</h1>
           <p className="text-mobile-body-1-regular md:text-body-1-regular">
