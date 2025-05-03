@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ButtonSignOut from "@/components/button-sign-out";
 import { useAuth } from "@/providers/auth-provider";
-import RoadmapList from "@/components/roadmap/roadmap-list";
+import RoadmapList from "@/components/roadmap/user-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import PersonalizeRoadmap from "@/screens/personalization/personalize-roadmap";
 

@@ -27,7 +27,7 @@ export interface RoadmapProps {
   updated_at: Date;
 }
 
-const RoadmapList = () => {
+const UserRoadmapList = () => {
   const [roadmaps, setRoadmaps] = useState<RoadmapProps[]>([]);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const RoadmapList = () => {
   useEffect(() => {
     const fetchRoadmaps = async () => {
       try {
-        const result = await roadmapService.listCommunityRoadmap();
+        const result = await roadmapService.listUserRoadmap();
         console.log("API Response:", result);
 
         if (result?.data?.items) {
@@ -78,4 +78,4 @@ const RoadmapList = () => {
   );
 };
 
-export default RoadmapList;
+export default UserRoadmapList;

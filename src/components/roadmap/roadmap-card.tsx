@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RoadmapProps } from "@/components/roadmap/roadmap-list";
+import { RoadmapProps } from "@/components/roadmap/user-roadmap-list";
 import Link from "next/link";
 
 interface RoadmapCardProps {

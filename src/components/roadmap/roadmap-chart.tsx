@@ -12,6 +12,7 @@ import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useState } from "react";
 import RoadmapNode from "./roadmap-nodes";
 import Topic from "@/types/topic";
+import { Dialog } from "radix-ui";
 
 interface ReactFlowProps {
   roadmap: GetRoadmapOutput;
@@ -25,86 +26,130 @@ function splitSubtopicsEvenly(subtopics: any[]) {
   };
 }
 
-function generateFlowData(topics: Topic[]) {
+function generateFlowData(roadmap: GetRoadmapOutput) {
   const nodes: any[] = [];
   const edges: any[] = [];
-  let yOffset = 0;
-  let previousTopicId: string | null = null;
 
-  topics.forEach((topic: Topic, index: number) => {
+  const topicSpacingY = 200;
+  const subtopicOffsetX = 400; // Left-right offset for subtopics
+  const subtopicSpacingY = 80; // Vertical spacing for subtopics
+
+  const titleNodeId = "roadmap-title-node";
+  nodes.push({
+    id: titleNodeId,
+    position: { x: 0, y: 0 },
+    data: { label: roadmap.title, isTitleNode: true },
+    type: "roadmapNode",
+  });
+
+  let previousTopicId = titleNodeId;
+
+  roadmap.topics.forEach((topic: Topic, index: number) => {
     const topicId = `topic-${index}`;
     const { left, right } = splitSubtopicsEvenly(topic.subtopics || []);
+    const topicY = (index + 1) * topicSpacingY;
 
-    const maxSubtopics = Math.max(left.length, right.length);
-    const subtopicsHeight = (maxSubtopics - 1) * 80;
-    const topicY = yOffset + subtopicsHeight / 2;
+    // Menambahkan node topik dengan validasi topik terakhir
+    nodes.push({
+      id: topicId,
+      position: { x: 0, y: topicY },
+      data: {
+        label: topic.title,
+        isLastTopic: index === roadmap.topics.length - 1,
+      },
+      type: "roadmapNode",
+      // targetPosition: index === 0 ? undefined : Position.Top,
+      // sourcePosition:
+      //   index === roadmap.topics.length - 1 ? undefined : Position.Bottom,
+    });
 
     if (previousTopicId) {
       edges.push({
         id: `${previousTopicId}->${topicId}`,
         source: previousTopicId,
         target: topicId,
-        sourceHandle: "topic-previous",
-        targetHandle: "topic-current",
+        // sourceHandle:
+        //   previousTopicId === titleNodeId ? "roadmap-title" : "topic-previous",
+        // targetHandle:
+        //   previousTopicId === titleNodeId ? undefined : "topic-current",
+        style: { stroke: "#4b7ce8", strokeWidth: 2 },
       });
     }
     previousTopicId = topicId;
 
-    // Push topic node
-    nodes.push({
-      id: topicId,
-      position: { x: 0, y: topicY },
-      data: { label: topic.title },
-      type: "roadmapNode",
-      targetPosition: Position.Top,
-      sourcePosition: Position.Bottom,
-    });
+    const isLastTopic = index === roadmap.topics.length - 1;
 
-    // Left subtopics
-    left.forEach((sub: any, subIdx: number) => {
+    left.forEach((sub, subIdx) => {
       const subId = `${topicId}-left-${subIdx}`;
-      const subY = yOffset + subIdx * 80;
+      const subY =
+        topicY -
+        ((left.length - 1) * subtopicSpacingY) / 2 +
+        subIdx * subtopicSpacingY;
+
       nodes.push({
         id: subId,
-        position: { x: -400, y: subY },
-        data: { label: sub.title },
+        position: { x: -subtopicOffsetX, y: subY },
+        data: {
+          label: sub.title,
+          isLeftSubtopic: true,
+          isRightSubtopic: false,
+          isConnectable: false,
+        },
         type: "roadmapNode",
-        targetPosition: Position.Right,
-        sourcePosition: Position.Left,
       });
 
       edges.push({
         id: `e-${topicId}-${subId}`,
         source: topicId,
         target: subId,
-        sourceHandle: "topic-left",
+        sourceHandle: isLastTopic ? "lastTopic-left" : "topic-left", // untuk subtopik kiri
         targetHandle: "subtopic-left",
+        style: { stroke: "#4b7ce8", strokeWidth: 2 },
       });
     });
 
-    // Right subtopics
-    right.forEach((sub: any, subIdx: number) => {
+    right.forEach((sub, subIdx) => {
       const subId = `${topicId}-right-${subIdx}`;
-      const subY = yOffset + subIdx * 80;
+      const subY =
+        topicY -
+        ((right.length - 1) * subtopicSpacingY) / 2 +
+        subIdx * subtopicSpacingY;
+
       nodes.push({
         id: subId,
-        position: { x: 400, y: subY },
-        data: { label: sub.title },
+        position: { x: subtopicOffsetX, y: subY },
+        data: {
+          label: sub.title,
+          isLeftSubtopic: false,
+          isRightSubtopic: true,
+          isConnectable: false,
+        },
         type: "roadmapNode",
-        targetPosition: Position.Left,
-        sourcePosition: Position.Right,
+        // targetPosition: Position.Left,
+        // sourcePosition: Position.Right,
+      });
+
+      console.log("Subtopic kanan", {
+        id: subId,
+        position: { x: subtopicOffsetX, y: subY },
+        data: {
+          label: sub.title,
+          isLeftSubtopic: false,
+          isRightSubtopic: true,
+          isConnectable: false,
+        },
+        type: "roadmapNode",
       });
 
       edges.push({
         id: `e-${topicId}-${subId}`,
         source: topicId,
         target: subId,
-        sourceHandle: "topic-right",
+        sourceHandle: isLastTopic ? "lastTopic-right" : "topic-right", // untuk subtopik kanan
         targetHandle: "subtopic-right",
+        style: { stroke: "#4b7ce8", strokeWidth: 2 },
       });
     });
-
-    yOffset += subtopicsHeight + 150;
   });
 
   return { nodes, edges };
@@ -114,7 +159,7 @@ const nodeTypes = { roadmapNode: RoadmapNode };
 
 const RoadmapChart = (props: ReactFlowProps) => {
   const { nodes: initialNodes, edges: initialEdges } = generateFlowData(
-    props.roadmap.topics
+    props.roadmap
   );
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -126,7 +171,7 @@ const RoadmapChart = (props: ReactFlowProps) => {
 
   const proOptions = { hideAttribution: true };
   return (
-    <div style={{ width: "100%", height: "100vh" }} className="mt-10rounded-md">
+    <div style={{ width: "100%", height: "100vh" }} className="">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -134,7 +179,6 @@ const RoadmapChart = (props: ReactFlowProps) => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        // }}
         nodeTypes={nodeTypes}
         connectionLineType={ConnectionLineType.SmoothStep}
         panOnDrag={false}

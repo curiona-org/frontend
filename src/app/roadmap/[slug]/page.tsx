@@ -2,8 +2,6 @@ import React from "react";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { notFound } from "next/navigation";
 import RoadmapChart from "@/components/roadmap/roadmap-chart";
-import { ReactFlow, Position } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
 
 const roadmapService = new RoadmapService();
 
