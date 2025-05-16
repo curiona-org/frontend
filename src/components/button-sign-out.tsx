@@ -1,21 +1,20 @@
 "use client";
 import Button from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 export default function ButtonSignOut() {
   const { isLoggedIn, signOut } = useAuth();
+  const router = useRouter(); // Inisialisasi useRouter untuk navigasi
+
+  const handleSignOut = async () => {
+    await signOut(); // Lakukan sign out
+    router.push("/"); // Redirect ke halaman home setelah sign out
+  };
 
   if (!isLoggedIn) {
     return null;
   }
 
-  return (
-    // temporary style button
-    <Button
-      onClick={signOut}
-      className='w-32 py-3 bg-red-500 hover:bg-red-900 text-white-500 rounded-lg mt-4'
-    >
-      Sign Out
-    </Button>
-  );
+  return <Button onClick={handleSignOut}>Sign Out</Button>;
 }

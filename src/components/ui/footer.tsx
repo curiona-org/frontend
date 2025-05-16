@@ -7,7 +7,7 @@ import Logo from "/public/logo-white.svg";
 const Footer = () => {
   const pathname = usePathname();
 
-  const hideFooterPages = ["/sign-in", "/sign-up"];
+  const hideFooterPages = ["/sign-in", "/sign-up", "/personalization"];
   if (hideFooterPages.includes(pathname)) {
     return null;
   }

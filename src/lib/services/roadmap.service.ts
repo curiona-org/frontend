@@ -1,6 +1,11 @@
 import config from "@/lib/config";
 import { APIService } from "@/lib/services/api.service";
-import { ListRoadmapsOutput, GenerateRoadmapOutput, GetRoadmapOutput } from "@/types/api-roadmap";
+import {
+  ListRoadmapsOutput,
+  GenerateRoadmapOutput,
+  GetRoadmapOutput,
+} from "@/types/api-roadmap";
+import { GetTopicBySlugOutput } from "@/types/api-topic";
 
 export class RoadmapService extends APIService {
   constructor() {
@@ -26,5 +31,24 @@ export class RoadmapService extends APIService {
   async getRoadmapBySlug(slug: string) {
     const response = await this.get<GetRoadmapOutput>(`/roadmaps/${slug}`);
     return response.data;
+  }
+
+  async getRoadmapTopicBySlug(slug: string) {
+    const response = await this.get<GetTopicBySlugOutput>(
+      `/roadmaps/topic/${slug}`
+    );
+    return response.data;
+  }
+
+  async markTopicAsFinished(slug: string) {
+    return this.patch(`/roadmaps/topic/${slug}/finish`).then(
+      (res) => res?.data
+    );
+  }
+
+  async markTopicAsIncomplete(slug: string) {
+    return this.patch(`/roadmaps/topic/${slug}/incomplete`).then(
+      (res) => res?.data
+    );
   }
 }

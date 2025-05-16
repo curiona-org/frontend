@@ -2,9 +2,10 @@
 import { useState } from "react";
 import ButtonSignOut from "@/components/button-sign-out";
 import { useAuth } from "@/providers/auth-provider";
-import RoadmapList from "@/components/roadmap/user-roadmap-list";
+import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import PersonalizeRoadmap from "@/screens/personalization/personalize-roadmap";
+import Link from "next/link";
 
 export default function HomeAuthenticated() {
   const { session } = useAuth();
@@ -24,7 +25,7 @@ export default function HomeAuthenticated() {
             Create a personalized roadmap that helps you learn new things
             without the hassle.
           </p>
-          <GenerateRoadmap onTopicChange={setTopic} />
+          <GenerateRoadmap />
         </div>
 
         {topic && (
@@ -37,31 +38,32 @@ export default function HomeAuthenticated() {
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <h4 className="font-satoshi text-heading-4-regular">
-              Type here to generate your roadmap
+              Or check out roadmaps others have created
             </h4>
-            <span className="font-satoshi text-body-1-regular flex items-center gap-1 cursor-pointer hover:text-blue-500">
-              See More
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m10 17l5-5m0 0l-5-5"
-                />
-              </svg>
-            </span>
+            <Link href="/community">
+              <span className="font-satoshi text-body-1-regular flex items-center gap-1 cursor-pointer hover:text-blue-500">
+                See More
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m10 17l5-5m0 0l-5-5"
+                  />
+                </svg>
+              </span>
+            </Link>
           </div>
 
-          <RoadmapList />
+          <UserRoadmapList />
         </div>
-        <ButtonSignOut />
       </div>
     </div>
   );

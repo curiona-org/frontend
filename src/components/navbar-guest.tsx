@@ -22,22 +22,17 @@ const NavigationBarGuest = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 5) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div
-      className={`fixed w-full px-6 lg:px-40 py-6 flex justify-between z-50 transition-all duration-300 ${
+      className={`fixed w-full px-6 lg:px-40 py-6 flex justify-between z-50 transition-all ease-out duration-300 ${
         isScrolled ? "bg-white-500 shadow-md" : "bg-transparent"
       }`}
     >

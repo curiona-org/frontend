@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { Progress } from "radix-ui";
 
 const roadmapService = new RoadmapService();
 
@@ -16,6 +18,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
     familiarity: "",
     duration: 0,
   });
+  const router = useRouter();
 
   const handleNext = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -64,7 +67,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       },
     };
 
-    console.log("Topic: ", topic)
+    console.log("Topic: ", topic);
 
     try {
       const response = await roadmapService.generateRoadmap(payload);
@@ -75,6 +78,11 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
       const result = response.data;
       console.log("Success:", result);
+      if (result?.slug) {
+        router.push(`/roadmap/${result.slug}`);
+      } else {
+        alert("Roadmap generated, but no slug was returned.");
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -85,23 +93,49 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
   }, [formData]);
 
   return (
-    <div className="justify-center px-6 lg:px-40 py-40">
-      <div className="flex flex-wrap gap-4 items-center text-mobile-display-1 md:text-display-1">
-        <h1>Personalize Your</h1>
-        <span className="text-blue-500 dashedBorder px-5 py-1">Roadmap</span>
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className=" p-6 bg-white shadow rounded-xl space-y-6"
-      >
-        {/* Step 1: Time Availability */}
+    <div className="w-full bg-white rounded-xl shadow-xl px-4 py-8 space-y-10">
+      {/* Header */}
+      <div className="flex flex-wrap items-center gap-2">
+        <h1 className="text-display-1 font-bold text-left">Personalize Your</h1>
         {step === 1 && (
-          <div className="space-y-4">
-            <p className="text-blue-500 text-heading-3">
-              Select your available time to create a learning plan that fits
-              your schedule.
+          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
+            ⏳ Time availability
+          </span>
+        )}
+        {step === 2 && (
+          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
+            🤯 Familiarity
+          </span>
+        )}
+        {step === 3 && (
+          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
+            📅 Learning Duration
+          </span>
+        )}
+      </div>
+
+      {/* Progress Bar */}
+      <Progress.Root
+        className="w-full h-[5px] bg-gray-200 rounded-full overflow-hidden"
+        value={step}
+        max={3}
+      >
+        <Progress.Indicator
+          className="bg-blue-500 h-full transition-all duration-500"
+          style={{ width: `${(step / 3) * 100}%` }}
+        />
+      </Progress.Root>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-10 text-left">
+        {/* Step 1 */}
+        {step === 1 && (
+          <div className="space-y-6">
+            <p className="text-heading-4">
+              How much time can you learn each day or week? We’ll fit the plan
+              to your schedule 😌
             </p>
-            <div className="grid grid-cols-3 gap-5 h-24">
+            <div className="grid grid-cols-3 gap-4">
               <input
                 type="number"
                 value={
@@ -116,59 +150,72 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                       e.target.value === "" ? 0 : +e.target.value,
                   })
                 }
-                className="border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 text-center"
+                className="dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
                 placeholder="0"
               />
-              <input
-                type="text"
-                value="Hour"
-                disabled
-                className="border border-gray-300 rounded-lg p-2 text-center bg-gray-100 text-gray-500"
-              />
-              <input
-                type="text"
-                value="Per Day"
-                disabled
-                className="border border-gray-300 rounded-lg p-2 text-center bg-gray-100 text-gray-500"
-              />
+              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
+                Hour
+              </div>
+              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
+                Per day
+              </div>
             </div>
           </div>
         )}
 
-        {/* Step 2: Familiarity */}
+        {/* Step 2 */}
         {step === 2 && (
-          <div className="space-y-4">
-            <p className="text-blue-500 text-heading-3">
-              How familiar are you with the topic?
+          <div className="space-y-6">
+            <p className="text-heading-4">
+              Tell us how well you know the topic—so we can match the content to
+              your skill level 😉
             </p>
-            <div className="flex gap-5 h-24">
-              {["beginner", "intermediate", "advanced"].map((level) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                {
+                  label: "beginner",
+                  emoji: "🥱",
+                  text: "I'm new to this topic.",
+                },
+                {
+                  label: "intermediate",
+                  emoji: "🤓",
+                  text: "I know the basics.",
+                },
+                {
+                  label: "advanced",
+                  emoji: "😎",
+                  text: "I'm confident and want deeper insights.",
+                },
+              ].map(({ label, emoji, text }) => (
                 <button
                   type="button"
-                  key={level}
-                  className={`flex-1 rounded-lg border px-4 py-2 font-medium transition ${
-                    formData.familiarity === level
+                  key={label}
+                  className={`rounded-lg border p-4 text-left text-sm transition-all ${
+                    formData.familiarity === label
                       ? "bg-blue-500 text-white-500 border-blue-500"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-transparent hover:ring hover:ring-blue-500"
+                      : "bg-white text-gray-800 border-gray-300 hover:border-blue-400 hover:ring"
                   }`}
                   onClick={() =>
-                    setFormData({ ...formData, familiarity: level })
+                    setFormData({ ...formData, familiarity: label })
                   }
                 >
-                  {level}
+                  <span className="text-lg mr-2">{emoji}</span>
+                  {text}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Step 3: Duration */}
+        {/* Step 3 */}
         {step === 3 && (
-          <div className="space-y-4">
-            <p className="text-blue-500 text-heading-3">
-              Target Learning Duration
+          <div className="space-y-6">
+            <p className="text-heading-4">
+              Set how long you want your learning journey to take—short and
+              focused or paced and steady 🧘
             </p>
-            <div className="grid grid-cols-2 gap-5 h-24">
+            <div className="grid grid-cols-2 gap-4">
               <input
                 type="number"
                 value={formData.duration === 0 ? "" : formData.duration}
@@ -178,49 +225,56 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                     duration: e.target.value === "" ? 0 : +e.target.value,
                   })
                 }
-                className="border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 text-center"
-                placeholder="0"
+                className="border border-gray-300 rounded-lg px-4 py-3 text-center focus:ring focus:ring-blue-500"
+                placeholder="1"
               />
-
-              <input
-                type="text"
-                value="Month"
+              <select
                 disabled
-                className="border border-gray-300 rounded-lg p-2 text-center bg-gray-100 text-gray-500"
-              />
+                className="border border-gray-300 bg-gray-100 text-gray-500 rounded-lg px-4 py-3"
+              >
+                <option>Week</option>
+              </select>
             </div>
           </div>
         )}
 
-        {/* Buttons */}
-        <div className="flex gap-10 justify-between pt-4 h-24">
-          {step > 1 ? (
+        {/* Navigation Buttons */}
+        <div className="grid grid-cols-2 gap-4 pt-4">
+          {step === 1 ? (
             <button
-              type="button"
-              onClick={handleBack}
-              className="w-full rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
-            >
-              Back
-            </button>
-          ) : (
-            <div />
-          )}
-          {step < 3 ? (
-            <button
-              key={`next-${step}`}
               type="button"
               onClick={handleNext}
-              className="w-full rounded-lg bg-blue-500 text-white-500 hover:bg-blue-900 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+              className="col-span-2 w-full bg-blue-500 text-white-500 rounded-lg py-3 hover:bg-blue-700 transition"
             >
               Next
             </button>
           ) : (
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-green-700 text-white-500 hover:bg-green-900 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
-            >
-              Submit
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={handleBack}
+                className="w-full rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 py-3"
+              >
+                Back
+              </button>
+
+              {step < 3 ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="w-full bg-blue-500 text-white-500 rounded-lg py-3 hover:bg-blue-700 transition"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full bg-green-600 text-white rounded-lg py-3 hover:bg-green-800 transition"
+                >
+                  Generate My Learning Plan
+                </button>
+              )}
+            </>
           )}
         </div>
       </form>

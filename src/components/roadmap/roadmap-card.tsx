@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RoadmapProps } from "@/components/roadmap/user-roadmap-list";
 import Link from "next/link";
+import { Progress } from "radix-ui";
 
 interface RoadmapCardProps {
   roadmap: RoadmapProps;
@@ -9,7 +10,9 @@ interface RoadmapCardProps {
 const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
   const [saved, setSaved] = useState(false);
 
-  const handleClick = () => {
+  const handleClickSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setSaved(!saved);
   };
 
@@ -19,7 +22,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
         {/* Title */}
         <div className="flex justify-between items-center gap-4">
           <div className="flex-grow">
-            <h3 className="text-lg font-semibold text-gray-800 truncate text-wrap">
+            <h3 className="text-heading-4-bold font-semibold truncate text-wrap">
               {roadmap.title.length > 30
                 ? roadmap.title.slice(0, 50) + "..."
                 : roadmap.title}
@@ -27,10 +30,10 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
           </div>
           <div className="shrink-0">
             <button
-              onClick={handleClick}
+              onClick={handleClickSave}
               className={`${
                 saved
-                  ? "bg-blue-500 text-white"
+                  ? "bg-blue-500 text-white-500"
                   : "text-gray-400 hover:text-blue-500"
               } transition-all ease-out duration-300 rounded-lg`}
             >
@@ -38,7 +41,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
                 className={`flex items-center gap-1 border ${
                   saved
                     ? "border-blue-500"
-                    : "border-gray-200 hover:border-blue-500"
+                    : "border-[#E5E5E5] hover:border-blue-500"
                 } rounded-lg p-2`}
               >
                 <span role="img" aria-label="folder">
@@ -61,7 +64,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-body-2">
           {roadmap.description.length > 60
             ? roadmap.description.slice(0, 80) + "..."
             : roadmap.description}
@@ -74,7 +77,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
         </div>
 
         {/* Topics */}
-        <div className="flex items-center justify-between text-sm text-gray-700 my-2">
+        <div className="flex items-center justify-between text-body-2">
           <div className="flex items-center gap-1">
             <span role="img" aria-label="lightbulb">
               💡
@@ -91,7 +94,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
         </div>
 
         {/* Skill Level */}
-        <div className="flex items-center justify-between text-sm text-gray-700">
+        <div className="flex items-center justify-between text-body-2">
           <div className="flex items-center gap-1">
             <span role="img" aria-label="bicep">
               💪
@@ -106,6 +109,41 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
                 .slice(1)
                 .toLowerCase()}
           </span>
+        </div>
+
+        {/* Divider */}
+        <div className="relative my-4 h-[1px]">
+          <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+          <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+
+        <div className="text-body-2">
+          {/* Progress Learning Section */}
+          <div className="flex items-center justify-between text-body-2">
+            <div className="flex items-center gap-1">
+              <span role="img" aria-label="runningperson">
+                🏃
+              </span>
+              <span>Learning Progress</span>
+            </div>
+            <span>{`0/${roadmap.total_topics}`} Topics Completed</span>
+          </div>
+
+          {/* Radix Progress Bar */}
+          <Progress.Root
+            className="relative pt-4"
+            value={0} // Set to 0 for now as there is no completed topic
+            max={roadmap.total_topics} // Total topics from API
+          >
+            <Progress.Indicator
+              className="bg-blue-600 h-2 rounded-full"
+              style={{
+                width: `${
+                  ((roadmap.finished_topics || 0) / roadmap.total_topics) * 100
+                }%`,
+              }}
+            />
+          </Progress.Root>
         </div>
       </div>
     </Link>
