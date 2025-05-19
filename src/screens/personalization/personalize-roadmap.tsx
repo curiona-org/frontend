@@ -15,8 +15,10 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     timeAvailability: 0,
+    timeUnit: "hours" as "hours" | "minutes",
     familiarity: "",
     duration: 0,
+    durationUnit: "months" as "months" | "weeks" | "days",
   });
   const router = useRouter();
 
@@ -57,11 +59,11 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       personalization_options: {
         daily_time_availability: {
           value: Number(formData.timeAvailability),
-          unit: "hours",
+          unit: formData.timeUnit,
         },
         total_duration: {
           value: Number(formData.duration),
-          unit: "months",
+          unit: formData.durationUnit,
         },
         skill_level: formData.familiarity,
       },
@@ -153,10 +155,21 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                 className="dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
                 placeholder="0"
               />
-              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
-                Hour
-              </div>
-              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
+              <select
+                value={formData.timeUnit}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    timeUnit: e.target.value as "hours" | "minutes",
+                  })
+                }
+                className="flex items-center justify-center dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
+              >
+                <option value="hours">Hour(s)</option>
+                <option value="minutes">Minute(s)</option>
+              </select>
+              {/* <div className=""></div> */}
+              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 text-mobile-body-1-medium lg:text-body-1-medium rounded-lg px-4 py-3">
                 Per day
               </div>
             </div>
@@ -191,7 +204,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                 <button
                   type="button"
                   key={label}
-                  className={`rounded-lg border p-4 text-left text-sm transition-all ${
+                  className={`rounded-lg border p-4 text-sm transition-all flex items-center justify-center text-center ${
                     formData.familiarity === label
                       ? "bg-blue-500 text-white-500 border-blue-500"
                       : "bg-white text-gray-800 border-gray-300 hover:border-blue-400 hover:ring"
@@ -225,14 +238,22 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                     duration: e.target.value === "" ? 0 : +e.target.value,
                   })
                 }
-                className="border border-gray-300 rounded-lg px-4 py-3 text-center focus:ring focus:ring-blue-500"
+                className="border border-gray-300 rounded-lg px-4 py-3 text-center focus:ring focus:ring-blue-500 w-full"
                 placeholder="1"
               />
               <select
-                disabled
-                className="border border-gray-300 bg-gray-100 text-gray-500 rounded-lg px-4 py-3"
+                value={formData.durationUnit}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    durationUnit: e.target.value as "months" | "weeks" | "days",
+                  })
+                }
+                className="dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
               >
-                <option>Week</option>
+                <option value="weeks">Week(s)</option>
+                <option value="days">Day(s)</option>
+                <option value="months">Month(s)</option>
               </select>
             </div>
           </div>

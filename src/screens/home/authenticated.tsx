@@ -1,15 +1,27 @@
 "use client";
-import { useState } from "react";
-import ButtonSignOut from "@/components/button-sign-out";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/providers/auth-provider";
+import { RoadmapService } from "@/lib/services/roadmap.service";
 import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
+import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import PersonalizeRoadmap from "@/screens/personalization/personalize-roadmap";
 import Link from "next/link";
 
+const roadmapService = new RoadmapService();
+
 export default function HomeAuthenticated() {
   const { session } = useAuth();
   const [topic, setTopic] = useState("");
+  const [userHasRoadmaps, setUserHasRoadmaps] = useState(false);
+
+  useEffect(() => {
+    const checkUserRoadmaps = async () => {
+      const roadmaps = await roadmapService.listUserRoadmap();
+      setUserHasRoadmaps(roadmaps.data.items.length > 0);
+    };
+    checkUserRoadmaps();
+  }, [session]);
 
   return (
     <div className="justify-center min-h-screen px-6 lg:px-40 py-32">
@@ -34,10 +46,19 @@ export default function HomeAuthenticated() {
           </div>
         )}
 
+        {userHasRoadmaps && (
+          <div className="flex flex-col">
+            <h4 className="text-heading-4-regular">
+              Your Recently Generated Roadmap
+            </h4>
+            <UserRoadmapList />
+          </div>
+        )}
+
         {/* Tetap tampilkan RoadmapList dan SignOut button */}
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
-            <h4 className="font-satoshi text-heading-4-regular">
+            <h4 className="text-heading-4-regular">
               Or check out roadmaps others have created
             </h4>
             <Link href="/community">
@@ -62,7 +83,7 @@ export default function HomeAuthenticated() {
             </Link>
           </div>
 
-          <UserRoadmapList />
+          <CommunityRoadmapList />
         </div>
       </div>
     </div>

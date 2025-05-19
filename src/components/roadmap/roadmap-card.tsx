@@ -2,6 +2,9 @@ import { useState } from "react";
 import { RoadmapProps } from "@/components/roadmap/user-roadmap-list";
 import Link from "next/link";
 import { Progress } from "radix-ui";
+import { RoadmapService } from "@/lib/services/roadmap.service";
+
+const roadmapService = new RoadmapService();
 
 interface RoadmapCardProps {
   roadmap: RoadmapProps;
@@ -9,17 +12,33 @@ interface RoadmapCardProps {
 
 const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleClickSave = (e: React.MouseEvent) => {
+  const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setSaved(!saved);
+
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      if (saved) {
+        await roadmapService.unbookmarkRoadmap(roadmap.slug);
+        setSaved(false);
+      } else {
+        await roadmapService.bookmarkRoadmap(roadmap.slug);
+        setSaved(true);
+      }
+    } catch (error) {
+      console.error("Failed to toggle bookmark:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Link href={`/roadmap/${roadmap.slug}`}>
       <div className="group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
-        {/* Title */}
         <div className="flex justify-between items-center gap-4">
           <div className="flex-grow">
             <h3 className="text-heading-4-bold font-semibold truncate text-wrap">
@@ -30,12 +49,14 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
           </div>
           <div className="shrink-0">
             <button
-              onClick={handleClickSave}
+              onClick={toggleSave}
+              disabled={loading}
               className={`${
                 saved
                   ? "bg-blue-500 text-white-500"
                   : "text-gray-400 hover:text-blue-500"
               } transition-all ease-out duration-300 rounded-lg`}
+              aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
             >
               <div
                 className={`flex items-center gap-1 border ${

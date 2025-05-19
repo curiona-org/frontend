@@ -51,4 +51,16 @@ export class RoadmapService extends APIService {
       (res) => res?.data
     );
   }
+
+  async listBookmarkedRoadmaps() {
+    return this.get(`/bookmarks`).then((res) => res?.data);
+  }
+
+  async bookmarkRoadmap(slug: string) {
+    return this.post(`/roadmaps/${slug}/bookmark`).then((res) => res?.data);
+  }
+
+  async unbookmarkRoadmap(slug: string) {
+    return this.delete(`/roadmaps/${slug}/bookmark`)
+  }
 }

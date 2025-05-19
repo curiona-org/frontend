@@ -7,39 +7,62 @@ import { usePathname } from "next/navigation"; // Mengimpor usePathname dari nex
 const roadmapService = new RoadmapService();
 
 export interface RoadmapProps {
-  created_at: Date;
-  description: string;
-  finished_topics: number;
   id: number;
-  personalization_options: {
-    daily_time_availability: {
-      unit: string;
-      value: number;
-    };
-    skill_level: string;
-    total_duration: {
-      unit: string;
-      value: number;
-    };
+  title: string;
+  slug: string;
+  description: string;
+  total_topics: number;
+  created_at: string;
+  updated_at: string;
+
+  progression: {
+    total_topics: number;
+    finished_topics: number;
+    completion_percentage: number;
+    is_finished: boolean;
+    finished_at: string;
+    created_at: string;
+    updated_at: string;
   };
 
-  slug: string;
-  title: string;
-  total_topics: number;
-  updated_at: Date;
+  personalization_options: {
+    daily_time_availability: {
+      value: number;
+      unit: string;
+    };
+    total_duration: {
+      value: number;
+      unit: string;
+    };
+    skill_level: string;
+    additional_info?: string;
+  };
+
+  creator: {
+    id: number;
+    method: string;
+    email: string;
+    name: string;
+    avatar: string;
+    is_suspended: boolean;
+    joined_at: string;
+  };
+
+  is_saved?: boolean;
 }
 
-const UserRoadmapList = () => {
+interface UserRoadmapListProps {
+  filter?: "all" | "onprogress" | "saved";
+}
+
+const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
+  filter = "all",
+}) => {
   const [roadmaps, setRoadmaps] = useState<RoadmapProps[]>([]);
-  const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6; // Menampilkan 6 roadmap per halaman (tergantung ukuran halaman dan jumlah card per baris)
+  const pageSize = 6;
   const totalPages = Math.ceil(roadmaps.length / pageSize);
-
-  // Menggunakan usePathname untuk mendapatkan path di dalam app directory
   const pathname = usePathname();
 
   const handlePageChange = (page: number) => {
@@ -59,26 +82,59 @@ const UserRoadmapList = () => {
     // Custom page logic for pagination
   };
 
+  const handleToggleSave = (slug: string, saved: boolean) => {
+    setRoadmaps((prev) =>
+      prev.map((r) =>
+        r.slug === slug
+          ? {
+              ...r,
+              is_saved: saved,
+            }
+          : r
+      )
+    );
+  };
+
   useEffect(() => {
     const fetchRoadmaps = async () => {
+      setLoading(true);
       try {
-        const result = await roadmapService.listUserRoadmap(); // Mendapatkan data roadmap
-        console.log("API Response:", result);
+        let result;
+        if (filter === "saved") {
+          result = await roadmapService.listBookmarkedRoadmaps();
+        } else {
+          result = await roadmapService.listUserRoadmap();
+        }
 
         if (result?.data?.items) {
-          setRoadmaps(result.data.items); // Menyimpan data roadmap
+          setRoadmaps(result.data.items);
         } else {
-          console.error("Items not found in response");
+          setRoadmaps([]);
         }
       } catch (error) {
+        setRoadmaps([]);
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); // Menghentikan loading setelah data selesai diambil
+        setLoading(false);
       }
     };
 
     fetchRoadmaps();
-  }, []);
+  }, [filter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
+  const filteredRoadmaps = roadmaps.filter((roadmap) => {
+    if (filter === "all") return true;
+    if (filter === "onprogress")
+      return (
+        roadmap.progression.finished_topics < roadmap.progression.total_topics
+      );
+    if (filter === "saved") return roadmap.is_saved === true; // pastikan ada di data
+    return true;
+  });
 
   // Membatasi hanya menampilkan roadmap yang sesuai dengan currentPage
   const limitedRoadmaps = roadmaps.slice(
@@ -100,12 +156,20 @@ const UserRoadmapList = () => {
       {/* Grid untuk menampilkan roadmap */}
       <div
         className={`grid ${
-          isProfilePage ? "grid-cols-2" : "grid-cols-3"
+          pathname === "/profile" ? "grid-cols-2" : "grid-cols-3"
         } gap-6 mt-6`}
       >
         {limitedRoadmaps.length > 0 ? (
           limitedRoadmaps.map((roadmap) => (
-            <RoadmapCard key={roadmap.id} roadmap={roadmap} />
+            <RoadmapCard
+              key={roadmap.id}
+              roadmap={{
+                ...roadmap,
+                total_topics: roadmap.progression.total_topics,
+                finished_topics: roadmap.progression.finished_topics,
+              }}
+              onToggleSave={handleToggleSave}
+            />
           ))
         ) : (
           <p className="text-center col-span-full text-gray-500">

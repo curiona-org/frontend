@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 
@@ -23,26 +24,28 @@ export default function HomeGuest() {
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <h4 className="text-mobile-heading-4-regular md:text-heading-4-regular">
-              Type here to generate your roadmap
+              Check out roadmaps others have created
             </h4>
-            <span className="text-mobile-body-1-regular md:text-body-1-regular flex items-center gap-1 cursor-pointer hover:text-blue-500">
-              See More
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m10 17l5-5m0 0l-5-5"
-                />
-              </svg>
-            </span>
+            <Link href="/community">
+              <span className="font-satoshi text-body-1-regular flex items-center gap-1 cursor-pointer hover:text-blue-500">
+                See More
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m10 17l5-5m0 0l-5-5"
+                  />
+                </svg>
+              </span>
+            </Link>
           </div>
 
           <CommunityRoadmapList />

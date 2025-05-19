@@ -12,6 +12,7 @@ type AuthContextType = {
   authError: string | null;
   authIsLoading: boolean;
   isLoggedIn: boolean;
+  setName: (name: string) => void;
   signUp: (params: {
     name: string;
     email: string;
@@ -33,6 +34,7 @@ const AuthContext = createContext<AuthContextType>({
   authError: null,
   authIsLoading: true,
   isLoggedIn: false,
+  setName: () => {},
   signUp: async () => {},
   signIn: async () => {},
   signInGoogle: async () => {},
@@ -65,6 +67,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
     return () => clearInterval(checkTokenInterval);
   }, [session]);
+
+  const setName = (name: string) => {
+    if (!session) return;
+    setSession({
+      ...session,
+      user: {
+        ...session.user,
+        name,
+      },
+    });
+  };
 
   // Register new user
   const signUp = async (params: {
@@ -178,6 +191,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         authError,
         authIsLoading: isLoading,
         isLoggedIn,
+        setName,
         signUp,
         signIn,
         signInGoogle,
