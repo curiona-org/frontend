@@ -12,14 +12,21 @@ export class RoadmapService extends APIService {
     super(config.BACKEND_URL);
   }
 
-  async listCommunityRoadmap() {
-    return this.get<ListRoadmapsOutput>("/roadmaps").then((res) => res?.data);
+  async listCommunityRoadmap(
+    page = 1,
+    limit = 9,
+    search = "",
+    orderBy: "oldest" | "newest" = "oldest"
+  ) {
+    return this.get<ListRoadmapsOutput>(
+      `/roadmaps?page=${page}&limit=${limit}&search=${search}&order_by=${orderBy}`
+    ).then((res) => res?.data);
   }
 
-  async listUserRoadmap() {
-    return this.get<ListRoadmapsOutput>("/profile/roadmaps").then(
-      (res) => res?.data
-    );
+  async listUserRoadmap(page = 1, limit = 6) {
+    return this.get<ListRoadmapsOutput>(
+      `/profile/roadmaps?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
   }
 
   async generateRoadmap(data) {
@@ -61,6 +68,6 @@ export class RoadmapService extends APIService {
   }
 
   async unbookmarkRoadmap(slug: string) {
-    return this.delete(`/roadmaps/${slug}/bookmark`)
+    return this.delete(`/roadmaps/${slug}/bookmark`);
   }
 }

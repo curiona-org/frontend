@@ -48,7 +48,7 @@ export default function HomeGuest() {
             </Link>
           </div>
 
-          <CommunityRoadmapList />
+          <CommunityRoadmapList search="" orderBy="newest" showPagination={false}/>
         </div>
       </div>
     </div>

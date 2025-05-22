@@ -19,6 +19,8 @@ export default async function RoadmapDetailPage({
 
   if (!result?.data) {
     notFound();
+  } else {
+    console.log(result.data)
   }
 
   const roadmap = result.data;

@@ -1,27 +1,43 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ProfileService } from "@/lib/services/profile.service";
+import { RoadmapService } from "@/lib/services/roadmap.service";
 import { GetProfileOutput } from "@/types/api-profile";
 import PersonalInformation from "@/components/profile/personal-information";
 import Stats from "@/components/profile/stats";
-import YourRoadmap from "@/components/profile/your-roadmap";
+import YourRoadmap from "@/components/profile/my-roadmap";
 import { useAuth } from "@/providers/auth-provider";
+import Loader from "@/components/loader/loader";
 
 const ProfileDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>("");
   const { setName, session } = useAuth();
+  const [generatedRoadmap, setGeneratedRoadmap] = useState<number>(0);
+  const [roadmapFinished, setRoadmapFinished] = useState<number>(0);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileAndRoadmaps = async () => {
       try {
-        const service = new ProfileService();
-        const response = await service.profile();
-        if (response && response.data) {
-          const profileData: GetProfileOutput = response.data;
+        const profileService = new ProfileService();
+        const roadmapService = new RoadmapService();
+
+        const profileResponse = await profileService.profile();
+        if (profileResponse && profileResponse.data) {
+          const profileData: GetProfileOutput = profileResponse.data;
           setName(profileData.name);
           setNewName(profileData.name);
+        }
+
+        const roadmapResponse = await roadmapService.listUserRoadmap();
+        if (
+          roadmapResponse &&
+          roadmapResponse.data &&
+          Array.isArray(roadmapResponse.data.items)
+        ) {
+          const roadmaps = roadmapResponse.data.items;
+          setGeneratedRoadmap(roadmaps.length);
         }
       } catch (error) {
         console.error("Error fetching profile", error);
@@ -30,7 +46,7 @@ const ProfileDetails = () => {
       }
     };
 
-    fetchProfile();
+    fetchProfileAndRoadmaps();
   }, []);
 
   const handleEditClick = () => {
@@ -62,7 +78,7 @@ const ProfileDetails = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-4">Loading...</div>;
+    <Loader />;
   }
 
   if (!session) {
@@ -88,7 +104,7 @@ const ProfileDetails = () => {
 
           <div className="dashedLine"></div>
 
-          <Stats generatedRoadmap={20} roadmapFinished={0} />
+          <Stats generatedRoadmap={generatedRoadmap} roadmapFinished={0} />
 
           <div className="dashedLine"></div>
 

@@ -19,10 +19,6 @@ const Stats: React.FC<StatsProps> = ({ generatedRoadmap, roadmapFinished }) => {
           <p className="text-3xl font-semibold">{roadmapFinished}</p>
           <p>Roadmap Finished</p>
         </div>
-        <div className="border rounded-lg p-6 w-32 text-center">
-          <p className="text-3xl font-semibold">{roadmapFinished}</p>
-          <p>Roadmap Finished</p>
-        </div>
       </div>
     </div>
   );

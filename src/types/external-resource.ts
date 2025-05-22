@@ -5,6 +5,7 @@ export const ExternalResourceSchema = z.object({
   author: z.string(),
   url: z.string(),
   cover_url: z.string(),
+  length: z.number(),
 });
 
 export type ExternalResource = z.infer<typeof ExternalResourceSchema>;

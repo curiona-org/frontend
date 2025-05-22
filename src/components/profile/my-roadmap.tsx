@@ -16,7 +16,7 @@ const YourRoadmap = () => {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded border ${
             filter === "all"
-              ? "bg-blue-500 text-white border-blue-500"
+              ? "bg-blue-500 text-white-500 border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
@@ -26,7 +26,7 @@ const YourRoadmap = () => {
           onClick={() => setFilter("onprogress")}
           className={`px-4 py-2 rounded border ${
             filter === "onprogress"
-              ? "bg-blue-500 text-white border-blue-500"
+              ? "bg-blue-500 text-white-500 border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >
@@ -36,7 +36,7 @@ const YourRoadmap = () => {
           onClick={() => setFilter("saved")}
           className={`px-4 py-2 rounded border ${
             filter === "saved"
-              ? "bg-blue-500 text-white border-blue-500"
+              ? "bg-blue-500 text-white-500 border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
           }`}
         >

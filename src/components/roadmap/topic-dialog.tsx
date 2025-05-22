@@ -3,6 +3,7 @@ import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
+import Loader from "@/components/loader/loader";
 
 interface TopicDialogProps {
   slug: string | null;
@@ -139,18 +140,30 @@ const TopicDialog = ({
                             return (
                               <div
                                 key={i}
-                                className="aspect-video rounded overflow-hidden shadow-md"
+                                className="rounded overflow-hidden shadow-md"
                               >
                                 {videoId ? (
-                                  <iframe
-                                    width="100%"
-                                    height="100%"
-                                    src={`https://www.youtube.com/embed/${videoId}`}
-                                    title={video.title}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                  ></iframe>
+                                  <div className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                                    {/* Video aspect ratio */}
+                                    <div className="aspect-video relative">
+                                      <iframe
+                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                        title={video.title}
+                                        className="absolute inset-0 w-full h-full"
+                                        frameBorder="0"
+                                        allowFullScreen
+                                      ></iframe>
+                                    </div>
+                                    {/* Info bawah */}
+                                    <div className="p-2 bg-white border-t border-gray-200 flex flex-col">
+                                      <p className="font-semibold">
+                                        {video.title}
+                                      </p>
+                                      <span className="text-sm text-gray-600">
+                                        {video.author}
+                                      </span>
+                                    </div>
+                                  </div>
                                 ) : (
                                   <p>Invalid video URL</p>
                                 )}
@@ -208,11 +221,13 @@ const TopicDialog = ({
                 {/* Pro Tips */}
                 <div className="bg-blue-100 text-blue-800 p-4 rounded border border-blue-300">
                   <p className="font-bold mb-1">Pro tips:</p>
-                  <p>{data.description}</p>
+                  <p>{data.pro_tips}</p>
                 </div>
               </>
             ) : (
-              <p className="text-center">Loading topic details...</p>
+              <div className="flex justify-center items-center min-h-full">
+                <Loader />
+              </div>
             )}
           </Dialog.Content>
         </Dialog.Overlay>

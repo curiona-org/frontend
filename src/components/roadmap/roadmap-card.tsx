@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RoadmapProps } from "@/components/roadmap/user-roadmap-list";
+import { RoadmapSummary } from "@/types/api-roadmap";
 import Link from "next/link";
 import { Progress } from "radix-ui";
 import { RoadmapService } from "@/lib/services/roadmap.service";
@@ -7,11 +7,12 @@ import { RoadmapService } from "@/lib/services/roadmap.service";
 const roadmapService = new RoadmapService();
 
 interface RoadmapCardProps {
-  roadmap: RoadmapProps;
+  roadmap: RoadmapSummary;
+  showProgress: boolean;
 }
 
-const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
-  const [saved, setSaved] = useState(false);
+const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
+  const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
 
   const toggleSave = async (e: React.MouseEvent) => {
@@ -25,9 +26,11 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
       if (saved) {
         await roadmapService.unbookmarkRoadmap(roadmap.slug);
         setSaved(false);
+        console.log(roadmap.is_bookmarked);
       } else {
         await roadmapService.bookmarkRoadmap(roadmap.slug);
         setSaved(true);
+        console.log(roadmap.is_bookmarked);
       }
     } catch (error) {
       console.error("Failed to toggle bookmark:", error);
@@ -36,13 +39,25 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
     }
   };
 
+  // Format skill level capitalization
+  const skillLevel =
+    roadmap.personalization_options.skill_level.charAt(0).toUpperCase() +
+    roadmap.personalization_options.skill_level.slice(1).toLowerCase();
+
+  // Progress values
+  const finishedTopics = roadmap.progression.finished_topics || 0;
+  const totalTopics =
+    roadmap.progression.total_topics || roadmap.total_topics || 0;
+  const completionPercent =
+    totalTopics > 0 ? (finishedTopics / totalTopics) * 100 : 0;
+
   return (
     <Link href={`/roadmap/${roadmap.slug}`}>
       <div className="group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
         <div className="flex justify-between items-center gap-4">
           <div className="flex-grow">
             <h3 className="text-heading-4-bold font-semibold truncate text-wrap">
-              {roadmap.title.length > 30
+              {roadmap.title.length > 50
                 ? roadmap.title.slice(0, 50) + "..."
                 : roadmap.title}
             </h3>
@@ -86,7 +101,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
 
         {/* Description */}
         <p className="text-body-2">
-          {roadmap.description.length > 60
+          {roadmap.description.length > 80
             ? roadmap.description.slice(0, 80) + "..."
             : roadmap.description}
         </p>
@@ -105,7 +120,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
             </span>
             <span>Total Topics</span>
           </div>
-          <span>{roadmap.total_topics}</span>
+          <span>{totalTopics}</span>
         </div>
 
         {/* Divider */}
@@ -122,14 +137,7 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
             </span>
             <span>Skill Level</span>
           </div>
-          <span>
-            {roadmap.personalization_options.skill_level
-              .charAt(0)
-              .toUpperCase() +
-              roadmap.personalization_options.skill_level
-                .slice(1)
-                .toLowerCase()}
-          </span>
+          <span>{skillLevel}</span>
         </div>
 
         {/* Divider */}
@@ -147,22 +155,17 @@ const RoadmapCard = ({ roadmap }: RoadmapCardProps) => {
               </span>
               <span>Learning Progress</span>
             </div>
-            <span>{`0/${roadmap.total_topics}`} Topics Completed</span>
+            <span>{`${finishedTopics}/${totalTopics}`} Topics Completed</span>
           </div>
 
-          {/* Radix Progress Bar */}
           <Progress.Root
             className="relative pt-4"
-            value={0} // Set to 0 for now as there is no completed topic
-            max={roadmap.total_topics} // Total topics from API
+            value={finishedTopics}
+            max={totalTopics}
           >
             <Progress.Indicator
               className="bg-blue-600 h-2 rounded-full"
-              style={{
-                width: `${
-                  ((roadmap.finished_topics || 0) / roadmap.total_topics) * 100
-                }%`,
-              }}
+              style={{ width: `${completionPercent}%` }}
             />
           </Progress.Root>
         </div>

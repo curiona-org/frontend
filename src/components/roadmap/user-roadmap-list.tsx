@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { RoadmapService } from "@/lib/services/roadmap.service"; // Mengimpor service untuk mengambil data roadmap
+import { RoadmapService } from "@/lib/services/roadmap.service";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
-import { usePathname } from "next/navigation"; // Mengimpor usePathname dari next/navigation untuk menggantikan useRouter
+import { usePathname } from "next/navigation";
 
 const roadmapService = new RoadmapService();
 
@@ -12,8 +12,9 @@ export interface RoadmapProps {
   slug: string;
   description: string;
   total_topics: number;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
+  is_bookmarked: boolean;
 
   progression: {
     total_topics: number;
@@ -21,8 +22,8 @@ export interface RoadmapProps {
     completion_percentage: number;
     is_finished: boolean;
     finished_at: string;
-    created_at: string;
-    updated_at: string;
+    created_at: Date;
+    updated_at: Date;
   };
 
   personalization_options: {
@@ -37,32 +38,23 @@ export interface RoadmapProps {
     skill_level: string;
     additional_info?: string;
   };
-
-  creator: {
-    id: number;
-    method: string;
-    email: string;
-    name: string;
-    avatar: string;
-    is_suspended: boolean;
-    joined_at: string;
-  };
-
-  is_saved?: boolean;
 }
 
 interface UserRoadmapListProps {
   filter?: "all" | "onprogress" | "saved";
+  showPagination?: boolean;
 }
 
 const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
   filter = "all",
+  showPagination = true,
 }) => {
   const [roadmaps, setRoadmaps] = useState<RoadmapProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const pageSize = 6;
-  const totalPages = Math.ceil(roadmaps.length / pageSize);
   const pathname = usePathname();
 
   const handlePageChange = (page: number) => {
@@ -70,104 +62,146 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
     setCurrentPage(page);
   };
 
+  const handleCustomPage = () => {
+    const input = prompt(`Enter a page number (1 to ${totalPages}):`);
+    const num = parseInt(input || "", 10);
+    if (num >= 1 && num <= totalPages) {
+      setCurrentPage(num);
+    } else {
+      alert("Invalid page number.");
+    }
+  };
+
   const generatePageNumbers = () => {
-    let pages = [];
-    for (let i = 1; i <= totalPages; i++) {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
+
+    if (startPage > 1) pages.unshift("...");
+    if (endPage < totalPages) pages.push("...");
+
     return pages;
-  };
-
-  const handleCustomPage = () => {
-    // Custom page logic for pagination
-  };
-
-  const handleToggleSave = (slug: string, saved: boolean) => {
-    setRoadmaps((prev) =>
-      prev.map((r) =>
-        r.slug === slug
-          ? {
-              ...r,
-              is_saved: saved,
-            }
-          : r
-      )
-    );
   };
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
       setLoading(true);
       try {
-        let result;
-        if (filter === "saved") {
-          result = await roadmapService.listBookmarkedRoadmaps();
-        } else {
-          result = await roadmapService.listUserRoadmap();
-        }
+        // endpoint sudah mengembalikan data.pagination & nested progression
+        const res = await roadmapService.listUserRoadmap(currentPage);
+        const { total, total_pages, current_page, items } = res.data;
 
-        if (result?.data?.items) {
-          setRoadmaps(result.data.items);
-        } else {
-          setRoadmaps([]);
-        }
-      } catch (error) {
+        const mapped = items.map((item) => ({
+          id: item.id,
+          title: item.title,
+          slug: item.slug,
+          description: item.description,
+          total_topics: item.total_topics,
+          created_at: new Date(item.created_at),
+          updated_at: new Date(item.updated_at),
+          is_bookmarked: item.is_bookmarked ?? false,
+
+          progression: {
+            total_topics: item.progression.total_topics,
+            finished_topics: item.progression.finished_topics,
+            completion_percentage: item.progression.completion_percentage,
+            is_finished: item.progression.completion_percentage === 100,
+            finished_at:
+              item.progression.completion_percentage === 100
+                ? item.progression.updated_at
+                : "",
+            created_at: new Date(item.progression.created_at),
+            updated_at: new Date(item.progression.updated_at),
+          },
+
+          personalization_options: item.personalization_options,
+        }));
+
+        setRoadmaps(mapped);
+        setTotalItems(total);
+        setTotalPages(total_pages);
+        setCurrentPage(current_page);
+      } catch (err) {
+        console.error(err);
         setRoadmaps([]);
-        console.error("Error fetching data:", error);
+        setTotalItems(0);
+        setTotalPages(1);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRoadmaps();
-  }, [filter]);
+  }, [currentPage, filter]);
 
+  // reset ke halaman 1 kalau filter berubah
   useEffect(() => {
     setCurrentPage(1);
   }, [filter]);
 
-  const filteredRoadmaps = roadmaps.filter((roadmap) => {
-    if (filter === "all") return true;
-    if (filter === "onprogress")
-      return (
-        roadmap.progression.finished_topics < roadmap.progression.total_topics
+  const handleToggleSave = async (slug: string, saved: boolean) => {
+    try {
+      if (saved) {
+        await roadmapService.unbookmarkRoadmap(slug);
+      } else {
+        await roadmapService.bookmarkRoadmap(slug);
+      }
+
+      setRoadmaps((prev) =>
+        prev.map((r) =>
+          r.slug === slug
+            ? {
+                ...r,
+                is_bookmarked: !saved,
+              }
+            : r
+        )
       );
-    if (filter === "saved") return roadmap.is_saved === true; // pastikan ada di data
+    } catch (error) {
+      console.error("Failed to toggle bookmark:", error);
+      alert("Gagal memperbarui bookmark. Silakan coba lagi.");
+    }
+  };
+
+  // filter on‐progress di client
+  const filtered = roadmaps.filter((r) => {
+    if (filter === "onprogress") {
+      return r.progression.finished_topics < r.progression.total_topics;
+    }
+    if (filter === "saved") {
+      return r.is_bookmarked === true;
+    }
     return true;
   });
 
-  // Membatasi hanya menampilkan roadmap yang sesuai dengan currentPage
-  const limitedRoadmaps = roadmaps.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  if (loading) return <p>Loading...</p>;
 
-  if (loading) {
-    return (
-      <p className="text-center col-span-full text-gray-500">Loading...</p>
-    );
-  }
-
-  // Cek apakah halaman saat ini adalah '/profile'
-  const isProfilePage = pathname === "/profile";
+  // const limitedRoadmaps = filteredRoadmaps.slice(
+  //   (currentPage - 1) * pageSize,
+  //   currentPage * pageSize
+  // );
 
   return (
     <>
-      {/* Grid untuk menampilkan roadmap */}
       <div
-        className={`grid ${
-          pathname === "/profile" ? "grid-cols-2" : "grid-cols-3"
+        className={`grid gap-6 mt-6 ${
+          pathname === "/profile" ? "lg:grid-cols-2" : "lg:grid-cols-3"
         } gap-6 mt-6`}
       >
-        {limitedRoadmaps.length > 0 ? (
-          limitedRoadmaps.map((roadmap) => (
+        {filtered.length > 0 ? (
+          filtered.map((roadmap) => (
             <RoadmapCard
               key={roadmap.id}
-              roadmap={{
-                ...roadmap,
-                total_topics: roadmap.progression.total_topics,
-                finished_topics: roadmap.progression.finished_topics,
-              }}
+              roadmap={roadmap}
               onToggleSave={handleToggleSave}
             />
           ))
@@ -178,71 +212,71 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
         )}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-between items-center text-body-1-regular">
-        {/* Showing page info */}
-        <div className="text-center mt-4">
-          <span>
-            Showing {1 + (currentPage - 1) * pageSize} to{" "}
-            {Math.min(currentPage * pageSize, roadmaps.length)} of{" "}
-            {roadmaps.length} results
-          </span>
-        </div>
-
-        <div className="flex justify-center items-center mt-6 space-x-0">
-          <button
-            className="py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0"
-            onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
-          >
-            &lt;&lt;
-          </button>
-          <button
-            className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-
-          {/* Page Numbers with Ellipsis */}
-          {generatePageNumbers().map((page, index) => (
+      {/* Pagination Controls */}
+      {showPagination && (
+        <div className="flex justify-between items-center text-body-1-regular mt-6">
+          <div>
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {(currentPage - 1) * pageSize + filtered.length} of {totalItems}{" "}
+            results
+          </div>
+          <div className="flex items-center space-x-0">
             <button
-              key={index}
-              className={`py-2 px-4 ${
-                page === currentPage
-                  ? "bg-blue-500 text-white-500 border-none" // Menghilangkan border biru pada tombol aktif
-                  : page === "..."
-                  ? "bg-white-500 border border-black-100"
-                  : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
-              }`}
-              onClick={() =>
-                page === "..."
-                  ? handleCustomPage()
-                  : handlePageChange(page as number)
-              }
-              disabled={page === "..."}
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50"
             >
-              {page}
+              &lt;&lt;
             </button>
-          ))}
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+            >
+              &lt;
+            </button>
 
-          <button
-            className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </button>
-          <button
-            className="py-2 px-4 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0"
-            onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;&gt;
-          </button>
+            {generatePageNumbers().map((p, i) =>
+              p === "..." ? (
+                <button
+                  key={i}
+                  onClick={handleCustomPage}
+                  className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100"
+                >
+                  ...
+                </button>
+              ) : (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(p as number)}
+                  className={`py-2 px-4 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 ${
+                    p === currentPage
+                      ? "bg-blue-600 text-white-500 border-blue-600"
+                      : "bg-white-500"
+                  }`}
+                >
+                  {p}
+                </button>
+              )
+            )}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50"
+            >
+              &gt;&gt;
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
