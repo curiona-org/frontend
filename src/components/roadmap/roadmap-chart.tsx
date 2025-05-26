@@ -179,9 +179,8 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
     []
   );
 
-  const proOptions = { hideAttribution: true };
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
+    <div className="nowheel" style={{ width: "100%", height: "100vh" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -195,7 +194,6 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         defaultEdgeOptions={{
           type: "smoothstep",
         }}
-        proOptions={{ hideAttribution: true }}
         zoomOnScroll={false}
         panOnDrag={false}
         nodesDraggable={false}

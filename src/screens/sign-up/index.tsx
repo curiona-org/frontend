@@ -78,27 +78,31 @@ export default function SignUpPage() {
 
           <form className="space-y-4" onSubmit={onSubmit}>
             <input
-              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Full Name"
               {...register("name")}
+              required
             />
             <input
               type="email"
-              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Email"
               {...register("email")}
+              required
             />
             <input
               type="password"
-              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Password"
               {...register("password")}
+              required
             />
             <input
               type="password"
-              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Confirm Password"
               {...register("confirmPassword")}
+              required
             />
 
             <div className="flex flex-col gap-2">

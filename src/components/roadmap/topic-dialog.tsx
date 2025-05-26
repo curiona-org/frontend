@@ -5,14 +5,15 @@ import { RoadmapService } from "@/lib/services/roadmap.service";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 import Loader from "@/components/loader/loader";
 
+const roadmapService = new RoadmapService();
+
 interface TopicDialogProps {
-  slug: string | null;
+  slug: string;
   open: boolean;
   onClose: () => void;
   updateTopicStatus: (slug: string, isFinished: boolean) => void;
 }
 
-const roadmapService = new RoadmapService();
 const TopicDialog = ({
   slug,
   open,
@@ -74,7 +75,7 @@ const TopicDialog = ({
                   <button
                     onClick={toggleFinished}
                     disabled={loading}
-                    className={`text-sm border p-3 rounded transition ${
+                    className={`min-w-40 text-sm border p-3 rounded-lg transition text-heading-3 ${
                       data.is_finished
                         ? "border-red-500 text-red-500"
                         : "border-blue-600 text-blue-600"

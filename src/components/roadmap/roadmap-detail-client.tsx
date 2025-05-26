@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import { Progress } from "radix-ui";
-import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import RegenerateDialog from "@/components/roadmap/regenerate-dialog";
+import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import ChatbotWidget from "@/components/chatbot/chatbot";
 
 const roadmapService = new RoadmapService();
@@ -11,6 +12,27 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
+  const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);\
+
+  const handleOpenRegenerateDialog = () => {
+    setRegenerateDialogOpen(true);
+  };
+
+  const handleCloseRegenerateDialog = () => {
+    setRegenerateDialogOpen(false);
+  };
+
+  const personalizationData = {
+    timeAvailability: {
+      amount: roadmap.personalization_options.daily_time_availability.value,
+      unit: roadmap.personalization_options.daily_time_availability.unit.toLowerCase(),
+    },
+    familiarity: roadmap.personalization_options.skill_level.toLowerCase(),
+    learningDuration: {
+      amount: roadmap.personalization_options.total_duration.value,
+      unit: roadmap.personalization_options.total_duration.unit.toLowerCase(),
+    }
+  };
 
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -96,7 +118,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                   className={`flex items-center gap-1 border ${
                     saved
                       ? "border-blue-500"
-                      : "border-[#E5E5E5] hover:border-blue-500"
+                      : "border-black-50 hover:border-blue-500"
                   } rounded-lg p-2`}
                 >
                   <span role="img" aria-label="folder">
@@ -107,6 +129,20 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                   >
                     {saved ? "Saved!" : "Save"}
                   </span>
+                </div>
+              </button>
+
+              <button
+                onClick={handleOpenRegenerateDialog}
+                disabled={loading}
+                className=""
+                aria-label="Regenerate Roadmap"
+              >
+                <div className="flex items-center gap-1 border border-black-50 rounded-lg p-2 hover:border-blue-500">
+                  <span role="img" aria-label="refresh">
+                    🔄
+                  </span>
+                  <span className="hover:text-blue-500">Regenerate</span>
                 </div>
               </button>
             </div>
@@ -171,7 +207,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       </div>
       <RoadmapChart roadmap={roadmap} updateTopicStatus={updateTopicStatus} />
 
-      <ChatbotWidget />
+      <ChatbotWidget slug={slug} />
     </>
   );
 }

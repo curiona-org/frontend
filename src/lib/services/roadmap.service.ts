@@ -70,4 +70,8 @@ export class RoadmapService extends APIService {
   async unbookmarkRoadmap(slug: string) {
     return this.delete(`/roadmaps/${slug}/bookmark`);
   }
+
+  async regenerateRoadmap(slug: string) {
+    return this.patch(`/roadmaps/${slug}/regenerate`).then((res) => res?.data);
+  }
 }

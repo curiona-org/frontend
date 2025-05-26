@@ -69,8 +69,8 @@ export default function SignInPage() {
   return (
     <>
       <Toast ref={toastRef} />
-      <div className="flex items-center justify-center min-h-screen px-6 py-28">
-        <div className="dashedBorder p-5 shadow-lg  flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
+      <div className="flex items-center justify-center min-h-screen px-7 py-28">
+        <div className="dashedBorder p-5 shadow-lg flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
           <h1 className="text-mobile-display-2 md:text-display-2">Sign In</h1>
           <p className="text-mobile-body-1-regular md:text-body-1-regular">
             to Create Your Personalized Learning Blueprint
@@ -79,15 +79,17 @@ export default function SignInPage() {
           <form className="space-y-3" onSubmit={onSubmit}>
             <input
               type="email"
-              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500  focus:ring-blue-500"
               placeholder="Email"
               {...register("email")}
+              required
             />
             <input
               type="password"
-              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Password"
               {...register("password")}
+              required
             />
             <div className="text-start">
               <Link

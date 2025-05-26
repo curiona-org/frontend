@@ -1,29 +1,234 @@
 "use client";
 import { useAuth } from "@/providers/auth-provider";
 import { BorderBeam } from "../magicui/border-beam";
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import dayjs from "dayjs";
 
-export default function Chatbot() {
+interface Message {
+  from: "user" | "bot";
+  text: string;
+  timestamp?: string;
+  done: boolean;
+}
+
+interface WebSocketEvent<T> {
+  type: string;
+  payload: T;
+}
+
+interface WebSocketEventNewMessage {
+  message: string;
+  from: string;
+  sent: string;
+}
+
+interface WebSocketEventRoadmapAssistChunk {
+  content: string;
+  done: boolean;
+}
+
+interface WebSocketRequest {
+  type: "roadmap_chat_assist_request";
+  payload: {
+    message: string;
+  };
+}
+
+export default function Chatbot({ slug }: { slug: string }) {
   const { session } = useAuth();
-  const [messages, setMessages] = useState([
-    {
-      from: "bot",
-      text: "👋 Welcome to the Eriona Chat Assist! We're here to help you with your roadmap. Let's get started! 🚀 Feel free to ask any questions you have",
-    },
-  ]);
+  // const [messages, setMessages] = useState([
+  //   {
+  //     from: "bot",
+  //     text: "👋 Welcome to the Eriona Chat Assist! We're here to help you with your roadmap. Let's get started! 🚀 Feel free to ask any questions you have",
+  //   },
+  // ]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const currentMessages = useRef("");
   const [input, setInput] = useState("");
-  const [isOpen, setIsOpen] = useState(false); // state untuk toggle chatbox
+  const [isOpen, setIsOpen] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // WebSocket
+  useEffect(() => {
+    if (!session || !isOpen) return;
+
+    // koneksi websocket
+    const ws = new WebSocket(
+      `ws://api.curiona.34.2.143.125.sslip.io/roadmaps/${slug}/assist`,
+      ["Authorization", session.tokens.access_token]
+    );
+
+    wsRef.current = ws;
+
+    // handler saat koneksi terbuka
+    ws.onopen = () => {
+      console.log("Connected to WebSocket");
+      setIsConnected(true);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data) as WebSocketEvent<
+          WebSocketEventNewMessage | WebSocketEventRoadmapAssistChunk
+        >;
+
+        // Jika server mengirim pesan chatbot
+        if (data.type === "new_message") {
+          const { message, sent } = data.payload as WebSocketEventNewMessage;
+          console.log("payload data:", data.payload);
+
+          setMessages((prev) => {
+            // Cari pesan loading "..." dan ganti dengan respons dari server
+            const newMessages = [...prev];
+            const loadingIndex = newMessages.findIndex(
+              (msg) => msg.from === "bot" && msg.text === "..."
+            );
+
+            if (loadingIndex !== -1) {
+              newMessages[loadingIndex] = {
+                from: "bot",
+                text: message,
+                timestamp: sent,
+                done: true,
+              };
+            } else {
+              // Jika tidak ada pesan loading, tambahkan sebagai pesan baru
+              newMessages.push({
+                from: "bot",
+                text: message,
+                timestamp: sent,
+                done: true,
+              });
+            }
+
+            return newMessages;
+          });
+        }
+        if (data.type === "roadmap_chat_assist_chunk") {
+          const { content, done } =
+            data.payload as WebSocketEventRoadmapAssistChunk;
+          setMessages((prev) => {
+            // If there's no in-progress message, start a new one
+            if (prev.length === 0 || prev[prev.length - 1].done) {
+              return [
+                ...prev,
+                {
+                  text: content,
+                  from: "bot",
+                  timestamp: new Date().toString(),
+                  done: done,
+                },
+              ];
+            }
+            // Otherwise, append to the latest in-progress message
+            else {
+              const lastIndex = prev.length - 1;
+              const updatedMessage: Message = {
+                text: prev[lastIndex].text + content,
+                done: done,
+                from: "bot",
+                timestamp: new Date().toString(),
+              };
+              const newMessages = [...prev];
+              newMessages[lastIndex] = updatedMessage;
+              return newMessages;
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    // Event handler untuk error
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          from: "bot",
+          text: "Sorry, there was an error connecting to the assistant. Please try again later.",
+          done: true,
+        },
+      ]);
+    };
+
+    // Event handler saat koneksi ditutup
+    ws.onclose = (event) => {
+      console.log("event: " + event);
+      console.log("WebSocket connection closed");
+      setIsConnected(false);
+    };
+
+    // Cleanup function
+    return () => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.close();
+        wsRef.current = null;
+      }
+    };
+  }, [session, isOpen, slug]);
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    setMessages([
-      ...messages,
-      { from: "user", text: input },
-      { from: "bot", text: "..." },
-    ]);
+    if (!input.trim() || !wsRef.current) return;
+
+    const userMessage = {
+      from: "user" as const,
+      text: input,
+      timestamp: new Date().toISOString(),
+      done: true,
+    };
+
+    // Kirim pesan ke server melalui WebSocket dengan format yang sesuai
+    if (wsRef.current.readyState === WebSocket.OPEN) {
+      // Tambahkan pesan user ke state
+      setMessages((prev) => [...prev, userMessage]);
+      const requestData: WebSocketRequest = {
+        type: "roadmap_chat_assist_request",
+        payload: {
+          message: input,
+        },
+      };
+
+      wsRef.current.send(JSON.stringify(requestData));
+      console.log("request data: " + requestData);
+    } else {
+      // Jika WebSocket tidak terhubung
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        // Ganti pesan loading dengan pesan error
+        newMessages[newMessages.length - 1] = {
+          from: "bot",
+          text: "Connection lost. Please refresh the page and try again.",
+        };
+        return newMessages;
+      });
+    }
+
     setInput("");
-    // nanti di sini baru bisa dipasang API call
+  };
+
+  // Format timestamp menjadi format yang lebih mudah dibaca
+  const formatTime = (timestamp: string) => {
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (e) {
+      return "";
+    }
   };
 
   if (!isOpen) {
@@ -57,20 +262,22 @@ export default function Chatbot() {
               Eriona
             </h4>
             <span className="text-mobile-body-1-regular lg:text-body-1-regular text-blue-400">
-              Your Roadmap Assistant
+              Your Roadmap Assistant{" "}
+              {isConnected && (
+                <span className="text-green-500">• Connected</span>
+              )}
             </span>
           </div>
         </div>
         <button
           className="w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold"
-          onClick={() => setIsOpen(false)} // toggle close chat
+          onClick={() => setIsOpen(false)}
           aria-label="Close Chat"
           title="Close Chat"
         >
           ✕
         </button>
       </div>
-
       <div className="dashedLine"></div>
 
       {/* Chat messages */}
@@ -85,7 +292,6 @@ export default function Chatbot() {
             {msg.from === "bot" && (
               <span className="text-heading-3 mr-2">🤖</span>
             )}
-
             <div
               className={`p-4 rounded-md ${
                 msg.from === "bot"
@@ -93,9 +299,17 @@ export default function Chatbot() {
                   : "w-60 bg-blue-600 shadow-md text-white-500 text-end"
               }`}
             >
-              {msg.text}
+              <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+              {msg.timestamp && (
+                <div
+                  className={`text-xs mt-2 ${
+                    msg.from === "bot" ? "text-gray-400" : "text-blue-200"
+                  }`}
+                >
+                  {dayjs(msg.timestamp).format("HH:mm")}
+                </div>
+              )}
             </div>
-
             {msg.from === "user" && (
               <img
                 src={session.user.avatar}
@@ -105,6 +319,7 @@ export default function Chatbot() {
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input box */}
@@ -116,11 +331,15 @@ export default function Chatbot() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          disabled={!isConnected}
         />
         <button
-          className="bg-blue-600 text-white-500 rounded p-2 hover:bg-blue-700"
+          className={`${
+            isConnected ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300"
+          } text-white-500 rounded p-2`}
           onClick={handleSend}
           aria-label="Send message"
+          disabled={!isConnected}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
