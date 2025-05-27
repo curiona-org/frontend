@@ -1,82 +1,79 @@
-import { apiClient } from "@/lib/services/api.service";
+import config from "@/lib/config";
+import { APIService } from "@/lib/services/api.service";
 import {
+  ListRoadmapsOutput,
   GenerateRoadmapOutput,
   GetRoadmapOutput,
-  ListRoadmapsOutput,
 } from "@/types/api-roadmap";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 
-export class RoadmapService {
+export class RoadmapService extends APIService {
+  constructor() {
+    super(config.BACKEND_URL);
+  }
+
   async listCommunityRoadmap(
     page = 1,
     limit = 9,
     search = "",
     orderBy: "oldest" | "newest" = "oldest"
   ) {
-    let path = `/roadmaps?page=${page}&limit=${limit}&order_by=${orderBy}`;
-    if (search) {
-      path += `&search=${encodeURIComponent(search)}`;
-    }
-    return apiClient.get<ListRoadmapsOutput>(path).then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>(
+      `/roadmaps?page=${page}&limit=${limit}&search=${search}&order_by=${orderBy}`
+    ).then((res) => res?.data);
   }
 
   async listUserRoadmap(page = 1, limit = 6) {
-    return apiClient
-      .get<ListRoadmapsOutput>(`/profile/roadmaps?page=${page}&limit=${limit}`)
-      .then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>(
+      `/profile/roadmaps?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
   }
 
   async generateRoadmap(data) {
-    return apiClient
-      .post<GenerateRoadmapOutput>("/roadmaps", data)
-      .then((res) => res?.data);
+    return this.post<GenerateRoadmapOutput>("/roadmaps", data).then(
+      (res) => res?.data
+    );
+  }
+
+  async regenerateRoadmap(slug: string, data: any) {
+    return this.patch(`/roadmaps/${slug}/regenerate`, data).then(
+      (res) => res?.data
+    );
   }
 
   async getRoadmapBySlug(slug: string) {
-    const response = await apiClient.get<GetRoadmapOutput>(
-      `/roadmaps/${slug}`,
-      {},
-      { withCredentials: true }
-    );
+    const response = await this.get<GetRoadmapOutput>(`/roadmaps/${slug}`);
     return response.data;
   }
 
   async getRoadmapTopicBySlug(slug: string) {
-    const response = await apiClient.get<GetTopicBySlugOutput>(
+    const response = await this.get<GetTopicBySlugOutput>(
       `/roadmaps/topic/${slug}`
     );
     return response.data;
   }
 
   async markTopicAsFinished(slug: string) {
-    return apiClient
-      .patch(`/roadmaps/topic/${slug}/finish`)
-      .then((res) => res?.data);
+    return this.patch(`/roadmaps/topic/${slug}/finish`).then(
+      (res) => res?.data
+    );
   }
 
   async markTopicAsIncomplete(slug: string) {
-    return apiClient
-      .patch(`/roadmaps/topic/${slug}/incomplete`)
-      .then((res) => res?.data);
+    return this.patch(`/roadmaps/topic/${slug}/incomplete`).then(
+      (res) => res?.data
+    );
   }
 
   async listBookmarkedRoadmaps() {
-    return apiClient.get(`/bookmarks`).then((res) => res?.data);
+    return this.get(`/bookmarks`).then((res) => res?.data);
   }
 
   async bookmarkRoadmap(slug: string) {
-    return apiClient
-      .post(`/roadmaps/${slug}/bookmark`)
-      .then((res) => res?.data);
+    return this.post(`/roadmaps/${slug}/bookmark`).then((res) => res?.data);
   }
 
   async unbookmarkRoadmap(slug: string) {
-    return apiClient.delete(`/roadmaps/${slug}/bookmark`);
-  }
-
-  async regenerateRoadmap(slug: string) {
-    return apiClient
-      .patch(`/roadmaps/${slug}/regenerate`)
-      .then((res) => res?.data);
+    return this.delete(`/roadmaps/${slug}/bookmark`);
   }
 }

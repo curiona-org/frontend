@@ -36,19 +36,38 @@ interface WebSocketRequest {
 
 export default function Chatbot({ slug }: { slug: string }) {
   const { session } = useAuth();
-  // const [messages, setMessages] = useState([
-  //   {
-  //     from: "bot",
-  //     text: "👋 Welcome to the Eriona Chat Assist! We're here to help you with your roadmap. Let's get started! 🚀 Feel free to ask any questions you have",
-  //   },
-  // ]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const currentMessages = useRef("");
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [isBotResponding, setIsBotResponding] = useState(false);
+
   const wsRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chunkQueueRef = useRef<{ content: string; done: boolean }[]>([]);
+  const processingChunkRef = useRef(false);
+
+  const simpleMarkdownToHTML = (text: string): string => {
+    // Ganti **teks** dan __teks__ dengan <strong>teks</strong>
+    let html = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/__(.+?)__/g, "<strong>$1</strong>");
+
+    // Ganti list item (- atau *) menjadi <li>
+    html = html.replace(/(?:^|\n)[-*] (.+)/g, "<li>$1</li>");
+
+    // Jika ingin membungkus list dalam <ul>
+    if (/(\n<li>.+<\/li>)+/g.test(html)) {
+      html = "<ul>" + html + "</ul>";
+    }
+
+    // Ganti baris baru dengan <br>
+    html = html.replace(/\n/g, "<br/>");
+
+    return html;
+  };
+
+  // Typing speed in milliseconds (higher = slower)
+  const typingDelayRef = useRef(20);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -58,16 +77,80 @@ export default function Chatbot({ slug }: { slug: string }) {
     scrollToBottom();
   }, [messages]);
 
+  // Process chunks from queue with delay
+  const processNextChunk = async () => {
+    if (processingChunkRef.current || chunkQueueRef.current.length === 0)
+      return;
+
+    processingChunkRef.current = true;
+    const { content, done } = chunkQueueRef.current.shift()!;
+
+    // Add a delay before processing the chunk
+    await new Promise((resolve) => setTimeout(resolve, typingDelayRef.current));
+
+    setMessages((prev) => {
+      // If there's no in-progress message, start a new one
+      if (prev.length === 0 || prev[prev.length - 1].done) {
+        return [
+          ...prev,
+          {
+            text: content,
+            from: "bot",
+            timestamp: new Date().toISOString(),
+            done: done,
+          },
+        ];
+      }
+      // Otherwise, append to the latest in-progress message
+      else {
+        const lastIndex = prev.length - 1;
+        const updatedMessage: Message = {
+          text: prev[lastIndex].text + content,
+          done: done,
+          from: "bot",
+          timestamp: new Date().toISOString(),
+        };
+
+        const newMessages = [...prev];
+        newMessages[lastIndex] = updatedMessage;
+
+        // If the message is now complete, set bot as not responding
+        if (done) {
+          setIsBotResponding(false);
+        }
+
+        return newMessages;
+      }
+    });
+
+    processingChunkRef.current = false;
+
+    // Process next chunk if available
+    if (chunkQueueRef.current.length > 0) {
+      processNextChunk();
+    }
+  };
+
+  // Process chunks when they're added to the queue
+  useEffect(() => {
+    if (chunkQueueRef.current.length > 0 && !processingChunkRef.current) {
+      processNextChunk();
+    }
+  }, []);
+
   // WebSocket
   useEffect(() => {
     if (!session || !isOpen) return;
+
+    // Reset chunk queue when opening the chat
+    chunkQueueRef.current = [];
+    processingChunkRef.current = false;
 
     // koneksi websocket
     const ws = new WebSocket(
       `ws://api.curiona.34.2.143.125.sslip.io/roadmaps/${slug}/assist`,
       ["Authorization", session.tokens.access_token]
     );
-
     wsRef.current = ws;
 
     // handler saat koneksi terbuka
@@ -110,43 +193,29 @@ export default function Chatbot({ slug }: { slug: string }) {
                 done: true,
               });
             }
-
             return newMessages;
           });
+
+          setIsBotResponding(false);
         }
+
         if (data.type === "roadmap_chat_assist_chunk") {
-          const { content, done } =
-            data.payload as WebSocketEventRoadmapAssistChunk;
-          setMessages((prev) => {
-            // If there's no in-progress message, start a new one
-            if (prev.length === 0 || prev[prev.length - 1].done) {
-              return [
-                ...prev,
-                {
-                  text: content,
-                  from: "bot",
-                  timestamp: new Date().toString(),
-                  done: done,
-                },
-              ];
-            }
-            // Otherwise, append to the latest in-progress message
-            else {
-              const lastIndex = prev.length - 1;
-              const updatedMessage: Message = {
-                text: prev[lastIndex].text + content,
-                done: done,
-                from: "bot",
-                timestamp: new Date().toString(),
-              };
-              const newMessages = [...prev];
-              newMessages[lastIndex] = updatedMessage;
-              return newMessages;
-            }
-          });
+          const chunk = data.payload as WebSocketEventRoadmapAssistChunk;
+
+          // Set bot as responding when receiving chunks
+          if (!chunk.done) {
+            setIsBotResponding(true);
+          }
+
+          // Add chunk to queue and process if not already processing
+          chunkQueueRef.current.push(chunk);
+          if (!processingChunkRef.current) {
+            processNextChunk();
+          }
         }
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
+        setIsBotResponding(false);
       }
     };
 
@@ -161,6 +230,7 @@ export default function Chatbot({ slug }: { slug: string }) {
           done: true,
         },
       ]);
+      setIsBotResponding(false);
     };
 
     // Event handler saat koneksi ditutup
@@ -168,6 +238,7 @@ export default function Chatbot({ slug }: { slug: string }) {
       console.log("event: " + event);
       console.log("WebSocket connection closed");
       setIsConnected(false);
+      setIsBotResponding(false);
     };
 
     // Cleanup function
@@ -176,11 +247,14 @@ export default function Chatbot({ slug }: { slug: string }) {
         wsRef.current.close();
         wsRef.current = null;
       }
+      // Clear chunk queue
+      chunkQueueRef.current = [];
+      processingChunkRef.current = false;
     };
   }, [session, isOpen, slug]);
 
   const handleSend = () => {
-    if (!input.trim() || !wsRef.current) return;
+    if (!input.trim() || !wsRef.current || isBotResponding) return;
 
     const userMessage = {
       from: "user" as const,
@@ -193,6 +267,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     if (wsRef.current.readyState === WebSocket.OPEN) {
       // Tambahkan pesan user ke state
       setMessages((prev) => [...prev, userMessage]);
+
       const requestData: WebSocketRequest = {
         type: "roadmap_chat_assist_request",
         payload: {
@@ -201,18 +276,24 @@ export default function Chatbot({ slug }: { slug: string }) {
       };
 
       wsRef.current.send(JSON.stringify(requestData));
-      console.log("request data: " + requestData);
+      console.log("request data: " + JSON.stringify(requestData));
+
+      // Set bot as responding when sending a message
+      setIsBotResponding(true);
+
+      // Clear any existing chunks
+      chunkQueueRef.current = [];
+      processingChunkRef.current = false;
     } else {
       // Jika WebSocket tidak terhubung
-      setMessages((prev) => {
-        const newMessages = [...prev];
-        // Ganti pesan loading dengan pesan error
-        newMessages[newMessages.length - 1] = {
+      setMessages((prev) => [
+        ...prev,
+        {
           from: "bot",
           text: "Connection lost. Please refresh the page and try again.",
-        };
-        return newMessages;
-      });
+          done: true,
+        },
+      ]);
     }
 
     setInput("");
@@ -221,11 +302,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   // Format timestamp menjadi format yang lebih mudah dibaca
   const formatTime = (timestamp: string) => {
     try {
-      const date = new Date(timestamp);
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      return dayjs(timestamp).format("HH:mm");
     } catch (e) {
       return "";
     }
@@ -279,7 +356,6 @@ export default function Chatbot({ slug }: { slug: string }) {
         </button>
       </div>
       <div className="dashedLine"></div>
-
       {/* Chat messages */}
       <div className="flex flex-col overflow-y-auto p-8 space-y-8 h-full">
         {messages.map((msg, idx) => (
@@ -299,14 +375,18 @@ export default function Chatbot({ slug }: { slug: string }) {
                   : "w-60 bg-blue-600 shadow-md text-white-500 text-end"
               }`}
             >
-              <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: simpleMarkdownToHTML(msg.text),
+                }}
+              />
               {msg.timestamp && (
                 <div
                   className={`text-xs mt-2 ${
                     msg.from === "bot" ? "text-gray-400" : "text-blue-200"
                   }`}
                 >
-                  {dayjs(msg.timestamp).format("HH:mm")}
+                  {formatTime(msg.timestamp)}
                 </div>
               )}
             </div>
@@ -319,9 +399,33 @@ export default function Chatbot({ slug }: { slug: string }) {
             )}
           </div>
         ))}
+        {/* Typing indicator when bot is responding but no message is being shown yet */}
+        {isBotResponding &&
+          messages.length > 0 &&
+          messages[messages.length - 1].from === "user" &&
+          chunkQueueRef.current.length === 0 && (
+            <div className="flex items-end justify-start">
+              <span className="text-heading-3 mr-2">🤖</span>
+              <div className="p-4 rounded-md bg-white-500 shadow-md">
+                <div className="flex space-x-1">
+                  <div
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></div>
+                  <div
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></div>
+                  <div
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
+                    style={{ animationDelay: "600ms" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          )}
         <div ref={messagesEndRef} />
       </div>
-
       {/* Input box */}
       <div className="p-3 flex items-center gap-2">
         <input
@@ -330,16 +434,20 @@ export default function Chatbot({ slug }: { slug: string }) {
           className="flex-1 border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          disabled={!isConnected}
+          onKeyDown={(e) =>
+            e.key === "Enter" && !isBotResponding && handleSend()
+          }
+          disabled={!isConnected || isBotResponding}
         />
         <button
           className={`${
-            isConnected ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300"
+            isConnected && !isBotResponding
+              ? "bg-blue-600 hover:bg-blue-700"
+              : "bg-blue-300"
           } text-white-500 rounded p-2`}
           onClick={handleSend}
           aria-label="Send message"
-          disabled={!isConnected}
+          disabled={!isConnected || isBotResponding}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
