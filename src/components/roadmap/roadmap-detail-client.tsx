@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
-import { Progress } from "radix-ui";
-import { RoadmapService } from "@/lib/services/roadmap.service";
-import RegenerateDialog from "@/components/roadmap/regenerate-dialog";
-import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import ChatbotWidget from "@/components/chatbot/chatbot";
+import RoadmapChart from "@/components/roadmap/roadmap-chart";
+import { RoadmapService } from "@/lib/services/roadmap.service";
+import { Progress } from "radix-ui";
+import { useState } from "react";
 
 const roadmapService = new RoadmapService();
 
@@ -12,7 +11,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
-  const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);\
+  const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
 
   const handleOpenRegenerateDialog = () => {
     setRegenerateDialogOpen(true);

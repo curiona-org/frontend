@@ -11,14 +11,9 @@ import { cookies } from "next/headers";
 const authService = new AuthService();
 
 export async function signOutAction() {
-  const session = await auth();
-
-  if (!session) {
-    return;
-  }
-
   const cookieStore = await cookies();
   cookieStore.delete(config.SESSION_COOKIE_NAME);
+  cookieStore.delete("refresh_token");
 }
 
 export async function refreshSessionAction(): Promise<
@@ -34,10 +29,19 @@ export async function refreshSessionAction(): Promise<
   }
 
   const cookieStore = await cookies();
-  const result = await authService.refresh();
+  const refresh = cookieStore.get("refresh_token");
+  if (!refresh?.value) {
+    return {
+      success: false,
+      message: "Refresh token not found",
+    };
+  }
+
+  const result = await authService.refresh(refresh.value);
 
   if (!result.success) {
     cookieStore.delete(config.SESSION_COOKIE_NAME);
+    cookieStore.delete("refresh_token");
     return result;
   }
 
@@ -57,6 +61,15 @@ export async function refreshSessionAction(): Promise<
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 1 week
+  });
+
+  cookieStore.set("refresh_token", result.data.refresh_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: result.data.refresh_token_expires_in,
+    expires: new Date(result.data.refresh_token_expires_at),
   });
 
   return {

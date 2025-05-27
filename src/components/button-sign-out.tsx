@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation"; // Import useRouter
 
 export default function ButtonSignOut() {
   const { isLoggedIn, signOut } = useAuth();
-  const router = useRouter(); // Inisialisasi useRouter untuk navigasi
+  const router = useRouter();
 
   const handleSignOut = async () => {
-    await signOut(); // Lakukan sign out
-    router.push("/"); // Redirect ke halaman home setelah sign out
+    await signOut();
+    router.push("/sign-in"); // Redirect to sign-in page after signing out
   };
 
   if (!isLoggedIn) {

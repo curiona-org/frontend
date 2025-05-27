@@ -41,7 +41,17 @@ export async function signInAction({
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: result.data.refresh_token_expires_in,
+      expires: new Date(result.data.refresh_token_expires_at),
+    });
+
+    cookieStore.set("refresh_token", result.data.refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: result.data.refresh_token_expires_in,
+      expires: new Date(result.data.refresh_token_expires_at),
     });
 
     return result;
