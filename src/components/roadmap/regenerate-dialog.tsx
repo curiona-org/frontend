@@ -1,6 +1,7 @@
 "use client";
 import { Dialog } from "radix-ui";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import Loader from "@/components/loader/loader";
 
@@ -31,6 +32,7 @@ const RegenerateDialog = ({
   const [durationUnit, setDurationUnit] = useState<DurationUnit>("weeks");
   const [skillLevel, setSkillLevel] = useState<SkillLevel>("beginner");
   const [expanded, setExpanded] = useState(false);
+  const router = useRouter();
 
   // Predefined reason options
   const reasonOptions = [
@@ -70,13 +72,13 @@ const RegenerateDialog = ({
         },
       };
 
-      await roadmapService.regenerateRoadmap(slug, data);
-      if (onSuccess) {
-        onSuccess();
+      const response = await roadmapService.regenerateRoadmap(slug, data);
+      if (!response.success) {
+        throw new Error("Failed to regenerate roadmap");
       }
-      onClose();
-      // Reload the page to show the new roadmap
-      window.location.reload();
+
+      const result = response.data;
+      router.push(`/roadmap/${result.slug}`);
     } catch (error) {
       console.error("Failed to regenerate roadmap:", error);
       alert("Failed to regenerate roadmap. Please try again.");
@@ -90,20 +92,9 @@ const RegenerateDialog = ({
       <Dialog.Portal>
         <Dialog.Overlay className="z-[100] fixed inset-0 bg-[#3C3C3C]/10 backdrop-blur-sm data-[state=open]:animate-fadeIn overflow-y-auto">
           <Dialog.Content className="flex flex-col gap-4 fixed left-1/2 top-1/2 w-[800px] max-h-[90vh] overflow-y-auto -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white-500 border-2 border-blue-500 p-10 text-blue-900 shadow-lg outline-none data-[state=open]:animate-fadeIn transition-all">
-            <div className="flex justify-between items-center">
-              <Dialog.Title className="text-mobile-heading-2 lg:text-heading-2">
-                Not happy with your roadmap?
-              </Dialog.Title>
-
-              <button
-                className="w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold"
-                onClick={onClose}
-                aria-label="Close Chat"
-                title="Close Chat"
-              >
-                ✕
-              </button>
-            </div>
+            <Dialog.Title className="text-mobile-heading-2 lg:text-heading-2">
+              Not happy with your roadmap?
+            </Dialog.Title>
 
             <p className="text-mobile-body-1-regular lg:text-body-1-regular">
               You can regenerate a new personalized roadmap. This will replace
@@ -268,19 +259,24 @@ const RegenerateDialog = ({
             )}
 
             {/* Actions */}
-            <button
-              onClick={handleRegenerateRoadmap}
-              disabled={loading || !reason}
-              className="w-full px-6 py-3 bg-blue-500 text-white-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <Loader size="sm" /> Processing...
-                </div>
-              ) : (
+            <div className="flex justify-between">
+              <button
+                className="p-3 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600"
+                onClick={onClose}
+                aria-label="Close Chat"
+                title="Close Chat"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleRegenerateRoadmap}
+                disabled={loading || !reason}
+                className="p-3 bg-blue-500 text-white-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 "Regenerate Roadmap✨"
-              )}
-            </button>
+              </button>
+            </div>
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>

@@ -67,7 +67,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   };
 
   // Typing speed in milliseconds (higher = slower)
-  const typingDelayRef = useRef(20);
+  const typingDelayRef = useRef(0);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -437,7 +437,6 @@ export default function Chatbot({ slug }: { slug: string }) {
           onKeyDown={(e) =>
             e.key === "Enter" && !isBotResponding && handleSend()
           }
-          disabled={!isConnected || isBotResponding}
         />
         <button
           className={`${

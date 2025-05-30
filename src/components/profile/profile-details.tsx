@@ -9,6 +9,9 @@ import YourRoadmap from "@/components/profile/my-roadmap";
 import { useAuth } from "@/providers/auth-provider";
 import Loader from "@/components/loader/loader";
 
+const profileService = new ProfileService();
+const roadmapService = new RoadmapService();
+
 const ProfileDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
@@ -20,9 +23,6 @@ const ProfileDetails = () => {
   useEffect(() => {
     const fetchProfileAndRoadmaps = async () => {
       try {
-        const profileService = new ProfileService();
-        const roadmapService = new RoadmapService();
-
         const profileResponse = await profileService.profile();
         if (profileResponse && profileResponse.data) {
           const profileData: GetProfileOutput = profileResponse.data;
@@ -31,13 +31,17 @@ const ProfileDetails = () => {
         }
 
         const roadmapResponse = await roadmapService.listUserRoadmap();
+        const finishedRoadmapResponse =
+          await roadmapService.listUserFinishedRoadmap();
         if (
           roadmapResponse &&
           roadmapResponse.data &&
           Array.isArray(roadmapResponse.data.items)
         ) {
           const roadmaps = roadmapResponse.data.items;
+          const finished = finishedRoadmapResponse.data;
           setGeneratedRoadmap(roadmaps.length);
+          setRoadmapFinished(finished.total);
         }
       } catch (error) {
         console.error("Error fetching profile", error);
@@ -104,7 +108,7 @@ const ProfileDetails = () => {
 
           <div className="dashedLine"></div>
 
-          <Stats generatedRoadmap={generatedRoadmap} roadmapFinished={0} />
+          <Stats generatedRoadmap={generatedRoadmap} roadmapFinished={roadmapFinished} />
 
           <div className="dashedLine"></div>
 

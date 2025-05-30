@@ -8,7 +8,7 @@ import Loader from "@/components/loader/loader";
 const roadmapService = new RoadmapService();
 
 interface TopicDialogProps {
-  slug: string;
+  slug: string | null;
   open: boolean;
   onClose: () => void;
   updateTopicStatus: (slug: string, isFinished: boolean) => void;

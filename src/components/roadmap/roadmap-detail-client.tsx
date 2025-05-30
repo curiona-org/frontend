@@ -5,6 +5,7 @@ import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import ChatbotWidget from "@/components/chatbot/chatbot";
 import RegenerateDialog from "@/components/roadmap/regenerate-dialog";
+import DeleteDialog from "@/components/roadmap/delete-dialog";
 
 const roadmapService = new RoadmapService();
 
@@ -13,6 +14,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
   const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -114,14 +116,26 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
 
               <button
                 onClick={() => setRegenerateDialogOpen(true)}
-                className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
                 aria-label="Regenerate roadmap"
+                className="hover:text-white-500"
               >
-                <div className="flex items-center gap-1 border border-[#E5E5E5] hover:border-blue-500 rounded-lg p-2">
+                <div className="flex items-center gap-1 border border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2">
                   <span role="img" aria-label="refresh">
                     🔄
                   </span>
-                  <span className="text-black-500">Regenerate</span>
+                  <span>Regenerate</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setDeleteDialogOpen(true)}
+                aria-label="Delete roadmap"
+                className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
+              >
+                <div className="flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2">
+                  <span role="img" aria-label="refresh">
+                    🗑️
+                  </span>
                 </div>
               </button>
             </div>
@@ -192,6 +206,12 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
         slug={slug}
         open={regenerateDialogOpen}
         onClose={() => setRegenerateDialogOpen(false)}
+      />
+
+      <DeleteDialog
+        slug={slug}
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
       />
     </>
   );

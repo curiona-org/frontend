@@ -12,31 +12,8 @@ export class RoadmapService extends APIService {
     super(config.BACKEND_URL);
   }
 
-  async listCommunityRoadmap(
-    page = 1,
-    limit = 9,
-    search = "",
-    orderBy: "oldest" | "newest" = "oldest"
-  ) {
-    return this.get<ListRoadmapsOutput>(
-      `/roadmaps?page=${page}&limit=${limit}&search=${search}&order_by=${orderBy}`
-    ).then((res) => res?.data);
-  }
-
-  async listUserRoadmap(page = 1, limit = 6) {
-    return this.get<ListRoadmapsOutput>(
-      `/profile/roadmaps?page=${page}&limit=${limit}`
-    ).then((res) => res?.data);
-  }
-
   async generateRoadmap(data) {
     return this.post<GenerateRoadmapOutput>("/roadmaps", data).then(
-      (res) => res?.data
-    );
-  }
-
-  async regenerateRoadmap(slug: string, data: any) {
-    return this.patch(`/roadmaps/${slug}/regenerate`, data).then(
       (res) => res?.data
     );
   }
@@ -44,6 +21,17 @@ export class RoadmapService extends APIService {
   async getRoadmapBySlug(slug: string) {
     const response = await this.get<GetRoadmapOutput>(`/roadmaps/${slug}`);
     return response.data;
+  }
+
+  async regenerateRoadmap(slug: string, data: any) {
+    return this.patch<GenerateRoadmapOutput>(
+      `/roadmaps/${slug}/regenerate`,
+      data
+    ).then((res) => res?.data);
+  }
+
+  async deleteRoadmapBySlug(slug: string) {
+    return this.delete(`/roadmaps/${slug}`).then((res) => res?.data);
   }
 
   async getRoadmapTopicBySlug(slug: string) {
@@ -65,7 +53,36 @@ export class RoadmapService extends APIService {
     );
   }
 
-  async listBookmarkedRoadmaps() {
+  async listUserRoadmap(page = 1, limit = 6) {
+    return this.get<ListRoadmapsOutput>(
+      `/profile/roadmaps?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
+  }
+
+  async listUserFinishedRoadmap(page = 1, limit = 6) {
+    return this.get<ListRoadmapsOutput>(
+      `/profile/roadmaps/finished?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
+  }
+
+  async listUserOnProgressRoadmap(page = 1, limit = 6) {
+    return this.get<ListRoadmapsOutput>(
+      `/profile/roadmaps/on-progress?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
+  }
+
+  async listCommunityRoadmap(
+    page = 1,
+    limit = 9,
+    search = "",
+    orderBy: "oldest" | "newest" = "oldest"
+  ) {
+    return this.get<ListRoadmapsOutput>(
+      `/roadmaps?page=${page}&limit=${limit}&search=${search}&order_by=${orderBy}`
+    ).then((res) => res?.data);
+  }
+
+  async listBookmarkedRoadmaps(page = 1, limit = 6) {
     return this.get(`/bookmarks`).then((res) => res?.data);
   }
 

@@ -41,7 +41,7 @@ export interface RoadmapProps {
 }
 
 interface UserRoadmapListProps {
-  filter?: "all" | "onprogress" | "saved";
+  filter?: "all" | "onprogress" | "saved" | "finished";
   showPagination?: boolean;
 }
 
@@ -97,7 +97,16 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
       setLoading(true);
       try {
         // endpoint sudah mengembalikan data.pagination & nested progression
-        const res = await roadmapService.listUserRoadmap(currentPage);
+        let res;
+        if (filter === "all") {
+          res = await roadmapService.listUserRoadmap(currentPage);
+        } else if (filter === "onprogress") {
+          res = await roadmapService.listUserOnProgressRoadmap(currentPage);
+        } else if (filter === "saved") {
+          res = await roadmapService.listBookmarkedRoadmaps(currentPage);
+        } else if (filter === "finished") {
+          res = await roadmapService.listUserFinishedRoadmap(currentPage);
+        }
         const { total, total_pages, current_page, items } = res.data;
 
         const mapped = items.map((item) => ({
@@ -172,17 +181,6 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
     }
   };
 
-  // filter on‐progress di client
-  const filtered = roadmaps.filter((r) => {
-    if (filter === "onprogress") {
-      return r.progression.finished_topics < r.progression.total_topics;
-    }
-    if (filter === "saved") {
-      return r.is_bookmarked === true;
-    }
-    return true;
-  });
-
   if (loading) return <p>Loading...</p>;
 
   // const limitedRoadmaps = filteredRoadmaps.slice(
@@ -195,10 +193,10 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
       <div
         className={`grid gap-6 mt-6 ${
           pathname === "/profile" ? "lg:grid-cols-2" : "lg:grid-cols-3"
-        } gap-6 mt-6`}
+        } gap-6 mt-4`}
       >
-        {filtered.length > 0 ? (
-          filtered.map((roadmap) => (
+        {roadmaps.length > 0 ? (
+          roadmaps.map((roadmap) => (
             <RoadmapCard
               key={roadmap.id}
               roadmap={roadmap}
@@ -217,7 +215,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
         <div className="flex justify-between items-center text-body-1-regular mt-6">
           <div>
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {(currentPage - 1) * pageSize + filtered.length} of {totalItems}{" "}
+            {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
             results
           </div>
           <div className="flex items-center space-x-0">

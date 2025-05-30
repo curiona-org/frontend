@@ -8,7 +8,7 @@ import {
   addEdge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import RoadmapNode from "./roadmap-nodes";
 import Topic from "@/types/topic";
 import TopicDialog from "@/components/roadmap/topic-dialog";
@@ -142,6 +142,13 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
+  // Calculate dynamic height based on number of topics
+  const flowHeight = useMemo(() => {
+    const topicCount = roadmap.topics.length;
+    // Base height + spacing per topic (adjust these values as needed)
+    return Math.max(500, topicCount * 300 + 200);
+  }, [roadmap.topics.length]);
+
   // Fungsi untuk update isFinished pada node tertentu
   const updateNodeFinishedStatus = (slug: string, isFinished: boolean) => {
     setNodes((nds) =>
@@ -179,8 +186,10 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
     []
   );
 
+  const proOptions = { hideAttribution: true };
+
   return (
-    <div className="nowheel" style={{ width: "100%", height: "100vh" }}>
+    <div className="nowheel" style={{ width: "100%", height: `${flowHeight}px` }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -189,6 +198,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         onConnect={onConnect}
         onNodeClick={handleNodeClick}
         fitView
+        proOptions={proOptions}
         nodeTypes={nodeTypes}
         connectionLineType={ConnectionLineType.SmoothStep}
         defaultEdgeOptions={{
@@ -198,6 +208,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         panOnDrag={false}
         nodesDraggable={false}
         zoomOnPinch={false}
+        zoomOnDoubleClick={false}
       />
       <TopicDialog
         slug={selectedSlug}
