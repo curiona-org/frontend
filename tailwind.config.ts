@@ -101,84 +101,84 @@ export default {
   				}
   			],
   			'mobile-display-1': [
-  				'34px',
+  				'36px',
   				{
   					lineHeight: '120%',
   					fontWeight: '700'
   				}
   			],
   			'mobile-display-2': [
-  				'27px',
+  				'34px',
   				{
   					lineHeight: '120%',
   					fontWeight: '700'
   				}
   			],
   			'mobile-heading-1': [
-  				'22px',
+  				'27px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-heading-2': [
-  				'18px',
+  				'22px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-heading-3': [
-  				'14px',
+  				'18px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-heading-4-regular': [
-  				'11px',
+  				'14px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-heading-4-bold': [
-  				'11px',
+  				'14px',
   				{
   					lineHeight: '120%',
   					fontWeight: '700'
   				}
   			],
   			'mobile-body-1-regular': [
-  				'9px',
+  				'11px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-body-1-medium': [
-  				'9px',
+  				'11px',
   				{
   					lineHeight: '120%',
   					fontWeight: '500'
   				}
   			],
   			'mobile-body-1-bold': [
-  				'9px',
+  				'11px',
   				{
   					lineHeight: '120%',
   					fontWeight: '700'
   				}
   			],
   			'mobile-body-2': [
-  				'7px',
+  				'9px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'
   				}
   			],
   			'mobile-caption': [
-  				'6px',
+  				'7px',
   				{
   					lineHeight: '120%',
   					fontWeight: '400'

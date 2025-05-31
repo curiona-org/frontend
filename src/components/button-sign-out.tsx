@@ -16,5 +16,5 @@ export default function ButtonSignOut() {
     return null;
   }
 
-  return <Button onClick={handleSignOut}>Sign Out</Button>;
+  return <Button onClick={handleSignOut} className="w-full text-start">Sign Out</Button>;
 }

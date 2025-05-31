@@ -70,45 +70,39 @@ export default function SignInPage() {
     <>
       <Toast ref={toastRef} />
       <div className="flex items-center justify-center min-h-screen px-7 py-28">
-        <div className="dashedBorder p-5 shadow-lg flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
+        <div className="flex flex-col gap-2 dashedBorder p-5 shadow-lg bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
           <h1 className="text-mobile-display-2 md:text-display-2">Sign In</h1>
           <p className="text-mobile-body-1-regular md:text-body-1-regular">
-            to Create Your Personalized Learning Blueprint
+            To Create Your Personalized Learning Blueprint
           </p>
 
-          <form className="space-y-3" onSubmit={onSubmit}>
+          <form className="space-y-2" onSubmit={onSubmit}>
             <input
               type="email"
-              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500  focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500  focus:ring-blue-500"
               placeholder="Email"
               {...register("email")}
               required
             />
             <input
               type="password"
-              className="text-mobile-body-1-medium md:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Password"
               {...register("password")}
               required
             />
-            <div className="text-start">
-              <Link
-                href="#"
-                className="text-mobile-body-1-regular md:text-body-1-regular text-blue-500 hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
 
             <button
               type="submit"
               disabled={authIsLoading}
-              className="text-mobile-body-1-bold md:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900 focus:outline-none focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+              className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900 focus:outline-none focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
             >
               {authIsLoading ? "..." : "Continue"}
             </button>
 
-            <p className="text-center text-sm md:text-base">OR</p>
+            <p className="text-center text-mobile-body-1-regular md:text-body-1-regular">
+              OR
+            </p>
 
             {/* sign in with google */}
             <button
@@ -129,7 +123,7 @@ export default function SignInPage() {
               </svg>
               Sign In with Google
             </button>
-            <p className="text-mobile-body-2 md:text-body-2 text-center">
+            <p className="text-mobile-body-1-regular lg:text-body-1-regular text-center">
               Don&apos;t have an account?
               <Link href="sign-up" className="text-blue-500 hover:underline">
                 {" "}
@@ -137,7 +131,7 @@ export default function SignInPage() {
               </Link>
             </p>
           </form>
-          <p className="text-mobile-body-2 md:text-body-2 max-w-sm">
+          <p className="text-mobile-body-1-regular lg:text-body-1-regular max-w-sm">
             By continuing to use our services, you acknowledge that you have
             both read and agree to our
             <Link href="#" className="text-blue-500 underline">

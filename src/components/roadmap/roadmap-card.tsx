@@ -53,10 +53,10 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
 
   return (
     <Link href={`/roadmap/${roadmap.slug}`}>
-      <div className="group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
-        <div className="flex justify-between items-center gap-4">
+      <div className="flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
+        <div className="flex justify-between items-center">
           <div className="flex-grow">
-            <h3 className="text-heading-4-bold font-semibold truncate text-wrap">
+            <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold truncate text-wrap">
               {roadmap.title.length > 50
                 ? roadmap.title.slice(0, 50) + "..."
                 : roadmap.title}
@@ -100,7 +100,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Description */}
-        <p className="text-body-2">
+        <p className="text-mobile-body-1-regular lg:text-body-2">
           {roadmap.description.length > 80
             ? roadmap.description.slice(0, 80) + "..."
             : roadmap.description}
@@ -113,7 +113,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Topics */}
-        <div className="flex items-center justify-between text-body-2">
+        <div className="flex items-center justify-between text-mobile-body-1-regular lg:text-body-2">
           <div className="flex items-center gap-1">
             <span role="img" aria-label="lightbulb">
               💡
@@ -130,7 +130,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Skill Level */}
-        <div className="flex items-center justify-between text-body-2">
+        <div className="flex items-center justify-between text-mobile-body-1-regular lg:text-body-2">
           <div className="flex items-center gap-1">
             <span role="img" aria-label="bicep">
               💪
@@ -148,7 +148,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
 
         <div className="text-body-2">
           {/* Progress Learning Section */}
-          <div className="flex items-center justify-between text-body-2">
+          <div className="flex items-center justify-between text-mobile-body-1-regular lg:text-body-2">
             <div className="flex items-center gap-1">
               <span role="img" aria-label="runningperson">
                 🏃

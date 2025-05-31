@@ -79,6 +79,10 @@ body {
   color: var(--black-500);
 }
 
+.container {
+  
+}
+
 .footer {
   @apply bg-[#011E4E];
 }
