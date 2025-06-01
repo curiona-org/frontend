@@ -1,9 +1,10 @@
 import Toast, { ToastRef } from "@/components/ui/toast";
 import { useAuth } from "@/providers/auth-provider";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormSignIn } from "./form";
+import Link from "next/link";
+import Button from "@/components/ui/button";
 
 export default function SignInPage() {
   const {
@@ -69,10 +70,10 @@ export default function SignInPage() {
   return (
     <>
       <Toast ref={toastRef} />
-      <div className="flex items-center justify-center min-h-screen px-7 py-28">
+      <div className="flex items-center justify-center min-h-screen px-6 lg:px-72 py-32">
         <div className="flex flex-col gap-2 dashedBorder p-5 shadow-lg bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
-          <h1 className="text-mobile-display-2 md:text-display-2">Sign In</h1>
-          <p className="text-mobile-body-1-regular md:text-body-1-regular">
+          <h1 className="text-mobile-display-2 lg:text-display-2">Sign In</h1>
+          <p className="text-mobile-body-1-regular lg:text-body-1-regular">
             To Create Your Personalized Learning Blueprint
           </p>
 
@@ -92,23 +93,22 @@ export default function SignInPage() {
               required
             />
 
-            <button
+            <Button
               type="submit"
               disabled={authIsLoading}
-              className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900 focus:outline-none focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+              className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-11 text-white-500 bg-blue-500 hover:bg-blue-900"
             >
-              {authIsLoading ? "..." : "Continue"}
-            </button>
+              {authIsLoading ? "Processing..." : "Continue"}
+            </Button>
 
-            <p className="text-center text-mobile-body-1-regular md:text-body-1-regular">
+            <p className="text-center text-mobile-body-1-regular lg:text-body-1-regular">
               OR
             </p>
 
-            {/* sign in with google */}
-            <button
+            <Button
               onClick={() => signInGoogle()}
               type="button"
-              className="flex gap-1 items-center justify-center w-full h-[43px] text-mobile-body-1-medium md:text-body-1-medium border-2 border-blue-500 rounded-lg focus:outline-none hover:bg-blue-900 hover:border-blue-900 hover:text-white-500 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+              className="flex gap-1 items-center justify-center w-full h-11 text-mobile-body-1-medium lg:text-body-1-medium border-2 border-blue-500 hover:bg-blue-900 hover:border-blue-900 hover:text-white-500"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@ export default function SignInPage() {
                 />
               </svg>
               Sign In with Google
-            </button>
+            </Button>
             <p className="text-mobile-body-1-regular lg:text-body-1-regular text-center">
               Don&apos;t have an account?
               <Link href="sign-up" className="text-blue-500 hover:underline">

@@ -1,9 +1,10 @@
 import Toast, { ToastRef } from "@/components/ui/toast";
 import { useAuth } from "@/providers/auth-provider";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormSignUp } from "./form";
+import Link from "next/link";
+import Button from "@/components/ui/button";
 
 export default function SignUpPage() {
   const {
@@ -69,59 +70,58 @@ export default function SignUpPage() {
   return (
     <>
       <Toast ref={toastRef} />
-      <div className="flex items-center justify-center min-h-screen px-6 py-28">
+      <div className="flex items-center justify-center min-h-screen px-6 lg:px-72 py-32">
         <div className="dashedBorder p-5 shadow-lg  flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
-          <h1 className="text-mobile-display-2 md:text-display-2">Sign Up</h1>
-          <p className="text-mobile-body-1-regular md:text-body-1-regular">
-            to Create Your Personalized Learning Blueprint
+          <h1 className="text-mobile-display-2 lg:text-display-2">Sign Up</h1>
+          <p className="text-mobile-body-1-regular lg:text-body-1-regular">
+            To Create Your Personalized Learning Blueprint
           </p>
 
           <form className="space-y-4" onSubmit={onSubmit}>
             <input
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Full Name"
               {...register("name")}
               required
             />
             <input
               type="email"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Email"
               {...register("email")}
               required
             />
             <input
               type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Password"
               {...register("password")}
               required
             />
             <input
               type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-md focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="Confirm Password"
               {...register("confirmPassword")}
               required
             />
 
             <div className="flex flex-col gap-2">
-              <button
+              <Button
                 type="submit"
-                className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-[43px] text-white-500 bg-blue-500 rounded-md hover:bg-blue-900 focus:outline-none focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+                className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900"
               >
                 {authIsLoading ? "..." : "Sign Up"}
-              </button>
+              </Button>
 
-              <p className="text-center text-mobile-body-1-regular md:text-body-1-regular">
+              <p className="text-center text-mobile-body-1-regular lg:text-body-1-regular">
                 OR
               </p>
 
-              {/* sign up with google */}
-              <button
+              <Button
                 onClick={() => signInGoogle()}
                 type="button"
-                className="flex gap-1 items-center justify-center w-full h-[43px] text-mobile-body-1-medium md:text-body-1-medium border-2 border-blue-500 rounded-lg focus:outline-none hover:bg-blue-900 hover:border-blue-900 hover:text-white-500 focus:scale-100 transition-transform duration-300 ease-out hover:scale-105"
+                className="flex gap-1 items-center justify-center w-full h-[43px] text-mobile-body-1-medium lg:text-body-1-medium border-2 border-blue-500 rounded-lg hover:bg-blue-900 hover:border-blue-900 hover:text-white-500"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ export default function SignUpPage() {
                   />
                 </svg>
                 Sign In with Google
-              </button>
+              </Button>
               <p className="text-mobile-body-1-regular lg:text-body-1-regular text-center">
                 Already have an account?
                 <Link href="sign-in" className="text-blue-500 hover:underline">

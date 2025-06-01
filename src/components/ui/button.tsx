@@ -4,12 +4,24 @@ import { forwardRef } from "react";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
+  disableEffects?: boolean;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, asChild, ...props }, ref) => {
+  ({ className, asChild, disableEffects = false, ...props }, ref) => {
     const Comp = asChild ? Slot.Root : "button";
-    return <Comp className={cn(className)} ref={ref} {...props} />;
+    return (
+      <Comp
+        className={cn(
+          className,
+          "rounded-lg",
+          !disableEffects &&
+            "transition-transform duration-300 ease-out hover:scale-105 active:scale-95"
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
   }
 );
 

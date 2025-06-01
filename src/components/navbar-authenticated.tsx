@@ -23,7 +23,6 @@ const NavigationBarAuthenticated = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when changing routes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
@@ -42,7 +41,6 @@ const NavigationBarAuthenticated = () => {
         }`}
       >
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link href="/">
             <div className="flex gap-2 items-center">
               <Image
@@ -56,15 +54,13 @@ const NavigationBarAuthenticated = () => {
               </span>
             </div>
           </Link>
-
-          {/* Desktop Navigation - Hidden on mobile */}
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
               className={`font-satoshi p-3 ${
                 pathname === "/"
                   ? "text-body-1-bold text-blue-500 dashedBorder"
-                  : "text-body-1-regular text-black-500 hover:text-blue-500"
+                  : "text-body-1-medium text-black-500 hover:text-blue-500"
               }`}
             >
               Generate Roadmap
@@ -74,13 +70,12 @@ const NavigationBarAuthenticated = () => {
               className={`font-satoshi p-3 ${
                 pathname === "/community"
                   ? "text-body-1-bold text-blue-500 dashedBorder"
-                  : "text-body-1-regular text-black-500 hover:text-blue-500"
+                  : "text-body-1-medium text-black-500 hover:text-blue-500"
               }`}
             >
               Community Roadmap
             </Link>
           </div>
-
           <button
             className="flex items-center justify-center lg:hidden w-11 h-11 text-gray-500 border-2 border-blue-100 rounded-lg"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -174,22 +169,94 @@ const NavigationBarAuthenticated = () => {
             )}
           </button>
 
-          <Image
-            src={session.user.avatar}
-            alt="User Avatar"
-            width={40}
-            height={40}
-            className="rounded-full bg-gray-300 items-center justify-center w-8 h-8 sm:w-10 sm:h-10 hidden lg:block"
-          />
+          {/* Desktop Dropdown Menu */}
+          <div className="hidden lg:block">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button className="flex items-center justify-center focus:outline-none">
+                  <div className="flex gap-2 items-center">
+                    <Image
+                      src={session.user.avatar}
+                      alt="User Avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full bg-gray-300 items-center justify-center w-8 h-8 sm:w-10 sm:h-10"
+                    />
+                    <p className="text-body-1-medium text-black-500">
+                      {session.user.name}
+                    </p>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.84314 5.63633C1.7954 5.59122 1.73925 5.55595 1.67788 5.53255C1.61652 5.50914 1.55114 5.49805 1.48549 5.4999C1.41984 5.50176 1.3552 5.51653 1.29526 5.54337C1.23531 5.57021 1.18125 5.60859 1.13614 5.65633C1.09103 5.70406 1.05576 5.76022 1.03235 5.82158C1.00895 5.88295 0.997854 5.94832 0.999712 6.01397C1.00157 6.07962 1.01634 6.14426 1.04318 6.20421C1.07002 6.26415 1.1084 6.31822 1.15614 6.36333L5.65614 10.6133C5.74897 10.7011 5.87188 10.75 5.99964 10.75C6.12739 10.75 6.2503 10.7011 6.34314 10.6133L10.8436 6.36333C10.8924 6.31852 10.9318 6.26446 10.9595 6.2043C10.9872 6.14413 11.0027 6.07906 11.0051 6.01287C11.0074 5.94667 10.9966 5.88066 10.9732 5.81869C10.9498 5.75671 10.9144 5.69999 10.8689 5.65183C10.8234 5.60367 10.7688 5.56503 10.7083 5.53814C10.6478 5.51126 10.5825 5.49667 10.5163 5.49523C10.45 5.49379 10.3842 5.50552 10.3225 5.52974C10.2609 5.55396 10.2047 5.59019 10.1571 5.63633L5.99964 9.56233L1.84314 5.63633Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  className="min-w-[160px] bg-white-500 rounded-lg shadow-lg z-50"
+                  sideOffset={5}
+                  align="end"
+                >
+                  <div className="flex flex-col gap-1">
+                    <div className="p-4 border-b">
+                      <div className="flex items-center gap-3">
+                        <Image
+                          src={session.user.avatar}
+                          alt="User Avatar"
+                          width={50}
+                          height={50}
+                          className="rounded-full bg-gray-300"
+                        />
+                        <div>
+                          <p className="font-semibold text-black-500">
+                            {session.user.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {session.user.email || "User"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <DropdownMenu.Item className="focus:outline-none">
+                      <Link
+                        href="/profile"
+                        className="flex items-center px-3 py-2 text-body-1-medium text-gray-700 hover:bg-blue-50 hover:text-blue-500 w-full"
+                      >
+                        My Profile
+                      </Link>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Item className="focus:outline-none">
+                      <div className="px-3 text-red-500 bg-red-50 w-full rounded-b-lg">
+                        <ButtonSignOut className="py-2 text-body-1-medium" />
+                      </div>
+                    </DropdownMenu.Item>
+                  </div>
+
+                  <DropdownMenu.Arrow className="fill-black-500" />
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          </div>
         </div>
 
+        {/* Mobile Menu */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             isMobileMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="bg-white-500 rounded-lg shadow-lg border border-gray-100 overflow-hidden">
-            <div className="flex flex-col">
+          <div className="bg-white-500 rounded-lg border border-gray-100 overflow-hidden">
+            <div className="flex flex-col gap-1">
               <div className="p-4 border-b">
                 <div className="flex items-center gap-3">
                   <Image
@@ -214,7 +281,7 @@ const NavigationBarAuthenticated = () => {
                 className={`px-4 py-3 ${
                   pathname === "/"
                     ? "text-blue-500 text-body-1-bold bg-blue-50"
-                    : ""
+                    : "text-body-1-medium"
                 }`}
               >
                 Generate Roadmap
@@ -224,13 +291,23 @@ const NavigationBarAuthenticated = () => {
                 className={`px-4 py-3 ${
                   pathname === "/community"
                     ? "text-blue-500 text-body-1-bold bg-blue-50"
-                    : ""
+                    : "text-body-1-medium"
                 }`}
               >
                 Community Roadmap
               </Link>
-              <div className="text-start px-4 py-3 bg-red-500 text-white-500 text-body-1-regular">
-                <ButtonSignOut />
+              <Link
+                href="/profile"
+                className={`px-4 py-3 ${
+                  pathname === "/profile"
+                    ? "text-blue-500 text-body-1-bold bg-blue-50"
+                    : "text-body-1-medium"
+                }`}
+              >
+                My Profile
+              </Link>
+              <div className="text-start px-4 bg-red-50 text-red-500 text-body-1-regular">
+                <ButtonSignOut className="py-3 text-body-1-medium" />
               </div>
             </div>
           </div>

@@ -1,9 +1,13 @@
 "use client";
 import Button from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/helpers/common.helper";
+interface ButtonSignOutProps {
+  className?: string;
+}
 
-export default function ButtonSignOut() {
+export default function ButtonSignOut({ className }: ButtonSignOutProps) {
   const { isLoggedIn, signOut } = useAuth();
   const router = useRouter();
 
@@ -16,5 +20,13 @@ export default function ButtonSignOut() {
     return null;
   }
 
-  return <Button onClick={handleSignOut} className="w-full text-start">Sign Out</Button>;
+  return (
+    <Button
+      disableEffects
+      onClick={handleSignOut}
+      className={cn("w-full text-start", className)}
+    >
+      Sign Out
+    </Button>
+  );
 }

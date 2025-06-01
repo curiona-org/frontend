@@ -17,8 +17,13 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row md:justify-between items-center gap-8">
         <div className="flex flex-col items-center md:items-start gap-4">
           <div className="flex gap-2 items-center">
-            <Image src={Logo} alt="Logo" priority />
-            <span className="font-satoshi text-3xl text-white-500 font-medium">
+            <Image
+              src={Logo}
+              alt="Logo"
+              priority
+              className="w-8 h-8 sm:w-auto sm:h-auto"
+            />
+            <span className="text-xl sm:text-2xl lg:text-3xl font-medium text-blue-500">
               Curiona
             </span>
           </div>
