@@ -30,6 +30,8 @@ export type ListRoadmapsOutput = FilteredList<RoadmapSummary>;
 export type GetRoadmapOutput = Roadmap & {
   creator: Creator;
   personalization_options: PersonalizationOptions;
+  is_bookmarked: boolean;
+  progression: RoadmapProgressionSummary;
   topics: Topic[];
 };
 

@@ -47,9 +47,8 @@ const NavigationBarAuthenticated = () => {
                 src={Logo}
                 alt="Logo"
                 priority
-                className="w-8 h-8 sm:w-auto sm:h-auto"
               />
-              <span className="text-xl sm:text-2xl lg:text-3xl font-medium text-blue-500">
+              <span className="hidden md:block text-heading-2 font-medium text-blue-500">
                 Curiona
               </span>
             </div>

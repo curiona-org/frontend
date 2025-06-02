@@ -73,6 +73,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         ((left.length - 1) * subtopicSpacingY) / 2 +
         subIdx * subtopicSpacingY;
 
+        console.log({sub})
       nodes.push({
         id: subId,
         position: { x: -subtopicOffsetX, y: subY },

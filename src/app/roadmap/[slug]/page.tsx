@@ -13,14 +13,13 @@ interface RoadmapDetailPageProps {
 export default async function RoadmapDetailPage({
   params,
 }: RoadmapDetailPageProps) {
-  const { slug } = await params;
-
+  const { slug } = params;
   const result = await roadmapService.getRoadmapBySlug(slug);
 
   if (!result?.data) {
     notFound();
   } else {
-    console.log(result.data)
+    console.log({currRoadmap: result.data});
   }
 
   const roadmap = result.data;

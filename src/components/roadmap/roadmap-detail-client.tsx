@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Progress } from "radix-ui";
-import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { ConfettiSideCannons } from "@/components/confetti-side-cannon";
+import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import ChatbotWidget from "@/components/chatbot/chatbot";
 import RegenerateDialog from "@/components/roadmap/regenerate-dialog";
 import DeleteDialog from "@/components/roadmap/delete-dialog";
+import FinishedDialog from "@/components/roadmap/finished-dialog";
 
 const roadmapService = new RoadmapService();
 
@@ -15,6 +17,27 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [loading, setLoading] = useState(false);
   const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiTriggered, setConfettiTriggered] = useState(false);
+  const [isFinishedDialogOpen, setIsFinishedDialogOpen] = useState(false);
+
+  // cek jika sudah selesai, tampil confetti sekali saat halaman load
+  useEffect(() => {
+    if (
+      (roadmap?.progression?.is_finished ||
+        roadmap?.progression?.finished_topics ===
+          roadmap?.progression?.total_topics) &&
+      !confettiTriggered
+    ) {
+      setShowConfetti(true);
+      setConfettiTriggered(true);
+      setIsFinishedDialogOpen(true);
+    }
+  }, [
+    roadmap?.progression?.finished_topics,
+    roadmap?.progression?.finished_topics,
+    confettiTriggered,
+  ]);
 
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,6 +102,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
 
   return (
     <>
+      {showConfetti && <ConfettiSideCannons />}
       <div className="px-6 lg:px-40 pt-32">
         <div className="flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6">
           <div className="flex justify-between">
@@ -212,6 +236,11 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
         slug={slug}
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
+      />
+
+      <FinishedDialog
+        open={isFinishedDialogOpen}
+        onClose={() => setIsFinishedDialogOpen(false)}
       />
     </>
   );
