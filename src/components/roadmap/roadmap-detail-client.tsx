@@ -5,9 +5,9 @@ import { RoadmapService } from "@/lib/services/roadmap.service";
 import { ConfettiSideCannons } from "@/components/confetti-side-cannon";
 import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import ChatbotWidget from "@/components/chatbot/chatbot";
-import RegenerateDialog from "@/components/roadmap/regenerate-dialog";
-import DeleteDialog from "@/components/roadmap/delete-dialog";
-import FinishedDialog from "@/components/roadmap/finished-dialog";
+import RegenerateDialog from "@/components/dialog/regenerate-dialog";
+import DeleteDialog from "@/components/dialog/delete-dialog";
+import FinishedDialog from "@/components/dialog/finished-dialog";
 
 const roadmapService = new RoadmapService();
 
@@ -105,11 +105,11 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       {showConfetti && <ConfettiSideCannons />}
       <div className="px-6 lg:px-40 pt-32">
         <div className="flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6">
-          <div className="flex justify-between">
+          <div className="flex flex-wrap justify-between">
             <h1 className="text-mobile-display-2 lg:text-heading-1-bold">
               {roadmap.title}
             </h1>
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex flex-wrap items-center gap-4 mt-2">
               <button
                 onClick={toggleSave}
                 disabled={loading}
@@ -203,8 +203,8 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
           <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
 
           <div className="flex flex-col gap-4">
-            <div className="flex justify-between text-mobile-body-1-regular lg:text-body-1-regular">
-              <span>🏃 Progress Learning</span>
+            <div className="flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular">
+              <span className="hidden md:block">🏃 Progress Learning</span>
               <span>{`${finishedTopics}/${totalTopics} Topics Completed`}</span>
             </div>
             <Progress.Root

@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../ui/button";
 
 interface PersonalInformationProps {
   name: string;
@@ -26,22 +27,20 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
   onCancelClick,
 }) => {
   return (
-    <div className="flex items-center justify-between border-b border-gray-200">
-      {/* Avatar */}
+    <div className="flex flex-wrap md:flex-nowrap gap-8 items-center justify-between">
       <img
         src={avatar}
         alt={name}
         className="w-28 h-28 rounded-full object-cover border-4 border-blue-500"
       />
 
-      {/* Info Section */}
-      <div className="flex-grow mx-8">
+      <div className="w-full flex flex-col gap-4">
         <p className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold text-gray-800 mb-5">
           Personal Information
         </p>
 
-        <div className="grid grid-cols-3 gap-x-12">
-          <div>
+        <div className="flex flex-col md:grid md:grid-cols-3 md:gap-x-12">
+          <div className="flex justify-between items-center md:block">
             <p className="flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2">
               <span role="img" aria-label="user" className="mr-2">
                 🙂
@@ -65,7 +64,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
             </p>
           </div>
 
-          <div>
+          <div className="flex justify-between items-center md:block">
             <p className="flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2">
               <span role="img" aria-label="email" className="mr-2">
                 📬
@@ -77,7 +76,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
             </p>
           </div>
 
-          <div>
+          <div className="flex justify-between items-center md:block">
             <p className="flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2">
               <span role="img" aria-label="calendar" className="mr-2">
                 🏠
@@ -92,32 +91,38 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
       </div>
 
       {/* Buttons */}
-      <div className="w-48 flex items-center justify-end gap-4">
+      <div className="w-full md:w-fit flex gap-4">
         {editing ? (
           <>
-            <button
+            <Button
               onClick={onSaveClick}
-              className="flex items-center border-2 border-green-500 rounded-lg px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100 transition"
+              className="flex md:flex-col w-full md:w-20 justify-center border-2 border-green-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100"
             >
-              💾 Save
-            </button>
-            <button
+              <span role="img" aria-label="save">
+                💾
+              </span>
+              Save
+            </Button>
+            <Button
               onClick={onCancelClick}
-              className="flex items-center border-2 border-red-500 rounded-lg px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-red-100 transition"
+              className="flex md:flex-col w-full md:w-20 justify-center border-2 border-red-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-red-100"
             >
-              ❌ Cancel
-            </button>
+              <span role="img" aria-label="cancel">
+                ❌
+              </span>
+              Cancel
+            </Button>
           </>
         ) : (
-          <button
+          <Button
             onClick={onEditClick}
-            className="flex items-center border-2 border-[#E5E5E5] rounded-lg px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-gray-100 transition"
+            className="w-full md:w-32 py-3 border-2 border-[#E5E5E5] text-mobile-body-1-regular lg:text-body-1-regular hover:bg-gray-100"
           >
-            <span role="img" aria-label="pencil" className="mr-2">
+            <span role="img" aria-label="pencil">
               ✏️
             </span>
             Edit Profile
-          </button>
+          </Button>
         )}
       </div>
     </div>

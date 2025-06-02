@@ -205,7 +205,7 @@ const NavigationBarAuthenticated = () => {
                   sideOffset={5}
                   align="end"
                 >
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col">
                     <div className="p-4 border-b">
                       <div className="flex items-center gap-3">
                         <Image
@@ -241,7 +241,7 @@ const NavigationBarAuthenticated = () => {
                     </DropdownMenu.Item>
                   </div>
 
-                  <DropdownMenu.Arrow className="fill-black-500" />
+                  <DropdownMenu.Arrow className="fill-white-500" />
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
@@ -255,7 +255,7 @@ const NavigationBarAuthenticated = () => {
           }`}
         >
           <div className="bg-white-500 rounded-lg border border-gray-100 overflow-hidden">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col">
               <div className="p-4 border-b">
                 <div className="flex items-center gap-3">
                   <Image

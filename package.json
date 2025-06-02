@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dotlottie/react-player": "^1.6.19",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/canvas-confetti": "^1.9.0",

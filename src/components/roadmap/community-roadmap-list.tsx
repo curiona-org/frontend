@@ -64,22 +64,12 @@ const CommunityRoadmap = ({
     }
   };
 
-  // Function to generate pagination with ellipsis
   const generatePageNumbers = () => {
-    const pageNumbers = [];
-
-    // Always show ellipsis between pages, even if only 2 pages
-    pageNumbers.push(1); // first page
-    if (totalPages > 5) pageNumbers.push("...");
-
-    // Add middle pages if applicable
-    for (let i = 2; i < totalPages; i++) {
-      pageNumbers.push(i);
+    if (totalPages <= 3) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+      return [1, 2, 3, "...", totalPages];
     }
-
-    if (totalPages > 5) pageNumbers.push("...");
-    pageNumbers.push(totalPages);
-    return pageNumbers;
   };
 
   const handleCustomPage = () => {
@@ -91,6 +81,8 @@ const CommunityRoadmap = ({
       alert("Invalid page number.");
     }
   };
+
+  const pages = generatePageNumbers();
 
   return (
     <>
@@ -148,7 +140,7 @@ const CommunityRoadmap = ({
                 key={index}
                 className={`py-2 px-4 ${
                   page === currentPage
-                    ? "bg-blue-500 text-white-500 border-none" // Menghilangkan border biru pada tombol aktif
+                    ? "bg-blue-500 text-white-500 border-none"
                     : page === "..."
                     ? "bg-white-500 border border-black-100"
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"

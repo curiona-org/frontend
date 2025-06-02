@@ -11,7 +11,7 @@ import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import RoadmapNode from "./roadmap-nodes";
 import Topic from "@/types/topic";
-import TopicDialog from "@/components/roadmap/topic-dialog";
+import TopicDialog from "@/components/dialog/topic-dialog";
 
 interface ReactFlowProps {
   roadmap: GetRoadmapOutput;
@@ -73,7 +73,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         ((left.length - 1) * subtopicSpacingY) / 2 +
         subIdx * subtopicSpacingY;
 
-        console.log({sub})
+      console.log({ sub });
       nodes.push({
         id: subId,
         position: { x: -subtopicOffsetX, y: subY },
@@ -142,6 +142,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
 
   // Calculate dynamic height based on number of topics
   const flowHeight = useMemo(() => {
@@ -190,7 +191,10 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const proOptions = { hideAttribution: true };
 
   return (
-    <div className="nowheel" style={{ width: "100%", height: `${flowHeight}px` }}>
+    <div
+      className="nowheel"
+      style={{ width: "100%", height: `${flowHeight}px` }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -205,10 +209,12 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         defaultEdgeOptions={{
           type: "smoothstep",
         }}
-        zoomOnScroll={false}
-        panOnDrag={false}
+        zoomOnScroll={isMobile}
+        panOnDrag={isMobile}
+        zoomOnPinch={isMobile}
+        minZoom={0.5}
+        maxZoom={2}
         nodesDraggable={false}
-        zoomOnPinch={false}
         zoomOnDoubleClick={false}
       />
       <TopicDialog

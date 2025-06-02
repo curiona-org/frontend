@@ -27,7 +27,7 @@ export default function HomeAuthenticated() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-4 items-center text-mobile-display-1 lg:text-display-1">
             <h1>Create Your </h1>
-            <span className="text-blue-500 dashedBorder px-2 md:px-5 py-2">
+            <span className="text-blue-500 dashedBorder px-2 md:px-5 py-1">
               Learning Blueprint
             </span>
           </div>

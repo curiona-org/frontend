@@ -309,11 +309,10 @@ export default function Chatbot({ slug }: { slug: string }) {
   };
 
   if (!isOpen) {
-    // tampilan kecil saat chat ditutup
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-0 right-0 mr-20 mb-20 w-32 h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
+        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-24 h-24  lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
         aria-label="Open Chat"
         title="Open Chat"
       >
@@ -329,7 +328,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 w-[480px] h-[525px] bg-white-500 border-2 border-blue-500 rounded-lg shadow-lg flex flex-col">
+    <div className="fixed bottom-0 lg:bottom-8 -right-0 lg:right-8 w-full h-[525px] md:w-[480px] lg:h-[525px] bg-white-500 border-2 border-blue-500 rounded-lg shadow-lg flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-2">

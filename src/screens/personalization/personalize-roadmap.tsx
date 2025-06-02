@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { Progress } from "radix-ui";
+import Button from "@/components/ui/button";
 
 const roadmapService = new RoadmapService();
 
@@ -98,19 +99,21 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
     <div className="w-full bg-white rounded-xl shadow-xl px-4 py-8 space-y-10">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-2">
-        <h1 className="text-display-1 font-bold text-left">Personalize Your</h1>
+        <h1 className="text-mobile-heading-1 lg:text-heading-1 font-bold">
+          Personalize Your
+        </h1>
         {step === 1 && (
-          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
-            ⏳ Time availability
+          <span className="text-blue-500 dashedBorder px-2 md:px-4 py-1 text-mobile-heading-1 lg:text-heading-1 font-bold">
+            ⏳ Time Availability
           </span>
         )}
         {step === 2 && (
-          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
+          <span className="text-blue-500 dashedBorder px-6 py-2 text-mobile-heading-1 lg:text-heading-1 font-bold">
             🤯 Familiarity
           </span>
         )}
         {step === 3 && (
-          <span className="text-blue-500 dashedBorder px-6 py-2 text-display-1 font-semibold">
+          <span className="text-blue-500 dashedBorder px-6 py-2 text-mobile-heading-1 lg:text-heading-1 font-bold">
             📅 Learning Duration
           </span>
         )}
@@ -133,8 +136,8 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         {/* Step 1 */}
         {step === 1 && (
           <div className="space-y-6">
-            <p className="text-heading-4">
-              How much time can you learn each day or week? We’ll fit the plan
+            <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
+              How much time can you learn each day or week? We'll fit the plan
               to your schedule 😌
             </p>
             <div className="grid grid-cols-3 gap-4">
@@ -152,7 +155,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                       e.target.value === "" ? 0 : +e.target.value,
                   })
                 }
-                className="dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
+                className="text-mobile-body-1-medium lg:text-body-1-medium dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
                 placeholder="0"
               />
               <select
@@ -163,13 +166,12 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                     timeUnit: e.target.value as "hours" | "minutes",
                   })
                 }
-                className="flex items-center justify-center dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
+                className="text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
               >
                 <option value="hours">Hour(s)</option>
                 <option value="minutes">Minute(s)</option>
               </select>
-              {/* <div className=""></div> */}
-              <div className="flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 text-mobile-body-1-medium lg:text-body-1-medium rounded-lg px-4 py-3">
+              <div className="text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
                 Per day
               </div>
             </div>
@@ -179,11 +181,11 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         {/* Step 2 */}
         {step === 2 && (
           <div className="space-y-6">
-            <p className="text-heading-4">
+            <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
               Tell us how well you know the topic—so we can match the content to
               your skill level 😉
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-mobile-body-1-medium lg:text-body-1-medium grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 {
                   label: "beginner",
@@ -201,10 +203,10 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                   text: "I'm confident and want deeper insights.",
                 },
               ].map(({ label, emoji, text }) => (
-                <button
+                <Button
                   type="button"
                   key={label}
-                  className={`rounded-lg border p-4 text-sm transition-all flex items-center justify-center text-center ${
+                  className={`border p-4 text-sm flex items-center justify-center text-center ${
                     formData.familiarity === label
                       ? "bg-blue-500 text-white-500 border-blue-500"
                       : "bg-white text-gray-800 border-gray-300 hover:border-blue-400 hover:ring"
@@ -215,7 +217,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                 >
                   <span className="text-lg mr-2">{emoji}</span>
                   {text}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -224,11 +226,11 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         {/* Step 3 */}
         {step === 3 && (
           <div className="space-y-6">
-            <p className="text-heading-4">
+            <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
               Set how long you want your learning journey to take—short and
               focused or paced and steady 🧘
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="text-mobile-body-1-medium lg:text-body-1-medium grid grid-cols-2 gap-4">
               <input
                 type="number"
                 value={formData.duration === 0 ? "" : formData.duration}
@@ -239,7 +241,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                   })
                 }
                 className="border border-gray-300 rounded-lg px-4 py-3 text-center focus:ring focus:ring-blue-500 w-full"
-                placeholder="1"
+                placeholder="0"
               />
               <select
                 value={formData.durationUnit}
@@ -262,38 +264,38 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         {/* Navigation Buttons */}
         <div className="grid grid-cols-2 gap-4 pt-4">
           {step === 1 ? (
-            <button
+            <Button
               type="button"
               onClick={handleNext}
-              className="col-span-2 w-full bg-blue-500 text-white-500 rounded-lg py-3 hover:bg-blue-700 transition"
+              className="text-mobile-body-1-bold lg:text-body-1-bold col-span-2 w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
             >
               Next
-            </button>
+            </Button>
           ) : (
             <>
-              <button
+              <Button
                 type="button"
                 onClick={handleBack}
-                className="w-full rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 py-3"
+                className="text-mobile-body-1-bold lg:text-body-1-bold w-full border border-gray-300 text-gray-700 hover:bg-gray-100 py-3"
               >
                 Back
-              </button>
+              </Button>
 
               {step < 3 ? (
-                <button
+                <Button
                   type="button"
                   onClick={handleNext}
-                  className="w-full bg-blue-500 text-white-500 rounded-lg py-3 hover:bg-blue-700 transition"
+                  className="text-mobile-body-1-bold lg:text-body-1-bold w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
                 >
                   Next
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   type="submit"
-                  className="w-full bg-green-600 text-white rounded-lg py-3 hover:bg-green-800 transition"
+                  className="text-mobile-body-1-bold lg:text-body-1-bold px-2 w-full text-white-500 py-3 bg-blue-500 active:bg-blue-900"
                 >
                   Generate My Learning Plan
-                </button>
+                </Button>
               )}
             </>
           )}
