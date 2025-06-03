@@ -14,6 +14,18 @@ export default function HomeAuthenticated() {
   const [userHasRoadmaps, setUserHasRoadmaps] = useState(false);
 
   useEffect(() => {
+    if (!session || !session.user?.id) return;
+
+    const loginKey = `login_${session.user.id}`;
+
+    const hasRefreshed = sessionStorage.getItem(loginKey);
+    if (!hasRefreshed) {
+      // Belum pernah refresh untuk akun ini, lakukan refresh dan set flag
+      sessionStorage.setItem(loginKey, "true");
+      window.location.reload();
+    }
+    
+
     const checkUserRoadmaps = async () => {
       const roadmaps = await roadmapService.listUserRoadmap();
       setUserHasRoadmaps(roadmaps.data.items.length > 0);
@@ -71,7 +83,7 @@ export default function HomeAuthenticated() {
 
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
-            <h4 className="text-mobile-heading-4-regular lg:text-heading-4-regular">
+            <h4 className="text-mobile-heading-4-regular lg:text-heading-4-regular w-[240px] md:w-full">
               Or check out roadmaps others have created
             </h4>
             <Link href="/community">

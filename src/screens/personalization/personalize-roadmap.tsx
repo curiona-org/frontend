@@ -264,38 +264,46 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         {/* Navigation Buttons */}
         <div className="grid grid-cols-2 gap-4 pt-4">
           {step === 1 ? (
-            <Button
-              type="button"
-              onClick={handleNext}
-              className="text-mobile-body-1-bold lg:text-body-1-bold col-span-2 w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
-            >
-              Next
-            </Button>
-          ) : (
-            <>
+            <div className=" col-span-12 w-full text-mobile-body-1-bold">
               <Button
                 type="button"
-                onClick={handleBack}
-                className="text-mobile-body-1-bold lg:text-body-1-bold w-full border border-gray-300 text-gray-700 hover:bg-gray-100 py-3"
+                onClick={handleNext}
+                className="lg:text-body-1-bold col-span-2 w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
               >
-                Back
+                Next
               </Button>
-
-              {step < 3 ? (
+            </div>
+          ) : (
+            <>
+              <div className=" text-mobile-body-1-bold">
                 <Button
                   type="button"
-                  onClick={handleNext}
-                  className="text-mobile-body-1-bold lg:text-body-1-bold w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
+                  onClick={handleBack}
+                  className="text-mobile-body-1-bold lg:text-body-1-bold w-full border border-gray-300 text-gray-700 hover:bg-gray-100 py-3"
                 >
-                  Next
+                  Back
                 </Button>
+              </div>
+
+              {step < 3 ? (
+                <div className="text-mobile-body-1-bold">
+                  <Button
+                    type="button"
+                    onClick={handleNext}
+                    className="text-mobile-body-1-bold lg:text-body-1-bold w-full bg-blue-500 text-white-500 py-3 active:bg-blue-900"
+                  >
+                    Next
+                  </Button>
+                </div>
               ) : (
-                <Button
-                  type="submit"
-                  className="text-mobile-body-1-bold lg:text-body-1-bold px-2 w-full text-white-500 py-3 bg-blue-500 active:bg-blue-900"
-                >
-                  Generate My Learning Plan
-                </Button>
+                <div className="text-mobile-body-1-bold">
+                  <Button
+                    type="submit"
+                    className="text-mobile-body-1-bold lg:text-body-1-bold px-2 w-full text-white-500 py-3 bg-blue-500 active:bg-blue-900"
+                  >
+                    Generate My Learning Plan
+                  </Button>
+                </div>
               )}
             </>
           )}

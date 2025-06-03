@@ -183,11 +183,6 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
   if (loading) return <p>Loading...</p>;
 
-  // const limitedRoadmaps = filteredRoadmaps.slice(
-  //   (currentPage - 1) * pageSize,
-  //   currentPage * pageSize
-  // );
-
   return (
     <>
       <div
@@ -212,7 +207,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
       {/* Pagination Controls */}
       {showPagination && (
-        <div className="flex justify-between items-center text-body-1-regular mt-6">
+        <div className="flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-body-1-regular mt-6">
           <div>
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
@@ -224,14 +219,14 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
               disabled={currentPage === 1}
               className="py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50"
             >
-              &lt;&lt;
+              ⏪
             </button>
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
             >
-              &lt;
+              ◀️
             </button>
 
             {generatePageNumbers().map((p, i) =>
@@ -263,14 +258,14 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
               disabled={currentPage === totalPages}
               className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
             >
-              &gt;
+              ▶️
             </button>
             <button
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
               className="py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50"
             >
-              &gt;&gt;
+              ⏩
             </button>
           </div>
         </div>

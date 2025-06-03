@@ -18,7 +18,9 @@ const ProfileDetails = () => {
   const [newName, setNewName] = useState<string>("");
   const { setName, session } = useAuth();
   const [generatedRoadmap, setGeneratedRoadmap] = useState<number>(0);
+  const [onProgressRoadmap, setOnProgressRoadmap] = useState<number>(0);
   const [roadmapFinished, setRoadmapFinished] = useState<number>(0);
+  const [savedRoadmap, setSavedRoadmapRoadmap] = useState<number>(0);
 
   useEffect(() => {
     const fetchProfileAndRoadmaps = async () => {
@@ -31,17 +33,26 @@ const ProfileDetails = () => {
         }
 
         const roadmapResponse = await roadmapService.listUserRoadmap();
+        const onProgressRoadmapResponse =
+          await roadmapService.listUserOnProgressRoadmap();
         const finishedRoadmapResponse =
           await roadmapService.listUserFinishedRoadmap();
+        const savedRoadmapResponse =
+          await roadmapService.listBookmarkedRoadmaps();
         if (
           roadmapResponse &&
           roadmapResponse.data &&
           Array.isArray(roadmapResponse.data.items)
         ) {
           const roadmaps = roadmapResponse.data.items;
+          const onProgress = onProgressRoadmapResponse.data;
           const finished = finishedRoadmapResponse.data;
+          const savedRoadmap = savedRoadmapResponse.data;
+
           setGeneratedRoadmap(roadmaps.length);
+          setOnProgressRoadmap(onProgress.total);
           setRoadmapFinished(finished.total);
+          // setSavedRoadmapRoadmap();
         }
       } catch (error) {
         console.error("Error fetching profile", error);
@@ -108,7 +119,11 @@ const ProfileDetails = () => {
 
           <div className="dashedLine"></div>
 
-          <Stats generatedRoadmap={generatedRoadmap} roadmapFinished={roadmapFinished} />
+          <Stats
+            generatedRoadmap={generatedRoadmap}
+            onProgressRoadmap={onProgressRoadmap}
+            finishedRoadmap={roadmapFinished}
+          />
 
           <div className="dashedLine"></div>
 

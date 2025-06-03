@@ -12,6 +12,7 @@ import FinishedDialog from "@/components/dialog/finished-dialog";
 const roadmapService = new RoadmapService();
 
 export default function RoadmapDetailClient({ initialRoadmap, slug }) {
+  const [collapsed, setCollapsed] = useState(false);
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
@@ -25,8 +26,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   useEffect(() => {
     if (
       (roadmap?.progression?.is_finished ||
-        roadmap?.progression?.finished_topics ===
-          roadmap?.progression?.total_topics) &&
+        roadmap?.progression?.finished_topics === roadmap?.total_topics) &&
       !confettiTriggered
     ) {
       setShowConfetti(true);
@@ -167,36 +167,55 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
 
           <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
 
-          <p className="text-mobile-body-1-regular lg:text-body-1-regular">
-            {roadmap.description}
-          </p>
+          <div className="relative">
+            <div className="lg:hidden mb-2">
+              <button
+                onClick={() => setCollapsed(!collapsed)}
+                className="w-full bg-gray-200 p-2 rounded"
+              >
+                {collapsed ? "Hide Details" : "Show Details"}
+              </button>
+            </div>
 
-          <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+            <div className={`${"lg:block"}${collapsed ? "" : "hidden"}`}>
+              <p className="text-mobile-body-1-regular lg:text-body-1-regular">
+                {roadmap.description}
+              </p>
+              <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
 
-          <div className="flex flex-col gap-5">
-            <div className="flex justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3">
-              <span>
-                📅 Date Created :{" "}
-                {new Date(roadmap.created_at).toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </span>
-              <span>
-                ⌛ Time Available :{" "}
-                {roadmap.personalization_options.daily_time_availability.value}{" "}
-                {roadmap.personalization_options.daily_time_availability.unit} /
-                Per Day
-              </span>
-              <span>
-                🤯 Skill Level : {roadmap.personalization_options.skill_level}
-              </span>
-              <span>
-                📆 Duration :{" "}
-                {roadmap.personalization_options.total_duration.value}{" "}
-                {roadmap.personalization_options.total_duration.unit}
-              </span>
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col md:flex-row justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3">
+                  <span>
+                    📅 Date Created :{" "}
+                    {new Date(roadmap.created_at).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span>
+                    ⌛ Time Available :{" "}
+                    {
+                      roadmap.personalization_options.daily_time_availability
+                        .value
+                    }{" "}
+                    {
+                      roadmap.personalization_options.daily_time_availability
+                        .unit
+                    }{" "}
+                    / Per Day
+                  </span>
+                  <span>
+                    🤯 Skill Level :{" "}
+                    {roadmap.personalization_options.skill_level}
+                  </span>
+                  <span>
+                    📆 Duration :{" "}
+                    {roadmap.personalization_options.total_duration.value}{" "}
+                    {roadmap.personalization_options.total_duration.unit}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -222,6 +241,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
           </div>
         </div>
       </div>
+
       <RoadmapChart roadmap={roadmap} updateTopicStatus={updateTopicStatus} />
 
       <ChatbotWidget slug={slug} />

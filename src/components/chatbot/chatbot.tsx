@@ -312,11 +312,11 @@ export default function Chatbot({ slug }: { slug: string }) {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-24 h-24  lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
+        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-20 h-20 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
         aria-label="Open Chat"
         title="Open Chat"
       >
-        <span className="text-display-2 select-none">🤖</span>
+        <span className="text-mobile-display-2 lg:text-display-2 select-none">🤖</span>
         <BorderBeam duration={6} size={100} />
         <BorderBeam duration={6} delay={3} size={100} />
       </div>

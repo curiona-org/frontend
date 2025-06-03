@@ -108,7 +108,7 @@ const CommunityRoadmap = ({
 
       {/* Pagination Controls */}
       {showPagination && (
-        <div className="flex justify-between items-center text-body-1-regular">
+        <div className="flex flex-wrap justify-center md:justify-between items-center text-body-1-regular">
           {/* Showing page info */}
           <div className="text-center mt-4">
             <span>
@@ -120,18 +120,18 @@ const CommunityRoadmap = ({
 
           <div className="flex justify-center items-center mt-6 space-x-0">
             <button
-              className="py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0"
+              className="py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
             >
-              &lt;&lt;
+              ⏪
             </button>
             <button
-              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
+              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
-              &lt;
+              ◀️
             </button>
 
             {/* Page Numbers with Ellipsis */}
@@ -157,18 +157,18 @@ const CommunityRoadmap = ({
             ))}
 
             <button
-              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
+              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
-              &gt;
+              ▶️
             </button>
             <button
-              className="py-2 px-4 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0"
+              className="py-2 px-4 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
             >
-              &gt;&gt;
+              ⏩
             </button>
           </div>
         </div>
