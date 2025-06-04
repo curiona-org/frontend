@@ -29,7 +29,6 @@ function splitSubtopicsEvenly(subtopics: any[]) {
 function generateFlowData(roadmap: GetRoadmapOutput) {
   const nodes: any[] = [];
   const edges: any[] = [];
-
   const topicSpacingY = 300;
   const subtopicOffsetX = 400;
   const subtopicSpacingY = 100;
@@ -38,9 +37,26 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
 
   roadmap.topics.forEach((topic: Topic, index: number) => {
     const topicId = `topic-${index}`;
-    const { left, right } = splitSubtopicsEvenly(topic.subtopics || []);
-    const topicY = index * topicSpacingY; // posisi Y topik mulai dari 0 (karena tidak ada title node)
 
+    // Sort subtopics berdasarkan order
+    const sortedSubtopics = (topic.subtopics || [])
+      .slice()
+      .sort((a, b) => a.order - b.order);
+
+    // Atur subtopik ke kiri dan kanan berdasarkan index
+    const { left, right } = (function assignSubtopicsSides(subs) {
+      const leftArr = [],
+        rightArr = [];
+      subs.forEach((sub, i) => {
+        if (i % 2 === 0) leftArr.push(sub);
+        else rightArr.push(sub);
+      });
+      return { left: leftArr, right: rightArr };
+    })(sortedSubtopics);
+
+    const topicY = index * topicSpacingY;
+
+    // Buat node topik
     nodes.push({
       id: topicId,
       position: { x: 0, y: topicY },
@@ -54,6 +70,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
       type: "roadmapNode",
     });
 
+    // koneksi ke topik sebelumnya
     if (previousTopicId) {
       edges.push({
         id: `${previousTopicId}->${topicId}`,
@@ -64,8 +81,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
     }
     previousTopicId = topicId;
 
-    const isLastTopic = index === roadmap.topics.length - 1;
-
+    // PROSES SUBTOPIK KIRI
     left.forEach((sub, subIdx) => {
       const subId = `${topicId}-left-${subIdx}`;
       const subY =
@@ -73,7 +89,6 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         ((left.length - 1) * subtopicSpacingY) / 2 +
         subIdx * subtopicSpacingY;
 
-      console.log({ sub });
       nodes.push({
         id: subId,
         position: { x: -subtopicOffsetX, y: subY },
@@ -92,12 +107,13 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         id: `e-${topicId}-${subId}`,
         source: topicId,
         target: subId,
-        sourceHandle: isLastTopic ? "lastTopic-left" : "topic-left", // untuk subtopik kiri
+        sourceHandle: "topic-left",
         targetHandle: "subtopic-left",
         style: { stroke: "var(--white-600)", strokeWidth: 2 },
       });
     });
 
+    // PROSES SUBTOPIK KANAN
     right.forEach((sub, subIdx) => {
       const subId = `${topicId}-right-${subIdx}`;
       const subY =
@@ -123,13 +139,12 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         id: `e-${topicId}-${subId}`,
         source: topicId,
         target: subId,
-        sourceHandle: isLastTopic ? "lastTopic-right" : "topic-right", // untuk subtopik kanan
+        sourceHandle: "topic-right",
         targetHandle: "subtopic-right",
         style: { stroke: "var(--white-600)", strokeWidth: 2 },
       });
     });
   });
-
   return { nodes, edges };
 }
 
@@ -170,11 +185,28 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
     );
   };
 
-  // Wrapper yang dipanggil dari TopicDialog via props
   const handleUpdateTopicStatus = (slug: string, isFinished: boolean) => {
-    updateTopicStatus(slug, isFinished); // update roadmap di parent
-    updateNodeFinishedStatus(slug, isFinished); // update node di lokal agar rerender
+    // 1. Ambil nilai sekarang dari finished_topics dan total_topics
+    const currentFinished = roadmap.progression.finished_topics;
+    const totalTopics = roadmap.total_topics;
+
+    const newFinished = isFinished ? currentFinished + 1 : currentFinished - 1;
+
+    // 3. Panggil update ke parent dan update node di lokal
+    updateTopicStatus(slug, isFinished);
+    updateNodeFinishedStatus(slug, isFinished);
+
+    // 4. Kalau menandai 'done' dan ternyata newFinished === totalTopics, otomatis tutup dialog
+    if (isFinished && newFinished === totalTopics) {
+      setDialogOpen(false);
+    }
   };
+
+  // Wrapper yang dipanggil dari TopicDialog via props
+  // const handleUpdateTopicStatus = (slug: string, isFinished: boolean) => {
+  //   updateTopicStatus(slug, isFinished); // update roadmap di parent
+  //   updateNodeFinishedStatus(slug, isFinished); // update node di lokal agar rerender
+  // };
 
   const handleNodeClick = useCallback((_, node: any) => {
     if (node.data?.slug) {
@@ -222,6 +254,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         updateTopicStatus={handleUpdateTopicStatus}
+        onFinish={() => setDialogOpen(false)}
       />
     </div>
   );

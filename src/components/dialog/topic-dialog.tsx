@@ -144,7 +144,7 @@ const TopicDialog = ({
                                 className="rounded overflow-hidden shadow-md"
                               >
                                 {videoId ? (
-                                  <div className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                                  <div className="max-w-sm h-full mx-auto bg-white-500 rounded-lg shadow-md overflow-hidden">
                                     {/* Video aspect ratio */}
                                     <div className="aspect-video relative">
                                       <iframe

@@ -8,11 +8,14 @@ import ChatbotWidget from "@/components/chatbot/chatbot";
 import RegenerateDialog from "@/components/dialog/regenerate-dialog";
 import DeleteDialog from "@/components/dialog/delete-dialog";
 import FinishedDialog from "@/components/dialog/finished-dialog";
+import Button from "@/components/ui/button";
+import { useAuth } from "@/providers/auth-provider";
 
 const roadmapService = new RoadmapService();
 
 export default function RoadmapDetailClient({ initialRoadmap, slug }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const { session } = useAuth();
+  const [showDetails, setShowDetails] = useState(true);
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
@@ -21,6 +24,10 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiTriggered, setConfettiTriggered] = useState(false);
   const [isFinishedDialogOpen, setIsFinishedDialogOpen] = useState(false);
+
+  const toggleDetails = () => {
+    setShowDetails((prev) => !prev);
+  };
 
   // cek jika sudah selesai, tampil confetti sekali saat halaman load
   useEffect(() => {
@@ -97,6 +104,10 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
     });
   };
 
+  if (!session) {
+    return null;
+  }
+
   const finishedTopics = roadmap?.progression?.finished_topics || 0;
   const totalTopics = roadmap.total_topics || 0;
 
@@ -137,7 +148,6 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                   </span>
                 </div>
               </button>
-
               <button
                 onClick={() => setRegenerateDialogOpen(true)}
                 aria-label="Regenerate roadmap"
@@ -150,38 +160,31 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                   <span>Regenerate</span>
                 </div>
               </button>
-
-              <button
-                onClick={() => setDeleteDialogOpen(true)}
-                aria-label="Delete roadmap"
-                className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
-              >
-                <div className="flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2">
-                  <span role="img" aria-label="refresh">
-                    🗑️
-                  </span>
-                </div>
-              </button>
+              {session.user.id === roadmap.creator.id && (
+                <button
+                  onClick={() => setDeleteDialogOpen(true)}
+                  aria-label="Delete roadmap"
+                  className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
+                >
+                  <div className="flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2">
+                    <span role="img" aria-label="refresh">
+                      🗑️
+                    </span>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+          <div className="relative my-2 dashedLine inset-0"></div>
 
-          <div className="relative">
-            <div className="lg:hidden mb-2">
-              <button
-                onClick={() => setCollapsed(!collapsed)}
-                className="w-full bg-gray-200 p-2 rounded"
-              >
-                {collapsed ? "Hide Details" : "Show Details"}
-              </button>
-            </div>
-
-            <div className={`${"lg:block"}${collapsed ? "" : "hidden"}`}>
+          <div className={`${showDetails ? "" : "hidden"}`}>
+            <div className="flex flex-col gap-6">
               <p className="text-mobile-body-1-regular lg:text-body-1-regular">
                 {roadmap.description}
               </p>
-              <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+
+              <div className="relative my-2 dashedLine inset-0"></div>
 
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col md:flex-row justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3">
@@ -216,14 +219,14 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                   </span>
                 </div>
               </div>
+
+              <div className="relative my-2 dashedLine inset-0"></div>
             </div>
           </div>
 
-          <div className="relative my-2 dashedLine inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
-
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular">
-              <span className="hidden md:block">🏃 Progress Learning</span>
+              <span className="hidden md:block">🏃 Learning Progress</span>
               <span>{`${finishedTopics}/${totalTopics} Topics Completed`}</span>
             </div>
             <Progress.Root
@@ -239,6 +242,15 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
               />
             </Progress.Root>
           </div>
+
+          <div className="text-white-500 text-mobile-body-1-bold flex justify-end md:hidden">
+            <Button
+              onClick={toggleDetails}
+              className="w-full h-11 bg-blue-500 active:bg-blue-900 text-black px-3"
+            >
+              {showDetails ? "Hide Roadmap Details" : "Show Roadmap Details"}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -250,6 +262,15 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
         slug={slug}
         open={regenerateDialogOpen}
         onClose={() => setRegenerateDialogOpen(false)}
+        initialPersonalization={{
+          timeValue:
+            roadmap.personalization_options.daily_time_availability.value,
+          timeUnit:
+            roadmap.personalization_options.daily_time_availability.unit,
+          durationValue: roadmap.personalization_options.total_duration.value,
+          durationUnit: roadmap.personalization_options.total_duration.unit,
+          skillLevel: roadmap.personalization_options.skill_level,
+        }}
       />
 
       <DeleteDialog
@@ -261,6 +282,8 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       <FinishedDialog
         open={isFinishedDialogOpen}
         onClose={() => setIsFinishedDialogOpen(false)}
+        slug={roadmap.slug}
+        existingData={roadmap}
       />
     </>
   );

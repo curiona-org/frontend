@@ -47,12 +47,12 @@ const ProfileDetails = () => {
           const roadmaps = roadmapResponse.data.items;
           const onProgress = onProgressRoadmapResponse.data;
           const finished = finishedRoadmapResponse.data;
-          const savedRoadmap = savedRoadmapResponse.data;
+          const saved = savedRoadmapResponse.data;
 
           setGeneratedRoadmap(roadmaps.length);
           setOnProgressRoadmap(onProgress.total);
           setRoadmapFinished(finished.total);
-          // setSavedRoadmapRoadmap();
+          setSavedRoadmapRoadmap(saved.total);
         }
       } catch (error) {
         console.error("Error fetching profile", error);
@@ -123,6 +123,7 @@ const ProfileDetails = () => {
             generatedRoadmap={generatedRoadmap}
             onProgressRoadmap={onProgressRoadmap}
             finishedRoadmap={roadmapFinished}
+            savedRoadmap={savedRoadmap}
           />
 
           <div className="dashedLine"></div>

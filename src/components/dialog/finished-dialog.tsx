@@ -1,46 +1,131 @@
 "use client";
 import { Dialog } from "radix-ui";
 import { DotLottiePlayer } from "@dotlottie/react-player";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { RoadmapService } from "@/lib/services/roadmap.service";
+import Button from "@/components/ui/button";
+
+const roadmapService = new RoadmapService();
 
 const FinishedDialog = ({
   open,
   onClose,
+  slug,
+  existingData,
 }: {
   open: boolean;
   onClose: () => void;
+  slug: string;
+  existingData: any;
 }) => {
-  // tetap gunakan timer otomatis untuk tutup
+  const [thoughts, setThoughts] = useState("");
+  const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const handleStarClick = (star: number) => {
+    setRating(star);
+  };
+
   useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => onClose(), 4800);
-      return () => clearTimeout(timer);
+    if (existingData?.rating?.is_rated) {
+      setRating(existingData.rating.rating);
+      setThoughts(existingData.rating.comment);
+    } else {
+      setRating(0);
+      setThoughts("");
     }
-  }, [open, onClose]);
+  }, [existingData, open]);
+
+  const handleSubmit = async () => {
+    if (rating === 0) {
+      alert("Please select a star rating");
+      return;
+    }
+    setLoading(true);
+    try {
+      await roadmapService.rateRoadmap(slug, rating, thoughts);
+      onClose();
+    } catch (err) {
+      console.error("Error submit rating", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 w-[400px] p-6 bg-white-500 rounded-lg shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none">
-          <div className="flex flex-col items-center">
+        {/* <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]" /> */}
+        <Dialog.Content className="fixed left-1/2 top-1/2 w-[400px] max-w-full p-8 bg-white-500 rounded-lg shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none">
+          <div className="flex flex-col gap-4 items-center">
             <DotLottiePlayer
               src="/clap.lottie"
               className="w-32"
               loop
               autoplay
             />
-            <h2 className="text-xl font-bold mb-4 text-center">
+            <h2 className="text-heading-2 font-bold text-center">
               Congratulations!
             </h2>
-            <p className="mb-4 text-center">
-              You have successfully completed the roadmap! Keep up the great
+            <p className="text-body-1 text-center">
+              You have successfully completed the roadmap. Keep up the great
               work and continue learning!
             </p>
+            {/* Rating Stars */}
+            <div className="flex gap-2 mb-4 cursor-pointer">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <div
+                  key={star}
+                  onClick={() => handleStarClick(star)}
+                  className="flex items-center"
+                >
+                  {rating >= star ? (
+                    // Bintang aktif
+                    <svg
+                      width="48"
+                      height="49"
+                      viewBox="0 0 48 49"
+                      fill="#F6CE53"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M21.1356 7.07571C21.3998 6.54003 21.8086 6.08897 22.3158 5.77357C22.823 5.45817 23.4084 5.29102 24.0056 5.29102C24.6029 5.29102 25.1883 5.45817 25.6955 5.77357C26.2027 6.08897 26.6115 6.54003 26.8756 7.07571L31.3236 16.0837L41.2676 17.5277C41.8588 17.6135 42.4141 17.8631 42.8707 18.2482C43.3274 18.6333 43.6671 19.1385 43.8515 19.7067C44.0359 20.2748 44.0576 20.8833 43.9141 21.4631C43.7706 22.043 43.4677 22.5711 43.0396 22.9877L36.3436 29.9997L38.0436 39.9037C38.1447 40.492 38.0793 41.0969 37.8547 41.6499C37.6301 42.203 37.2552 42.6822 36.7726 43.0334C36.2899 43.3846 35.7186 43.5937 35.1232 43.6373C34.5279 43.6808 33.9323 43.557 33.4036 43.2797L24.5036 38.5997L15.6076 43.2797C15.079 43.557 14.4833 43.6808 13.888 43.6373C12.7927 43.5937 12.2214 43.3846 11.7387 43.0334C11.256 42.6822 10.8812 42.203 10.6566 41.6499C10.932 41.0969 10.8665 40.492 10.9676 39.9037L12.6636 29.9997L5.46763 22.9877C5.03948 22.5708 4.73662 22.0424 4.59334 21.4622C4.45006 20.8821 4.47209 20.2734 4.65694 19.7052C4.84178 19.1369 5.18205 18.6317 5.63921 18.2469C6.09638 17.8621 6.65216 17.6129 7.24363 17.5277L17.1876 16.0877L21.6356 7.07571Z" />
+                    </svg>
+                  ) : (
+                    // Bintang tidak aktif
+                    <svg
+                      width="48"
+                      height="49"
+                      viewBox="0 0 48 49"
+                      fill="#ccc"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M21.1356 7.07571C21.3998 6.54003 21.8086 6.08897 22.3158 5.77357C22.823 5.45817 23.4084 5.29102 24.0056 5.29102C24.6029 5.29102 25.1883 5.45817 25.6955 5.77357C26.2027 6.08897 26.6115 6.54003 26.8756 7.07571L31.3236 16.0837L41.2676 17.5277C41.8588 17.6135 42.4141 17.8631 42.8707 18.2482C43.3274 18.6333 43.6671 19.1385 43.8515 19.7067C44.0359 20.2748 44.0576 20.8833 43.9141 21.4631C43.7706 22.043 43.4677 22.5711 43.0396 22.9877L36.3436 29.9997L38.0436 39.9037C38.1447 40.492 38.0793 41.0969 37.8547 41.6499C37.6301 42.203 36.7552 42.6822 36.2726 43.0334C35.7899 43.3846 35.2186 43.5937 34.6232 43.6373C34.0279 43.6808 33.9323 43.557 32.9036 43.2797L24.0036 38.5997L15.6076 43.2797C15.079 43.557 14.4833 43.6808 13.888 43.6373C12.7927 43.5937 12.2214 43.3846 11.7387 43.0334C11.256 42.6822 10.8812 42.203 10.6566 41.6499C10.432 41.0969 10.3665 40.492 10.4676 39.9037L12.1636 29.9997L4.96763 22.9877C4.53948 22.5708 4.23662 22.0424 4.09334 21.4622C3.95006 20.8821 3.97209 20.2734 4.15694 19.7052C4.34178 19.1369 4.68205 18.6317 5.13921 18.2469C5.59638 17.8621 6.15216 17.6129 6.74363 17.5277L16.6876 16.0877L21.1356 7.07571Z" />
+                    </svg>
+                  )}
+                </div>
+              ))}
+            </div>
+            {/* Jika sudah rating, set thoughts otomatis */}
+            <input
+              type="text"
+              placeholder="Share your thoughts about this roadmap"
+              className="w-full py-4 border border-gray-300 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={thoughts}
+              onChange={(e) => setThoughts(e.target.value)}
+            />
+            {/* Button submit */}
+            <Button
+              className="w-full py-3 bg-blue-500 active:bg-blue-900 text-white-500"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit 👊"}
+            </Button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
 };
+
 export default FinishedDialog;

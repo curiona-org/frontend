@@ -1,6 +1,6 @@
 "use client";
 import { Dialog } from "radix-ui";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import Loader from "@/components/loader/loader";
@@ -12,6 +12,13 @@ interface RegenerateDialogProps {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  initialPersonalization?: {
+    timeValue: number;
+    timeUnit: TimeUnit;
+    durationValue: number;
+    durationUnit: DurationUnit;
+    skillLevel: SkillLevel;
+  };
 }
 
 type TimeUnit = "hours" | "minutes";
@@ -23,16 +30,27 @@ const RegenerateDialog = ({
   open,
   onClose,
   onSuccess,
+  initialPersonalization,
 }: RegenerateDialogProps) => {
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
   const [timeValue, setTimeValue] = useState<number>(1);
-  const [timeUnit, setTimeUnit] = useState<TimeUnit>("hours");
   const [durationValue, setDurationValue] = useState<number>(1);
+  const [timeUnit, setTimeUnit] = useState<TimeUnit>("hours");
   const [durationUnit, setDurationUnit] = useState<DurationUnit>("weeks");
   const [skillLevel, setSkillLevel] = useState<SkillLevel>("beginner");
   const [expanded, setExpanded] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (initialPersonalization) {
+      setTimeValue(initialPersonalization.timeValue);
+      setTimeUnit(initialPersonalization.timeUnit);
+      setDurationValue(initialPersonalization.durationValue);
+      setDurationUnit(initialPersonalization.durationUnit);
+      setSkillLevel(initialPersonalization.skillLevel);
+    }
+  }, [initialPersonalization]);
 
   // Predefined reason options
   const reasonOptions = [
@@ -168,23 +186,23 @@ const RegenerateDialog = ({
                   <h4 className="text-mobile-body-1-regular lg:text-body-1-regular">
                     Personalize Your Time availability ⏳
                   </h4>
-                  <div className="flex gap-4 text-mobile-body-2 lg:text-body-2">
+                  <div className="grid grid-cols-12 gap-4 text-mobile-body-2 lg:text-body-2">
                     <input
                       type="number"
                       min="1"
                       value={timeValue}
                       onChange={(e) => setTimeValue(Number(e.target.value))}
-                      className="flex-1 w-48 h-16 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                      className="col-span-4 w-full flex-1 h-16 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-center"
                     />
                     <select
                       value={timeUnit}
                       onChange={(e) => setTimeUnit(e.target.value as TimeUnit)}
-                      className="flex-1 w-48 h-16 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                      className="col-span-4 flex-1 w-full h-16 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-center"
                     >
                       <option value="hours">Hour</option>
                       <option value="minutes">Minutes</option>
                     </select>
-                    <div className="flex-1 w-48 h-16 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-center">
+                    <div className="col-span-4 w-full text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
                       Per day
                     </div>
                   </div>
@@ -195,10 +213,10 @@ const RegenerateDialog = ({
                   <h4 className="text-mobile-body-1-regular lg:text-body-1-regular">
                     Personalize Your Familiarity 🧠
                   </h4>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-12 gap-4">
                     <button
                       onClick={() => setSkillLevel("beginner")}
-                      className={`p-4 border ${
+                      className={`col-span-4 w-full p-4 border ${
                         skillLevel === "beginner"
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-300"
@@ -208,7 +226,7 @@ const RegenerateDialog = ({
                     </button>
                     <button
                       onClick={() => setSkillLevel("intermediate")}
-                      className={`p-4 border ${
+                      className={`col-span-4 w-full p-4 border ${
                         skillLevel === "intermediate"
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-300"
@@ -218,7 +236,7 @@ const RegenerateDialog = ({
                     </button>
                     <button
                       onClick={() => setSkillLevel("advanced")}
-                      className={`p-4 border ${
+                      className={`col-span-4 w-full p-4 border ${
                         skillLevel === "advanced"
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-300"
@@ -234,7 +252,7 @@ const RegenerateDialog = ({
                   <h4 className="text-mobile-body-1-regular lg:text-body-1-regular">
                     Personalize Your Learning Duration 📅
                   </h4>
-                  <div className="flex gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <input
                       type="number"
                       min="1"
@@ -274,7 +292,7 @@ const RegenerateDialog = ({
                 disabled={loading || !reason}
                 className="p-3 bg-blue-500 text-white-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                "Regenerate Roadmap✨"
+                Regenerate Roadmap✨
               </button>
             </div>
           </Dialog.Content>

@@ -6,13 +6,16 @@ import Logo from "/public/logo.svg";
 import { usePathname } from "next/navigation";
 import { DropdownMenu } from "radix-ui";
 import ButtonSignOut from "@/components/button-sign-out";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const NavigationBarAuthenticated = () => {
   const { session } = useAuth();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,7 +28,32 @@ const NavigationBarAuthenticated = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsDesktopMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Jika menu mobile terbuka
+      if (isMobileMenuOpen) {
+        const target = event.target as Node;
+
+        // Jika klik dilakukan bukan di dalam container menu & bukan pada tombol toggle
+        if (
+          mobileMenuRef.current &&
+          !mobileMenuRef.current.contains(target) &&
+          toggleButtonRef.current &&
+          !toggleButtonRef.current.contains(target)
+        ) {
+          setIsMobileMenuOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   if (!session) {
     return null;
@@ -43,16 +71,13 @@ const NavigationBarAuthenticated = () => {
         <div className="flex items-center justify-between">
           <Link href="/">
             <div className="flex gap-2 items-center">
-              <Image
-                src={Logo}
-                alt="Logo"
-                priority
-              />
+              <Image src={Logo} alt="Logo" priority />
               <span className="hidden md:block text-heading-2 font-medium text-blue-500">
                 Curiona
               </span>
             </div>
           </Link>
+
           <div className="hidden lg:flex items-center gap-6">
             <Link
               href="/"
@@ -75,7 +100,9 @@ const NavigationBarAuthenticated = () => {
               Community Roadmap
             </Link>
           </div>
+
           <button
+            ref={toggleButtonRef}
             className="flex items-center justify-center lg:hidden w-11 h-11 text-gray-500 border-2 border-blue-100 rounded-lg"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-expanded={isMobileMenuOpen}
@@ -170,7 +197,10 @@ const NavigationBarAuthenticated = () => {
 
           {/* Desktop Dropdown Menu */}
           <div className="hidden lg:block">
-            <DropdownMenu.Root>
+            <DropdownMenu.Root
+              open={isDesktopMenuOpen}
+              onOpenChange={setIsDesktopMenuOpen}
+            >
               <DropdownMenu.Trigger asChild>
                 <button className="flex items-center justify-center focus:outline-none">
                   <div className="flex gap-2 items-center">
@@ -250,6 +280,7 @@ const NavigationBarAuthenticated = () => {
 
         {/* Mobile Menu */}
         <div
+          ref={mobileMenuRef}
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             isMobileMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
           }`}

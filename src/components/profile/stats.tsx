@@ -11,7 +11,7 @@ const Stats: React.FC<StatsProps> = ({
   generatedRoadmap,
   onProgressRoadmap,
   finishedRoadmap,
-  // savedRoadmap,
+  savedRoadmap,
 }) => {
   return (
     <div className="flex flex-col">
@@ -33,7 +33,7 @@ const Stats: React.FC<StatsProps> = ({
             {onProgressRoadmap}
           </p>
           <p className="text-mobile-body-1-medium lg:text-body-1-medium">
-            On Progress Roadmap
+            In Progress Roadmap
           </p>
         </div>
         <div className="col-span-3 border rounded-lg p-6 w-full text-center bg-gray-100 border-gray-300">
@@ -46,7 +46,7 @@ const Stats: React.FC<StatsProps> = ({
         </div>
         <div className="col-span-3 border rounded-lg p-6 w-full text-center bg-gray-100 border-gray-300">
           <p className="text-mobile-heading-1 lg:text-heading-1">
-            {/* {savedRoadmap} */}
+            {savedRoadmap}
           </p>
           <p className="text-mobile-body-1-medium lg:text-body-1-medium">
             Roadmap Saved

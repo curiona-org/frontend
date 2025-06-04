@@ -48,7 +48,7 @@ const YourRoadmap = () => {
               : "bg-white text-gray-700 dashedBorder hover:bg-gray-100"
           }`}
         >
-          🏃 On Progress Roadmaps
+          🏃 In Progress Roadmaps
         </button>
         <button
           onClick={() => setFilter("finished")}

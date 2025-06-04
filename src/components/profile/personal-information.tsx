@@ -84,7 +84,11 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               Joined On
             </p>
             <p className="text-mobile-body-1-regular lg:text-body-1-regular">
-              {new Date(joinedAt).toLocaleDateString()}
+              {new Date(joinedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
             </p>
           </div>
         </div>
