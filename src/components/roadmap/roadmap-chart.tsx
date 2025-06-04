@@ -8,7 +8,8 @@ import {
   addEdge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import RoadmapNode from "./roadmap-nodes";
 import Topic from "@/types/topic";
 import TopicDialog from "@/components/dialog/topic-dialog";
@@ -154,14 +155,24 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
+  const isMobile = useIsMobile();
 
   // Calculate dynamic height based on number of topics
   const flowHeight = useMemo(() => {
     const topicCount = roadmap.topics.length;
     // Base height + spacing per topic (adjust these values as needed)
-    return Math.max(500, topicCount * 300 + 200);
-  }, [roadmap.topics.length]);
+    let calculatedHeight = Math.max(500, topicCount * 300 + 200);
+
+    // Jika perangkat adalah mobile, kurangi beberapa piksel dari calculatedHeight
+    if (!isMobile) {
+      console.log("Desktop Height:" + calculatedHeight);
+      return calculatedHeight;
+    } else {
+      calculatedHeight -= 500;
+      console.log("Mobile Height:" + calculatedHeight);
+      return calculatedHeight;
+    }
+  }, [roadmap.topics.length, isMobile]);
 
   // Fungsi untuk update isFinished pada node tertentu
   const updateNodeFinishedStatus = (slug: string, isFinished: boolean) => {
@@ -220,32 +231,37 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const proOptions = { hideAttribution: true };
 
   return (
-    <div
-      className="nowheel"
-      style={{ width: "100%", height: `${flowHeight}px` }}
-    >
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onNodeClick={handleNodeClick}
-        fitView
-        proOptions={proOptions}
-        nodeTypes={nodeTypes}
-        connectionLineType={ConnectionLineType.SmoothStep}
-        defaultEdgeOptions={{
-          type: "smoothstep",
+    <>
+      <div
+        className="nowheel"
+        style={{
+          width: "100%",
+          height: isMobile ? "100vh" : "",
         }}
-        zoomOnScroll={isMobile}
-        panOnDrag={isMobile}
-        zoomOnPinch={isMobile}
-        minZoom={0.5}
-        maxZoom={2}
-        nodesDraggable={false}
-        zoomOnDoubleClick={false}
-      />
+      >
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={handleNodeClick}
+          fitView
+          proOptions={proOptions}
+          nodeTypes={nodeTypes}
+          connectionLineType={ConnectionLineType.SmoothStep}
+          defaultEdgeOptions={{
+            type: "smoothstep",
+          }}
+          zoomOnScroll={isMobile}
+          panOnDrag={isMobile}
+          zoomOnPinch={isMobile}
+          minZoom={0.1}
+          maxZoom={1}
+          nodesDraggable={false}
+          zoomOnDoubleClick={false}
+        />
+      </div>
       <TopicDialog
         slug={selectedSlug}
         open={dialogOpen}
@@ -253,7 +269,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         updateTopicStatus={handleUpdateTopicStatus}
         onFinish={() => setDialogOpen(false)}
       />
-    </div>
+    </>
   );
 };
 
