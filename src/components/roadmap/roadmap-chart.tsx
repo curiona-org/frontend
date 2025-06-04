@@ -35,42 +35,28 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
 
   let previousTopicId: string | null = null;
 
-  roadmap.topics.forEach((topic: Topic, index: number) => {
+  // 1. Urutkan topik berdasarkan order
+  const sortedTopics = roadmap.topics.slice().sort((a, b) => a.order - b.order);
+
+  sortedTopics.forEach((topic: Topic, index: number) => {
     const topicId = `topic-${index}`;
-
-    // Sort subtopics berdasarkan order
-    const sortedSubtopics = (topic.subtopics || [])
-      .slice()
-      .sort((a, b) => a.order - b.order);
-
-    // Atur subtopik ke kiri dan kanan berdasarkan index
-    const { left, right } = (function assignSubtopicsSides(subs) {
-      const leftArr = [],
-        rightArr = [];
-      subs.forEach((sub, i) => {
-        if (i % 2 === 0) leftArr.push(sub);
-        else rightArr.push(sub);
-      });
-      return { left: leftArr, right: rightArr };
-    })(sortedSubtopics);
-
     const topicY = index * topicSpacingY;
 
-    // Buat node topik
+    // 2. Buat node TOPIK (dengan numbering sudah ada dari topic.order)
     nodes.push({
       id: topicId,
       position: { x: 0, y: topicY },
       data: {
-        label: topic.title,
+        label: `${topic.order}. ${topic.title}`,
         slug: topic.slug,
         isFinished: topic.is_finished,
         isFirstTopic: index === 0,
-        isLastTopic: index === roadmap.topics.length - 1,
+        isLastTopic: index === sortedTopics.length - 1,
       },
       type: "roadmapNode",
     });
 
-    // koneksi ke topik sebelumnya
+    // 3. Jika ada topic sebelumnya, sambung dengan edge
     if (previousTopicId) {
       edges.push({
         id: `${previousTopicId}->${topicId}`,
@@ -81,9 +67,18 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
     }
     previousTopicId = topicId;
 
+    // 4. Urutkan subtopics berdasarkan order
+    const sortedSubtopics = (topic.subtopics || [])
+      .slice()
+      .sort((a, b) => a.order - b.order);
+
+    // 5. Split subtopics menjadi dua array kiri/kanan secara merata
+    const { left, right } = splitSubtopicsEvenly(sortedSubtopics);
+
     // PROSES SUBTOPIK KIRI
     left.forEach((sub, subIdx) => {
       const subId = `${topicId}-left-${subIdx}`;
+      // Hitung posisi Y untuk setiap subtopik agar terpusat di sekitar topicY
       const subY =
         topicY -
         ((left.length - 1) * subtopicSpacingY) / 2 +
@@ -93,7 +88,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         id: subId,
         position: { x: -subtopicOffsetX, y: subY },
         data: {
-          label: sub.title,
+          label: `${topic.order}.${sub.order}. ${sub.title}`,
           slug: sub.slug,
           isFinished: sub.is_finished,
           isLeftSubtopic: true,
@@ -116,6 +111,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
     // PROSES SUBTOPIK KANAN
     right.forEach((sub, subIdx) => {
       const subId = `${topicId}-right-${subIdx}`;
+      // Hitung posisi Y untuk setiap subtopik di kolom kanan
       const subY =
         topicY -
         ((right.length - 1) * subtopicSpacingY) / 2 +
@@ -125,7 +121,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
         id: subId,
         position: { x: subtopicOffsetX, y: subY },
         data: {
-          label: sub.title,
+          label: `${topic.order}.${sub.order}. ${sub.title}`,
           slug: sub.slug,
           isFinished: sub.is_finished,
           isLeftSubtopic: false,
@@ -145,6 +141,7 @@ function generateFlowData(roadmap: GetRoadmapOutput) {
       });
     });
   });
+
   return { nodes, edges };
 }
 

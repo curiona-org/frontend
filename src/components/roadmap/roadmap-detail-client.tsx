@@ -15,6 +15,7 @@ const roadmapService = new RoadmapService();
 
 export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const { session } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
   const [showDetails, setShowDetails] = useState(true);
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
@@ -22,10 +23,29 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [confettiTriggered, setConfettiTriggered] = useState(false);
   const [isFinishedDialogOpen, setIsFinishedDialogOpen] = useState(false);
 
   const localStorageKey = `confetti_seen_${slug}`;
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px = breakpoint `md:` Tailwind
+    };
+
+    // Panggil sekali di mount supaya langsung tahu kondisi awal
+    checkMobile();
+    // Pasang listener saat resize
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // ============================================================
+  // Hook kedua: inisialisasi atau update showDetails berdasarkan isMobile
+  useEffect(() => {
+    // Kalau sedang mobile, setShowDetails(false).
+    // Kalau bukan mobile (desktop), setShowDetails(true).
+    setShowDetails(!isMobile);
+  }, [isMobile]);
 
   // Fungsi untuk fetch ulang data roadmap (dipanggil setelah dialog rating ditutup)
   const fetchRoadmap = async () => {
@@ -222,7 +242,31 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
             </div>
           </div>
 
-          <div className="relative my-2 dashedLine inset-0"></div>
+          <div className="relative md:hidden dashedLine inset-0"></div>
+
+          <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
+            <div className="flex items-center">
+              <span>Your rating:</span>{" "}
+              {roadmap.rating?.is_rated ? (
+                <>{renderStars(roadmap.rating.rating)}</>
+              ) : (
+                <span className="text-xl leading-none text-gray-300">
+                  ☆☆☆☆☆
+                </span>
+              )}
+            </div>
+            <Button
+              onClick={() => setIsFinishedDialogOpen(true)}
+              aria-label="Edit rating"
+              className="bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none"
+            >
+              <span role="img" aria-label="edit">
+                ✏️
+              </span>
+            </Button>
+          </div>
+
+          <div className="relative dashedLine inset-0"></div>
 
           <div className={`${showDetails ? "" : "hidden"}`}>
             <div className="flex flex-col gap-6">
@@ -230,7 +274,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                 {roadmap.description}
               </p>
 
-              <div className="relative my-2 dashedLine inset-0"></div>
+              <div className="relative dashedLine inset-0"></div>
 
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col md:flex-row justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3">
@@ -266,7 +310,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
                 </div>
               </div>
 
-              <div className="relative my-2 dashedLine inset-0"></div>
+              <div className="relative dashedLine inset-0"></div>
             </div>
           </div>
 
@@ -338,7 +382,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
         }}
       />
 
-      <div className="fixed bottom-0 lg:bottom-20 left-12 z-50">
+      <div className="text-mobile-body-1-regular lg:text-body-1-regular hidden md:flex fixed bottom-20 left-12 z-50">
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setIsFinishedDialogOpen(true)}
@@ -349,8 +393,8 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
               ✏️
             </span>
           </Button>
-          <div className="bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg">
-            <span className="font-medium">Your rating:</span>
+          <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg">
+            <span>Your rating:</span>
             {roadmap.rating?.is_rated ? (
               <>{renderStars(roadmap.rating.rating)}</>
             ) : (

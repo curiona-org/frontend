@@ -44,6 +44,13 @@ export default {
             fontWeight: "400",
           },
         ],
+        "heading-2-bold": [
+          "31px",
+          {
+            lineHeight: "120%",
+            fontWeight: "700",
+          },
+        ],
         "heading-3": [
           "25px",
           {
@@ -133,6 +140,13 @@ export default {
           {
             lineHeight: "120%",
             fontWeight: "400",
+          },
+        ],
+        "mobile-heading-2-bold": [
+          "22px",
+          {
+            lineHeight: "120%",
+            fontWeight: "700",
           },
         ],
         "mobile-heading-3": [
