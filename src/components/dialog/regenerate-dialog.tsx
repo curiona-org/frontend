@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import Loader from "@/components/loader/loader";
+import Button from "../ui/button";
 
 const roadmapService = new RoadmapService();
 
@@ -202,7 +203,7 @@ const RegenerateDialog = ({
                       <option value="hours">Hour</option>
                       <option value="minutes">Minutes</option>
                     </select>
-                    <div className="col-span-4 w-full text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
+                    <div className="col-span-4 w-full text-mobile-body-2 lg:text-body-1- flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
                       Per day
                     </div>
                   </div>
@@ -213,8 +214,8 @@ const RegenerateDialog = ({
                   <h4 className="text-mobile-body-1-regular lg:text-body-1-regular">
                     Personalize Your Familiarity 🧠
                   </h4>
-                  <div className="grid grid-cols-12 gap-4">
-                    <button
+                  <div className="text-mobile-body-2 lg:text-body-2 grid grid-cols-12 gap-4">
+                    <Button
                       onClick={() => setSkillLevel("beginner")}
                       className={`col-span-4 w-full p-4 border ${
                         skillLevel === "beginner"
@@ -223,8 +224,8 @@ const RegenerateDialog = ({
                       } rounded-lg transition-colors`}
                     >
                       😌 I'm new to this topic.
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => setSkillLevel("intermediate")}
                       className={`col-span-4 w-full p-4 border ${
                         skillLevel === "intermediate"
@@ -233,8 +234,8 @@ const RegenerateDialog = ({
                       } rounded-lg transition-colors`}
                     >
                       🙂 I know the basics.
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => setSkillLevel("advanced")}
                       className={`col-span-4 w-full p-4 border ${
                         skillLevel === "advanced"
@@ -243,7 +244,7 @@ const RegenerateDialog = ({
                       } rounded-lg transition-colors`}
                     >
                       😎 I'm confident and want deeper insights.
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -252,7 +253,7 @@ const RegenerateDialog = ({
                   <h4 className="text-mobile-body-1-regular lg:text-body-1-regular">
                     Personalize Your Learning Duration 📅
                   </h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="text-mobile-body-2 lg:text-body-2 grid grid-cols-2 gap-4">
                     <input
                       type="number"
                       min="1"
@@ -277,23 +278,23 @@ const RegenerateDialog = ({
             )}
 
             {/* Actions */}
-            <div className="flex justify-between">
-              <button
-                className="p-3 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600"
+            <div className="text-mobile-body-1-medium lg:text-body-1-medium flex justify-between">
+              <Button
+                className="p-3 text-black-100 border-2 border-white-600"
                 onClick={onClose}
                 aria-label="Close Chat"
                 title="Close Chat"
               >
                 Cancel
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleRegenerateRoadmap}
                 disabled={loading || !reason}
-                className="p-3 bg-blue-500 text-white-500 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-3 bg-blue-500 text-white-500 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Regenerate Roadmap✨
-              </button>
+              </Button>
             </div>
           </Dialog.Content>
         </Dialog.Overlay>

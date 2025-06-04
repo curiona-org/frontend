@@ -25,25 +25,59 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [confettiTriggered, setConfettiTriggered] = useState(false);
   const [isFinishedDialogOpen, setIsFinishedDialogOpen] = useState(false);
 
+  const localStorageKey = `confetti_seen_${slug}`;
+
+  // Fungsi untuk fetch ulang data roadmap (dipanggil setelah dialog rating ditutup)
+  const fetchRoadmap = async () => {
+    try {
+      const res = await roadmapService.getRoadmapBySlug(slug);
+      if (res.data) {
+        setRoadmap(res.data);
+        setSaved(res.data.is_bookmarked);
+      }
+    } catch (err) {
+      console.error("Gagal fetch roadmap terbaru:", err);
+    }
+  };
+
+  // Dipanggil ketika FinishedDialog ditutup (baik karena submit rating ataupun cancel)
+  const handleFinishedDialogClose = () => {
+    setIsFinishedDialogOpen(false);
+    fetchRoadmap();
+  };
+
   const toggleDetails = () => {
     setShowDetails((prev) => !prev);
   };
 
-  // cek jika sudah selesai, tampil confetti sekali saat halaman load
   useEffect(() => {
-    if (
-      (roadmap?.progression?.is_finished ||
-        roadmap?.progression?.finished_topics === roadmap?.total_topics) &&
-      !confettiTriggered
-    ) {
+    // Pastikan roadmap sudah benar‐benar selesai
+    const isFinished =
+      roadmap?.progression?.is_finished ||
+      roadmap?.progression?.finished_topics === roadmap?.total_topics;
+
+    if (!isFinished) return;
+
+    // Hanya jalankan di browser
+    if (typeof window !== "undefined") {
+      // Cek apakah flag sudah ada
+      const hasSeen = localStorage.getItem(localStorageKey);
+      if (hasSeen) {
+        // Kalau sudah pernah melihat, skip
+        return;
+      }
+
+      // Jika belum, tampilkan confetti + dialog rating
       setShowConfetti(true);
-      setConfettiTriggered(true);
       setIsFinishedDialogOpen(true);
+
+      // Simpan flag agar tidak muncul lagi
+      localStorage.setItem(localStorageKey, "true");
     }
   }, [
     roadmap?.progression?.finished_topics,
-    roadmap?.progression?.finished_topics,
-    confettiTriggered,
+    roadmap?.progression?.is_finished,
+    localStorageKey,
   ]);
 
   const toggleSave = async (e: React.MouseEvent) => {
@@ -110,6 +144,18 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
 
   const finishedTopics = roadmap?.progression?.finished_topics || 0;
   const totalTopics = roadmap.total_topics || 0;
+
+  // Fungsi bantu untuk men‐render bintang (★ = filled, ☆ = empty)
+  const renderStars = (rating: number) => {
+    const full = "★".repeat(rating);
+    const empty = "☆".repeat(5 - rating);
+    return (
+      <span className="text-xl leading-none">
+        <span className="text-yellow-500">{full}</span>
+        <span className="text-gray-300">{empty}</span>
+      </span>
+    );
+  };
 
   return (
     <>
@@ -284,7 +330,35 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
         onClose={() => setIsFinishedDialogOpen(false)}
         slug={roadmap.slug}
         existingData={roadmap}
+        onRated={() => {
+          // Kalau memang tidak memerlukan rating & comment langsung,
+          // misalnya:
+          setIsFinishedDialogOpen(false);
+          fetchRoadmap();
+        }}
       />
+
+      <div className="fixed bottom-0 lg:bottom-20 left-12 z-50">
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => setIsFinishedDialogOpen(true)}
+            aria-label="Edit rating"
+            className="bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none"
+          >
+            <span role="img" aria-label="edit">
+              ✏️
+            </span>
+          </Button>
+          <div className="bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg">
+            <span className="font-medium">Your rating:</span>
+            {roadmap.rating?.is_rated ? (
+              <>{renderStars(roadmap.rating.rating)}</>
+            ) : (
+              <span className="text-xl leading-none text-gray-300">☆☆☆☆☆</span>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

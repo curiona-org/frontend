@@ -44,12 +44,12 @@ const ProfileDetails = () => {
           roadmapResponse.data &&
           Array.isArray(roadmapResponse.data.items)
         ) {
-          const roadmaps = roadmapResponse.data.items;
+          const roadmaps = roadmapResponse.data;
           const onProgress = onProgressRoadmapResponse.data;
           const finished = finishedRoadmapResponse.data;
           const saved = savedRoadmapResponse.data;
 
-          setGeneratedRoadmap(roadmaps.length);
+          setGeneratedRoadmap(roadmaps.total);
           setOnProgressRoadmap(onProgress.total);
           setRoadmapFinished(finished.total);
           setSavedRoadmapRoadmap(saved.total);

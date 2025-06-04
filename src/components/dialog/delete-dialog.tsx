@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import Loader from "@/components/loader/loader";
+import Button from "../ui/button";
 
 const roadmapService = new RoadmapService();
 
@@ -47,26 +48,26 @@ const DeleteDialog = ({
 
             <p className="text-mobile-body-1-regular lg:text-body-1-regular">
               This action will permanently remove your current roadmap. You
-              won’t be able to undo.
+              won't be able to undo.
             </p>
 
-            <div className="flex justify-between gap-6">
-              <button
-                className="w-full p-3 rounded-lg text-black-100 border-2 border-white-600"
+            <div className="flex justify-between gap-6 text-mobile-body-1-medium lg:text-body-1-medium">
+              <Button
+                className="w-full p-3 text-black-100 border-2 border-white-600"
                 onClick={onClose}
                 aria-label="Close Chat"
                 title="Close Chat"
               >
                 Cancel
-              </button>
-              <button
-                className="w-full p-3 text-white-500 bg-red-500 rounded-lg"
+              </Button>
+              <Button
+                className="w-full p-3 text-white-500 bg-red-500"
                 onClick={handleDeleteRoadmap}
                 aria-label="Close Chat"
                 title="Close Chat"
               >
                 Delete roadmap 🚮
-              </button>
+              </Button>
             </div>
           </Dialog.Content>
         </Dialog.Overlay>
