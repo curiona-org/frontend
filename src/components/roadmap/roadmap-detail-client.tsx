@@ -10,6 +10,7 @@ import DeleteDialog from "@/components/dialog/delete-dialog";
 import FinishedDialog from "@/components/dialog/finished-dialog";
 import Button from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const roadmapService = new RoadmapService();
 
@@ -24,6 +25,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isFinishedDialogOpen, setIsFinishedDialogOpen] = useState(false);
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   const localStorageKey = `confetti_seen_${slug}`;
 
@@ -177,8 +179,56 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
     );
   };
 
+  useEffect(() => {
+    if (isMobile) {
+      setOverlayVisible(true);
+      const timer = setTimeout(() => {
+        setOverlayVisible(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
+  const RenderZoomOverlay = () => {
+    return (
+      overlayVisible && (
+        <div className="fixed w-screen h-screen bg-[#3C3C3C]/10 flex justify-center items-center text-white text-lg z-50">
+          <div className="bg-white w-40 px-3 py-4 rounded-lg bg-white-500 border border-blue-500">
+            <div className="flex flex-col items-center gap-2">
+              <svg
+                width="32"
+                height="33"
+                viewBox="0 0 32 33"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="animate-updown"
+              >
+                <path
+                  d="M12.082 6.16722C11.0447 6.87855 10.9114 8.26989 11.4674 9.39922C12.4194 11.3332 14.046 14.5346 15.9174 17.7759C15.9174 17.7759 14.888 17.2199 13.344 16.8706C11.9174 16.5479 10.5554 17.5692 10.6434 19.0286C10.6654 19.3946 10.72 19.7752 10.8234 20.1519C11.008 20.8252 11.544 21.3199 12.166 21.6366C13.4807 22.3066 16.054 23.5012 19.0974 24.3099C20.2187 24.6072 21.3974 24.6326 22.4867 24.2352C23.2854 23.9446 24.344 23.4806 25.6134 22.7479C26.3119 22.3448 26.9968 21.9183 27.6667 21.4692C29.278 20.3872 30.1014 18.4972 29.774 16.5839C29.4609 14.7817 28.9689 13.0152 28.3054 11.3106C27.6027 9.49855 25.7674 8.45055 23.8647 8.84255C20.99 9.43522 18.4747 10.4866 18.4747 10.4866C17.948 9.57522 16.8394 7.96655 15.978 6.74522C15.2647 5.73389 14.0114 5.17655 12.8914 5.70322C12.6102 5.83646 12.3398 5.99137 12.0827 6.16655L12.082 6.16722ZM2.14003 6.64255C1.7447 6.41389 1.69203 5.86589 2.05336 5.58589C3.2867 4.62922 4.99603 3.54989 6.24003 3.28255C6.6427 3.19589 7.03336 3.42255 7.16003 3.81389C7.5507 5.02522 7.4707 7.04522 7.2587 8.59122C7.1967 9.04455 6.69603 9.27255 6.30003 9.04455L2.14003 6.64255ZM2.14003 21.0926C1.7447 21.3212 1.69203 21.8692 2.05336 22.1499C3.2867 23.1066 4.99603 24.1852 6.24003 24.4526C6.6427 24.5392 7.03336 24.3132 7.16003 23.9219C7.5507 22.7106 7.4707 20.6899 7.2587 19.1439C7.1967 18.6912 6.69603 18.4626 6.30003 18.6906L2.14003 21.0939V21.0926Z"
+                  stroke="#4B7CE8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M4.5834 8.05225C3.53957 9.83939 2.99289 11.8733 3.00007 13.9429C3.00007 16.5202 3.81607 18.4736 4.5454 19.7042"
+                  stroke="#4B7CE8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>Pinch to zoom</span>
+            </div>
+          </div>
+        </div>
+      )
+    );
+  };
+
   return (
     <>
+      {isMobile && <RenderZoomOverlay />}
       {showConfetti && <ConfettiSideCannons />}
       <div className="px-6 lg:px-40 pt-32">
         <div className="flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6">

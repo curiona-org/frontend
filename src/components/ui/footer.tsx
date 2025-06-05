@@ -8,6 +8,11 @@ const Footer = () => {
   const pathname = usePathname();
 
   const hideFooterPages = ["/sign-in", "/sign-up", "/personalization"];
+
+  if (pathname.startsWith("/roadmap")) {
+    return null;
+  }
+
   if (hideFooterPages.includes(pathname)) {
     return null;
   }

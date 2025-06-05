@@ -134,3 +134,19 @@ input[type="number"] {
     }
   }
 }
+
+@keyframes updown {
+  0% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(25deg);
+  }
+  100% {
+    transform: rotate(10deg);
+  }
+}
+
+.animate-updown {
+  animation: updown 1s ease-in-out infinite;
+}

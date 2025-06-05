@@ -160,18 +160,19 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   // Calculate dynamic height based on number of topics
   const flowHeight = useMemo(() => {
     const topicCount = roadmap.topics.length;
-    // Base height + spacing per topic (adjust these values as needed)
     let calculatedHeight = Math.max(500, topicCount * 300 + 200);
 
-    // Jika perangkat adalah mobile, kurangi beberapa piksel dari calculatedHeight
-    if (!isMobile) {
-      console.log("Desktop Height:" + calculatedHeight);
-      return calculatedHeight;
-    } else {
-      calculatedHeight -= 500;
-      console.log("Mobile Height:" + calculatedHeight);
-      return calculatedHeight;
+    const screenWidth = window.innerWidth;
+
+    if (isMobile || screenWidth < 768) {
+      const availableHeight = window.innerHeight - 100;
+      return Math.min(calculatedHeight, availableHeight);
+    } else if (screenWidth >= 768 && screenWidth < 1024) {
+      const availableHeight = window.innerHeight - 150;
+      return Math.min(calculatedHeight, availableHeight);
     }
+
+    return calculatedHeight;
   }, [roadmap.topics.length, isMobile]);
 
   // Fungsi untuk update isFinished pada node tertentu
@@ -236,7 +237,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         className="nowheel"
         style={{
           width: "100%",
-          height: isMobile ? "100vh" : "",
+          height: `${flowHeight}px`,
         }}
       >
         <ReactFlow

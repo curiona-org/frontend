@@ -126,7 +126,6 @@ const FinishedDialog = ({
               </p>
             )}
 
-            {/* Jika sudah rating, set thoughts otomatis */}
             <input
               type="text"
               placeholder="Share your thoughts about this roadmap"
