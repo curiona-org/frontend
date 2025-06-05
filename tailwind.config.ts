@@ -100,7 +100,7 @@ export default {
             fontWeight: "400",
           },
         ],
-        "caption": [
+        caption: [
           "10px",
           {
             lineHeight: "120%",
@@ -207,6 +207,7 @@ export default {
         ],
       },
       colors: {
+        transparent: "transparent",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         black: {

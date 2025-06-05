@@ -14,9 +14,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(
           className,
-          "rounded-lg shadow-lg",
-          !disableEffects &&
-            "transition-transform duration-300 ease-out hover:scale-105 active:scale-95"
+          "rounded-lg",
+          !disableEffects && "transition-transform duration-300 ease-out"
         )}
         ref={ref}
         {...props}

@@ -93,17 +93,15 @@ export class APIService {
     //       !originalRequest._retry
     //     ) {
     //       originalRequest._retry = true;
-    //       const refreshResult = await this.instance
-    //         .post<AuthRefreshOutput>("/auth/refresh")
-    //         .then((res) => res?.data);
+    //       const refreshResult = await refreshSessionAction();
 
     //       originalRequest.headers[
     //         "Authorization"
-    //       ] = `Bearer ${refreshResult.access_token}`;
+    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
 
     //       this.instance.defaults.headers.common[
     //         "Authorization"
-    //       ] = `Bearer ${refreshResult.access_token}`;
+    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
     //       return this.instance(originalRequest);
     //     }
     //     return Promise.reject(error);
