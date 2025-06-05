@@ -134,7 +134,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     processingChunkRef.current = false;
 
     console.log(
-      `Connecting to ws://${config.WEBSOCKET_URL}/roadmaps/${slug}/assist`
+      `[WEBSOCKET] Connecting to ws://${config.WEBSOCKET_URL}/roadmaps/${slug}/assist`
     );
     // koneksi websocket
     const ws = new WebSocket(
@@ -145,7 +145,7 @@ export default function Chatbot({ slug }: { slug: string }) {
 
     // handler saat koneksi terbuka
     ws.onopen = () => {
-      console.log("Connected to WebSocket");
+      console.log("[WEBSOCKET] Connected!");
       setIsConnected(true);
     };
 
@@ -158,7 +158,6 @@ export default function Chatbot({ slug }: { slug: string }) {
         // Jika server mengirim pesan chatbot
         if (data.type === "new_message") {
           const { message, sent } = data.payload as WebSocketEventNewMessage;
-          console.log("payload data:", data.payload);
 
           setMessages((prev) => {
             // Cari pesan loading "..." dan ganti dengan respons dari server
@@ -225,8 +224,8 @@ export default function Chatbot({ slug }: { slug: string }) {
 
     // Event handler saat koneksi ditutup
     ws.onclose = (event) => {
-      console.log("event: " + event);
-      console.log("WebSocket connection closed");
+      console.log("[WEBSOCKET] Event: " + event);
+      console.log("[WEBSOCKET] Connection closed");
       setIsConnected(false);
       setIsBotResponding(false);
     };
@@ -266,7 +265,6 @@ export default function Chatbot({ slug }: { slug: string }) {
       };
 
       wsRef.current.send(JSON.stringify(requestData));
-      console.log("request data: " + JSON.stringify(requestData));
 
       // Set bot as responding when sending a message
       setIsBotResponding(true);
@@ -289,13 +287,8 @@ export default function Chatbot({ slug }: { slug: string }) {
     setInput("");
   };
 
-  // Format timestamp menjadi format yang lebih mudah dibaca
   const formatTime = (timestamp: string) => {
-    try {
-      return dayjs(timestamp).format("HH:mm");
-    } catch (e) {
-      return "";
-    }
+    return dayjs(timestamp).format("HH:mm");
   };
 
   if (!isOpen) {
