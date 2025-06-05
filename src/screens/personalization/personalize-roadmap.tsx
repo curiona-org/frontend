@@ -158,14 +158,12 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         skill_level: formData.familiarity,
       },
     };
-    console.log("Topic: ", topic);
     try {
       const response = await roadmapService.generateRoadmap(payload);
       if (!response.success) {
         throw new Error("Failed to submit data");
       }
       const result = response.data;
-      console.log("Success:", result);
       if (result?.slug) {
         router.push(`/roadmap/${result.slug}`);
       } else {
@@ -177,10 +175,6 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       setIsLoading(false);
     }
   };
-
-  // useEffect(() => {
-  //   console.log("Updated formData: ", formData);
-  // }, [formData]);
 
   return (
     <>

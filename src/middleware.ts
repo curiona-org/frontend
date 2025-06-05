@@ -23,27 +23,21 @@ export default async function middleware(request: NextRequest) {
 
   try {
     const session = await getSession(request);
-    console.log("[MIDDLEWARE] Session in middleware:", session);
 
     if (!session) {
-      console.warn("[MIDDLEWARE] No session found, redirecting to sign-in");
       return NextResponse.redirect(signInURL);
     }
 
     if (session?.tokens && shouldRefreshToken(session, 5 * 60 * 1000)) {
-      console.log("[MIDDLEWARE] Session needs refresh, refreshing now");
       const refreshResult = await refreshSessionAction();
       if (!refreshResult.success) {
-        console.warn("[MIDDLEWARE] Refresh failed, redirecting to sign-in");
         return NextResponse.redirect(signInURL);
       }
 
-      console.log("[MIDDLEWARE] Session refreshed successfully");
       return response;
     }
 
     if (isSessionExpired(session)) {
-      console.warn("[MIDDLEWARE] Session expired, redirecting to sign-in");
       await destroySession(response);
       return NextResponse.redirect(signInURL);
     }

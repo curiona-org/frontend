@@ -137,11 +137,9 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       if (saved) {
         await roadmapService.unbookmarkRoadmap(roadmap.slug);
         setSaved(false);
-        console.log(roadmap.is_bookmarked);
       } else {
         await roadmapService.bookmarkRoadmap(roadmap.slug);
         setSaved(true);
-        console.log(roadmap.is_bookmarked);
       }
     } catch (error) {
       console.error("Failed to toggle bookmark:", error);
