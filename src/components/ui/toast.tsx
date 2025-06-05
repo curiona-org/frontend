@@ -35,28 +35,47 @@ const Toast = forwardRef<ToastRef, ToastPrimitive.ToastProps>(
       close: () => setIsOpened(false),
     }));
 
+    const symbolText: Record<ToastToggleOptions["type"], string> = {
+      info: "ℹ️",
+      success: "✅",
+      error: "❌",
+    };
+
     return (
       <ToastPrimitive.Root
         {...props}
         open={open}
         onOpenChange={setIsOpened}
         className={cn(
-          "grid grid-cols-[auto_max-content] items-center text-white border-[3px] rounded-2xl shadow-lg duration-200 hover:brightness-90 data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:animate-hide data-[state=open]:animate-fadeIn data-[swipe=end]:animate-swipeOut data-[swipe=cancel]:transition-[transform_200ms_ease-out]",
+          "grid grid-cols-[auto_max-content] items-center text-white bg-white-500 border-[3px] rounded-2xl shadow-lg duration-200 hover:brightness-90 data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:animate-hide data-[state=open]:animate-fadeIn data-[swipe=end]:animate-swipeOut data-[swipe=cancel]:transition-[transform_200ms_ease-out]",
           {
-            "border-blue-800 bg-blue-600": type === "info",
-            "border-green-800 bg-green-600": type === "success",
-            "border-red-800 bg-red-600": type === "error",
+            "border-blue-500 bg-blue-50": type === "info",
+            "border-green-500 bg-green-50": type === "success",
+            "border-red-500 bg-red-50": type === "error",
           }
         )}
       >
-        <ToastPrimitive.Close className='flex flex-col text-left items-start p-4'>
+        <ToastPrimitive.Close className='flex flex-col gap-2 text-left items-start p-4'>
           <div className='flex flex-row space-x-2'>
-            <span>x</span>
+            <span>{symbolText[type]}</span>
             <ToastPrimitive.Title>
-              <span className='opacity-70'>{title}</span>
+              <span
+                className={cn(
+                  "text-mobile-heading-4-bold lg:text-heading-4-bold",
+                  {
+                    "text-blue-600": type === "info",
+                    "text-green-600": type === "success",
+                    "text-red-600": type === "error",
+                  }
+                )}
+              >
+                {title}
+              </span>
             </ToastPrimitive.Title>
           </div>
-          <ToastPrimitive.Description>{description}</ToastPrimitive.Description>
+          <ToastPrimitive.Description className='text-mobile-body-1-medium lg:text-body-1-medium'>
+            {description}
+          </ToastPrimitive.Description>
         </ToastPrimitive.Close>
       </ToastPrimitive.Root>
     );
