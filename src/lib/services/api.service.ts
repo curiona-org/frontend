@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import config from "../config";
 
 export type APIResponse<T = Record<string, unknown>> = {
   success: boolean;
@@ -13,7 +14,7 @@ export type ValidationError = {
   message: string;
 };
 
-export abstract class APIService {
+export class APIService {
   protected baseURL: string;
   private instance: AxiosInstance;
 
@@ -80,6 +81,32 @@ export abstract class APIService {
       }
       return request;
     });
+
+    // this.instance.interceptors.response.use(
+    //   (response) => response,
+    //   async (error) => {
+    //     const originalRequest = error.config;
+
+    //     if (
+    //       error.response &&
+    //       error.response.status === 401 &&
+    //       !originalRequest._retry
+    //     ) {
+    //       originalRequest._retry = true;
+    //       const refreshResult = await refreshSessionAction();
+
+    //       originalRequest.headers[
+    //         "Authorization"
+    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
+
+    //       this.instance.defaults.headers.common[
+    //         "Authorization"
+    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
+    //       return this.instance(originalRequest);
+    //     }
+    //     return Promise.reject(error);
+    //   }
+    // );
   }
 
   private isAuthorizationAttached() {
@@ -90,7 +117,6 @@ export abstract class APIService {
   }
 }
 
-export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true,
-});
+export const apiClient = new APIService(
+  config.BACKEND_URL || "http://localhost:3000/api"
+);

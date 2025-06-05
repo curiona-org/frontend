@@ -1,19 +1,33 @@
 "use client";
 import Button from "@/components/ui/button";
+import { cn } from "@/lib/helpers/common.helper";
 import { useAuth } from "@/providers/auth-provider";
+import { redirect } from "next/navigation";
+interface ButtonSignOutProps {
+  className?: string;
+}
 
-export default function ButtonSignOut() {
-  const { isLoggedIn, signOut } = useAuth();
+export default function ButtonSignOut({ className }: ButtonSignOutProps) {
+  const { isLoggedIn, signOut, session } = useAuth();
+  // const router = useRouter();
+
+  const handleSignOut = async () => {
+    if (session?.user?.id) {
+      sessionStorage.removeItem(`login_${session.user.id}`);
+    }
+    await signOut();
+    redirect("/");
+  };
 
   if (!isLoggedIn) {
     return null;
   }
 
   return (
-    // temporary style button
     <Button
-      onClick={signOut}
-      className='w-32 py-3 bg-red-500 hover:bg-red-900 text-white-500 rounded-lg mt-4'
+      disableEffects
+      onClick={handleSignOut}
+      className={cn("w-full text-start", className)}
     >
       Sign Out
     </Button>

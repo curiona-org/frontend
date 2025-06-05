@@ -7,6 +7,7 @@ export const TopicSchema = z.object({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
+  pro_tips: z.string(),
   order: z.number(),
   is_finished: z.boolean(),
   external_search_query: z.string(),

@@ -6,8 +6,6 @@ export const RoadmapSchema = z.object({
   slug: z.string(),
   description: z.string(),
   total_topics: z.number(),
-  finished_topics: z.number(),
-  completion_percentage: z.number(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 });
