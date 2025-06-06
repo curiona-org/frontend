@@ -1,4 +1,5 @@
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { useAuth } from "@/providers/auth-provider";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import Link from "next/link";
 import { Progress } from "radix-ui";
@@ -11,6 +12,7 @@ interface RoadmapCardProps {
 }
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
+  const { isLoggedIn } = useAuth();
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
   const [loading, setLoading] = useState(false);
 
@@ -59,35 +61,37 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
                 : roadmap.title}
             </h3>
           </div>
-          <div className='shrink-0'>
-            <button
-              onClick={toggleSave}
-              disabled={loading}
-              className={`${
-                saved
-                  ? "bg-blue-500 text-white-500"
-                  : "text-gray-400 hover:text-blue-500"
-              } transition-all ease-out duration-300 rounded-lg`}
-              aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
-            >
-              <div
-                className={`flex items-center gap-1 border ${
+          {isLoggedIn && (
+            <div className='shrink-0'>
+              <button
+                onClick={toggleSave}
+                disabled={loading}
+                className={`${
                   saved
-                    ? "border-blue-500"
-                    : "border-[#E5E5E5] hover:border-blue-500"
-                } rounded-lg p-2`}
+                    ? "bg-blue-500 text-white-500"
+                    : "text-gray-400 hover:text-blue-500"
+                } transition-all ease-out duration-300 rounded-lg`}
+                aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
               >
-                <span role='img' aria-label='folder'>
-                  🗂️
-                </span>
-                <span
-                  className={`${saved ? "text-white-500" : "text-black-500"}`}
+                <div
+                  className={`flex items-center gap-1 border ${
+                    saved
+                      ? "border-blue-500"
+                      : "border-[#E5E5E5] hover:border-blue-500"
+                  } rounded-lg p-2`}
                 >
-                  {saved ? "Saved!" : "Save"}
-                </span>
-              </div>
-            </button>
-          </div>
+                  <span role='img' aria-label='folder'>
+                    🗂️
+                  </span>
+                  <span
+                    className={`${saved ? "text-white-500" : "text-black-500"}`}
+                  >
+                    {saved ? "Saved!" : "Save"}
+                  </span>
+                </div>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Divider */}
@@ -138,34 +142,40 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Divider */}
-        <div className='relative my-4 h-[1px]'>
-          <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
-          <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
-        </div>
-
-        <div className='text-body-2'>
-          {/* Progress Learning Section */}
-          <div className='flex items-center justify-between text-mobile-body-1-regular lg:text-body-2'>
-            <div className='flex items-center gap-1'>
-              <span role='img' aria-label='runningperson'>
-                🏃
-              </span>
-              <span>Learning Progress</span>
+        {isLoggedIn && (
+          <>
+            <div className='relative my-4 h-[1px]'>
+              <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
+              <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
             </div>
-            <span>{`${finishedTopics}/${totalTopics}`} Topics Completed</span>
-          </div>
 
-          <Progress.Root
-            className='relative pt-4'
-            value={finishedTopics}
-            max={totalTopics}
-          >
-            <Progress.Indicator
-              className='bg-blue-600 h-2 rounded-full'
-              style={{ width: `${completionPercent}%` }}
-            />
-          </Progress.Root>
-        </div>
+            <div className='text-body-2'>
+              {/* Progress Learning Section */}
+              <div className='flex items-center justify-between text-mobile-body-1-regular lg:text-body-2'>
+                <div className='flex items-center gap-1'>
+                  <span role='img' aria-label='runningperson'>
+                    🏃
+                  </span>
+                  <span>Learning Progress</span>
+                </div>
+                <span>
+                  {`${finishedTopics}/${totalTopics}`} Topics Completed
+                </span>
+              </div>
+
+              <Progress.Root
+                className='relative pt-4'
+                value={finishedTopics}
+                max={totalTopics}
+              >
+                <Progress.Indicator
+                  className='bg-blue-600 h-2 rounded-full'
+                  style={{ width: `${completionPercent}%` }}
+                />
+              </Progress.Root>
+            </div>
+          </>
+        )}
       </div>
     </Link>
   );
