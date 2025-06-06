@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button";
+import useFocus from "@/hooks/use-focus";
 import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
@@ -17,6 +18,25 @@ export default function GenerateRoadmap() {
   const [inputTopic, setInputTopic] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [inputRef, setFocus] = useFocus<HTMLInputElement>();
+
+  const recommendationPrompts = [
+    { label: "Guide me to ...", value: "Guide me to " },
+    { label: "I want to learn...", value: "I want to learn " },
+    {
+      label: "Help me build a roadmap for...",
+      value: "Help me build a roadmap for ",
+    },
+    { label: "Outline steps to master...", value: "Outline steps to master " },
+    {
+      label: "Show me how to start learning...",
+      value: "Show me how to start learning ",
+    },
+    {
+      label: "Develop a plan to become proficient in...",
+      value: "Develop a plan to become proficient in ",
+    },
+  ];
 
   const handleGenerate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,9 +74,14 @@ export default function GenerateRoadmap() {
   };
 
   return (
-    <div className='w-full'>
+    <div className='w-full flex flex-col gap-4'>
+      <div className='flex sm:justify-end sm:-mt-10'>
+        <p className='text-gray-500 text-mobile-heading-4-regular lg:text-body-2-regular'>
+          {inputTopic.length}/150
+        </p>
+      </div>
       <div className='relative'>
-        <div className='flex-grow w-full h-16 md:h-20 text-mobile-heading-4-regular lg:text-heading-4-regular rounded-xl bg-white-500 border border-gray-300 shadow shadow-blue-500'>
+        <div className='flex-grow w-full h-16 md:h-20 text-mobile-heading-4-regular lg:text-heading-4-regular rounded-xl md:rounded-2xl bg-white-500 border border-gray-300 shadow shadow-blue-500'>
           <ShineBorder
             duration={14}
             borderWidth={2}
@@ -64,6 +89,7 @@ export default function GenerateRoadmap() {
           />
           <form onSubmit={handleGenerate} className='relative w-full h-full'>
             <input
+              ref={inputRef}
               type='text'
               minLength={5}
               maxLength={150}
@@ -101,10 +127,22 @@ export default function GenerateRoadmap() {
         </div>
       </div>
 
-      {/* Menampilkan jumlah karakter yang sudah dimasukkan */}
-      <p className='text-gray-500 text-sm mt-2'>{inputTopic.length}/150</p>
-
-      {error && <p className='text-red-500 text-sm mt-2 ml-1'>{error}</p>}
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
+      <div className='flex flex-wrap gap-2 justify-start'>
+        {recommendationPrompts.map((prompt, idx) => (
+          <Button
+            key={`${idx}-recommendation`}
+            onClick={() => {
+              if (error) setError("");
+              setInputTopic(prompt.value);
+              setFocus();
+            }}
+            className='flex-grow p-2 text-black-300 border-2 border-black-100 bg-white-500 rounded-2xl hover:bg-white-600 transition-colors duration-200'
+          >
+            {prompt.label}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 }

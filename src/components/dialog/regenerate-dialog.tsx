@@ -193,7 +193,7 @@ const RegenerateDialog = ({
             <div className='text-mobile-caption lg:text-body-2 grid grid-cols-2 md:grid-cols-3 gap-2'>
               {reasonOptions.map((option, index) => (
                 <button
-                  key={index}
+                  key={`${index}-regen-option`}
                   onClick={() => handleReasonClick(option.value)}
                   className='p-2 border border-gray-300 rounded-lg hover:bg-blue-50 transition-colors'
                 >
