@@ -1,10 +1,10 @@
+import Button from "@/components/ui/button";
 import Toast, { ToastRef } from "@/components/ui/toast";
 import { useAuth } from "@/providers/auth-provider";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormSignUp } from "./form";
-import Link from "next/link";
-import Button from "@/components/ui/button";
 
 export default function SignUpPage() {
   const {
@@ -70,95 +70,81 @@ export default function SignUpPage() {
   return (
     <>
       <Toast ref={toastRef} />
-      <div className="flex items-center justify-center min-h-screen px-6 lg:px-72 py-32">
-        <div className="dashedBorder p-5 shadow-lg  flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md">
-          <h1 className="text-mobile-display-2 lg:text-display-2">Sign Up</h1>
-          <p className="text-mobile-body-1-regular lg:text-body-1-regular">
+      <div className='flex items-center justify-center min-h-screen px-6 lg:px-72 py-32'>
+        <div className='dashedBorder p-5 shadow-lg  flex flex-col gap-3 bg-white-100 rounded-lg w-full max-w-md sm:max-w-lg lg:max-w-md'>
+          <h1 className='text-mobile-display-2 lg:text-display-2'>Sign Up</h1>
+          <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
             To Create Your Personalized Learning Blueprint
           </p>
 
-          <form className="space-y-4" onSubmit={onSubmit}>
+          <form className='space-y-4' onSubmit={onSubmit}>
             <input
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Full Name"
+              className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500'
+              placeholder='Full Name'
               {...register("name")}
               required
             />
             <input
-              type="email"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Email"
+              type='email'
+              className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500'
+              placeholder='Email'
               {...register("email")}
               required
             />
             <input
-              type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Password"
+              type='password'
+              className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500'
+              placeholder='Password'
               {...register("password")}
               required
             />
             <input
-              type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Confirm Password"
+              type='password'
+              className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500'
+              placeholder='Confirm Password'
               {...register("confirmPassword")}
               required
             />
 
-            <div className="flex flex-col gap-2">
+            <div className='flex flex-col gap-2'>
               <Button
-                type="submit"
-                className="text-mobile-body-1-bold lg:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900"
+                type='submit'
+                className='text-mobile-body-1-bold lg:text-body-1-bold block w-full h-10 text-white-500 bg-blue-500 rounded-lg hover:bg-blue-900'
               >
                 {authIsLoading ? "..." : "Sign Up"}
               </Button>
 
-              <p className="text-center text-mobile-body-1-regular lg:text-body-1-regular">
+              <p className='text-center text-mobile-body-1-regular lg:text-body-1-regular'>
                 OR
               </p>
 
               <Button
                 onClick={() => signInGoogle()}
-                type="button"
-                className="flex gap-1 items-center justify-center w-full h-[43px] text-mobile-body-1-medium lg:text-body-1-medium border-2 border-blue-500 rounded-lg hover:bg-blue-900 hover:border-blue-900 hover:text-white-500"
+                type='button'
+                className='flex gap-1 items-center justify-center w-full h-[43px] text-mobile-body-1-medium lg:text-body-1-medium border-2 border-blue-500 rounded-lg hover:bg-blue-900 hover:border-blue-900 hover:text-white-500'
               >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
                 >
                   <path
-                    fill="currentColor"
-                    d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10c5.35 0 9.25-3.67 9.25-9.09c0-1.15-.15-1.81-.15-1.81"
+                    fill='currentColor'
+                    d='M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10c5.35 0 9.25-3.67 9.25-9.09c0-1.15-.15-1.81-.15-1.81'
                   />
                 </svg>
                 Sign In with Google
               </Button>
-              <p className="text-mobile-body-1-regular lg:text-body-1-regular text-center">
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
                 Already have an account?
-                <Link href="sign-in" className="text-blue-500 hover:underline">
+                <Link href='sign-in' className='text-blue-500 hover:underline'>
                   {" "}
                   Sign In
                 </Link>
               </p>
             </div>
           </form>
-          <p className="text-mobile-body-1-regular lg:text-body-1-regular max-w-sm">
-            By continuing to use our services, you acknowledge that you have
-            both read and agree to our
-            <Link href="#" className="text-blue-500 underline">
-              {" "}
-              Terms of Service
-            </Link>{" "}
-            and
-            <Link href="#" className="text-blue-500 underline">
-              {" "}
-              Privacy Policy
-            </Link>
-            .
-          </p>
         </div>
       </div>
     </>

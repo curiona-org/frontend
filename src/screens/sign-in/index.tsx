@@ -136,20 +136,6 @@ export default function SignInPage() {
               </Link>
             </p>
           </form>
-          <p className='text-mobile-body-1-regular lg:text-body-1-regular max-w-sm'>
-            By continuing to use our services, you acknowledge that you have
-            both read and agree to our
-            <Link href='#' className='text-blue-500 underline'>
-              {" "}
-              Terms of Service
-            </Link>{" "}
-            and
-            <Link href='#' className='text-blue-500 underline'>
-              {" "}
-              Privacy Policy
-            </Link>
-            .
-          </p>
         </div>
       </div>
     </>
