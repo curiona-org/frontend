@@ -44,13 +44,8 @@ const TopicDialog = ({
       if (data.is_finished) {
         await roadmapService.markTopicAsIncomplete(slug);
         updateTopicStatus(slug, false);
-
-        if (localStorage.getItem(`confetti_seen_${roadmapSlug}`)) {
-          localStorage.removeItem(`confetti_seen_${roadmapSlug}`);
-        }
       } else {
         await roadmapService.markTopicAsFinished(slug);
-
         updateTopicStatus(slug, true);
       }
       await fetchTopic(slug);

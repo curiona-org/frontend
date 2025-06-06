@@ -98,25 +98,41 @@ const FinishedDialog = ({
                 "Want to update your rating? 🎖️"}
               {!existingData?.rating?.is_rated && "Rate this roadmap 🎖️"}
             </h4>
-            {existingData?.rating?.is_rated && (
-              <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
-                Last rated when you had{" "}
-                <span className='font-bold text-blue-500'>
-                  {(
-                    (existingData.rating.progression_total_finished_topics /
-                      existingData.rating.progression_total_topics) *
-                    100
-                  ).toFixed(0)}
-                  %
-                </span>{" "}
-                of the roadmap completed on{" "}
-                {dayjs(existingData.rating.created_at).format("D MMM YYYY")}
-              </p>
-            )}
-            {!existingData?.rating?.is_rated && (
+            {existingData?.rating?.is_rated &&
+              existingData.rating.progression_total_finished_topics !==
+                existingData.rating.progression_total_topics && (
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  Last rated when you had{" "}
+                  <span className='font-bold text-blue-500'>
+                    {(
+                      (existingData.rating.progression_total_finished_topics /
+                        existingData.rating.progression_total_topics) *
+                      100
+                    ).toFixed(0)}
+                    %
+                  </span>{" "}
+                  of the roadmap completed on{" "}
+                  {dayjs(existingData.rating.created_at).format("D MMM YYYY")}
+                </p>
+              )}
+            {existingData?.rating?.is_rated &&
+              existingData.rating.progression_total_finished_topics ===
+                existingData.rating.progression_total_topics && (
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  Your feedback is still valuable! Please consider updating your
+                  rating if your experience has changed.
+                </p>
+              )}
+            {!existingData?.rating?.is_rated && !isFinished && (
               <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
                 Your haven't completed this roadmap yet, but your feedback is
                 still valuable! Please rate it based on your current experience.
+              </p>
+            )}
+            {!existingData?.rating?.is_rated && isFinished && (
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                Your feedback is valuable! Please rate this roadmap based on
+                your overall experience.
               </p>
             )}
             {/* Rating Stars */}

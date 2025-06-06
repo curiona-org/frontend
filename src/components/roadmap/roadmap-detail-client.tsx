@@ -68,7 +68,9 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
 
   useEffect(() => {
     // Pastikan roadmap sudah benar‐benar selesai
-    const isFinished = roadmap?.progression?.is_finished;
+    const isFinished =
+      roadmap?.progression?.finished_topics === roadmap?.total_topics ||
+      roadmap?.progression?.is_finished;
 
     if (!isFinished) return;
     if (isFinished && !isRated) {
@@ -89,6 +91,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
     }
   }, [
     roadmap?.progression?.finished_topics,
+    roadmap?.total_topics,
     roadmap?.progression?.is_finished,
     roadmap?.rating?.is_rated,
     isRated,
