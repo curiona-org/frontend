@@ -69,7 +69,7 @@ const FinishedDialog = ({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         {/* <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]" /> */}
-        <Dialog.Content className='fixed left-1/2 top-1/2 w-80 md:w-[700px] lg:w-[800px] p-8 bg-white-500 rounded-lg shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none'>
+        <Dialog.Content className='fixed left-1/2 top-1/2 w-80 md:w-[700px] lg:w-[800px] p-8 bg-white-500 border-2 border-blue-500 rounded-lg shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none'>
           <VisuallyHidden>
             <Dialog.Title>Congratulations - Rate the Roadmap</Dialog.Title>
           </VisuallyHidden>
