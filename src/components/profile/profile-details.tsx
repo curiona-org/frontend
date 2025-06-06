@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { ProfileService } from "@/lib/services/profile.service";
-import { RoadmapService } from "@/lib/services/roadmap.service";
-import { GetProfileOutput } from "@/types/api-profile";
+import Loader from "@/components/loader/loader";
+import YourRoadmap from "@/components/profile/my-roadmap";
 import PersonalInformation from "@/components/profile/personal-information";
 import Stats from "@/components/profile/stats";
-import YourRoadmap from "@/components/profile/my-roadmap";
+import { ProfileService } from "@/lib/services/profile.service";
+import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
-import Loader from "@/components/loader/loader";
+import { GetProfileOutput } from "@/types/api-profile";
+import { useEffect, useState } from "react";
 
 const profileService = new ProfileService();
 const roadmapService = new RoadmapService();
@@ -97,13 +97,13 @@ const ProfileDetails = () => {
   }
 
   if (!session) {
-    return <div className="text-center py-4">Profile data not found.</div>;
+    return <div className='text-center py-4'>Profile data not found.</div>;
   }
 
   return (
-    <div className="min-h-screen px-6 lg:px-40 py-32">
-      <div className="flex justify-center items-center">
-        <div className="flex flex-col gap-6 p-8 rounded-2xl shadow-xl max-w-5xl w-full">
+    <div className='min-h-screen px-6 lg:px-40 py-32'>
+      <div className='flex justify-center items-center'>
+        <div className='flex flex-col gap-6 p-8 rounded-2xl shadow-xl max-w-5xl w-full bg-white-500'>
           <PersonalInformation
             name={session?.user.name}
             email={session?.user.email}
@@ -117,7 +117,7 @@ const ProfileDetails = () => {
             onCancelClick={handleCancelClick}
           />
 
-          <div className="dashedLine"></div>
+          <div className='dashedLine'></div>
 
           <Stats
             generatedRoadmap={generatedRoadmap}
@@ -126,7 +126,7 @@ const ProfileDetails = () => {
             savedRoadmap={savedRoadmap}
           />
 
-          <div className="dashedLine"></div>
+          <div className='dashedLine'></div>
 
           <YourRoadmap />
         </div>

@@ -313,7 +313,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   }
 
   return (
-    <div className='fixed bottom-0 lg:bottom-8 -right-0 lg:right-8 w-full h-[525px] md:w-[480px] lg:h-[525px] bg-white-500 border-2 border-blue-500 rounded-lg shadow-lg flex flex-col'>
+    <div className='fixed bottom-0 lg:bottom-8 -right-0 lg:right-8 w-full h-[525px] md:w-[480px] lg:h-[525px] bg-white-500 border-2 border-blue-500 rounded-2xl shadow-lg flex flex-col'>
       {/* Header */}
       <div className='flex items-center justify-between p-3'>
         <div className='flex items-center gap-2'>
@@ -414,8 +414,8 @@ export default function Chatbot({ slug }: { slug: string }) {
       <div className='p-3 flex items-center gap-2'>
         <input
           type='text'
-          placeholder='Try ask our chatbot'
-          className='flex-1 border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
+          placeholder='Try asking about your roadmap...'
+          className='flex-1 border-2 border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) =>

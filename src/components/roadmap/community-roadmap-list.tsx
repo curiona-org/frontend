@@ -1,7 +1,7 @@
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { RoadmapSummary } from "@/types/api-roadmap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 const roadmapService = new RoadmapService();
 
@@ -22,7 +22,7 @@ const CommunityRoadmap = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalData, setTotalData] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const pageSize = 9;
 
   useEffect(() => {
@@ -31,7 +31,6 @@ const CommunityRoadmap = ({
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
-      setLoading(true);
       try {
         const response = await roadmapService.listCommunityRoadmap(
           currentPage,
@@ -49,10 +48,9 @@ const CommunityRoadmap = ({
       } catch (error) {
         console.error("Error fetching data", error);
       }
-      setLoading(false);
     };
 
-    fetchRoadmaps();
+    startTransition(() => fetchRoadmaps());
   }, [currentPage, search, orderBy]);
 
   // Pagination logic: slice the roadmaps array based on the current page
@@ -86,7 +84,7 @@ const CommunityRoadmap = ({
   return (
     <>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
-        {loading ? (
+        {isPending ? (
           <div className='col-span-full flex justify-center'>
             <span className='loader'></span>
           </div>

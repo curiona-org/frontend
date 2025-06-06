@@ -1,9 +1,9 @@
 import config from "@/lib/config";
 import { APIService } from "@/lib/services/api.service";
 import {
-  ListRoadmapsOutput,
   GenerateRoadmapOutput,
   GetRoadmapOutput,
+  ListRoadmapsOutput,
 } from "@/types/api-roadmap";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 
@@ -83,7 +83,7 @@ export class RoadmapService extends APIService {
   }
 
   async listBookmarkedRoadmaps(page = 1, limit = 6) {
-    return this.get(`/bookmarks`).then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>(`/bookmarks`).then((res) => res?.data);
   }
 
   async bookmarkRoadmap(slug: string) {
