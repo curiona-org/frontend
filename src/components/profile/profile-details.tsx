@@ -62,7 +62,8 @@ const ProfileDetails = () => {
     };
 
     fetchProfileAndRoadmaps();
-  }, [setName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleEditClick = () => {
     setEditing(true);

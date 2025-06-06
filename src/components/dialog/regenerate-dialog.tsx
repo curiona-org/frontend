@@ -112,8 +112,7 @@ const RegenerateDialog = ({
   };
 
   const handleRegenerateRoadmap = async () => {
-    if (!reason) {
-      alert("Please provide a reason for regenerating the roadmap");
+    if (timeError || durationError) {
       return;
     }
 
@@ -348,8 +347,13 @@ const RegenerateDialog = ({
 
               <Button
                 onClick={handleRegenerateRoadmap}
-                disabled={loading || !reason}
-                className='p-3 bg-blue-500 text-white-500 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                disabled={
+                  loading ||
+                  !reason ||
+                  timeError !== null ||
+                  durationError !== null
+                }
+                className='p-3 bg-blue-500 min-w-64 text-white-500 hover:bg-blue-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 {loading ? (
                   <RotatingLoader className='size-6 border-[3px] border-white-500' />
