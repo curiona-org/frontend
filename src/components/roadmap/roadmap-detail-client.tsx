@@ -62,53 +62,35 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
     }
   };
 
-  // Dipanggil ketika FinishedDialog ditutup (baik karena submit rating ataupun cancel)
-  const handleFinishedDialogClose = () => {
-    setIsFinishedDialogOpen(false);
-    fetchRoadmap();
-  };
-
   const toggleDetails = () => {
     setShowDetails((prev) => !prev);
   };
 
   useEffect(() => {
     // Pastikan roadmap sudah benar‐benar selesai
-    const isFinished =
-      roadmap?.progression?.is_finished ||
-      roadmap?.progression?.finished_topics === roadmap?.total_topics;
+    const isFinished = roadmap?.progression?.is_finished;
 
     if (!isFinished) return;
     if (isFinished && !isRated) {
-      setShowConfetti(true);
       setIsFinishedDialogOpen(true);
       return;
     }
 
-    if (isRated) {
-      setShowConfetti(false);
-      return;
-    }
-
-    // Hanya jalankan di browser
     if (typeof window !== "undefined") {
-      // Cek apakah flag sudah ada
       const hasSeen = localStorage.getItem(localStorageKey);
       if (hasSeen) {
-        // Kalau sudah pernah melihat, skip
         return;
       }
 
-      // Jika belum, tampilkan confetti + dialog rating
       setShowConfetti(true);
       setIsFinishedDialogOpen(true);
 
-      // Simpan flag agar tidak muncul lagi
       localStorage.setItem(localStorageKey, "true");
     }
   }, [
     roadmap?.progression?.finished_topics,
     roadmap?.progression?.is_finished,
+    roadmap?.rating?.is_rated,
     isRated,
     localStorageKey,
   ]);
@@ -432,10 +414,7 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       />
 
       <FinishedDialog
-        isFinished={
-          roadmap?.progression?.is_finished ||
-          roadmap?.progression?.finished_topics === roadmap?.total_topics
-        }
+        isFinished={roadmap?.progression?.is_finished || false}
         open={isFinishedDialogOpen}
         onClose={() => setIsFinishedDialogOpen(false)}
         slug={roadmap.slug}
