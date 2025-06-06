@@ -3,6 +3,7 @@ import Button from "@/components/ui/button";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { DotLottiePlayer } from "@dotlottie/react-player";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import dayjs from "dayjs";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
@@ -11,6 +12,7 @@ const roadmapService = new RoadmapService();
 
 interface FinishedDialogProps {
   open: boolean;
+  isFinished: boolean;
   onClose: () => void;
   onRated: (rating: number, comment: string) => void;
   slug: string;
@@ -18,6 +20,7 @@ interface FinishedDialogProps {
 }
 
 const FinishedDialog = ({
+  isFinished,
   open,
   onClose,
   onRated,
@@ -67,27 +70,71 @@ const FinishedDialog = ({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         {/* <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]" /> */}
-        <Dialog.Content className='fixed left-1/2 top-1/2 w-80 md:w-[700px] lg:w-[800px] p-8 bg-white-500 rounded-lg shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none'>
+        <Dialog.Content className='fixed left-1/2 top-1/2 w-80 md:w-[700px] lg:w-[465px] p-8 bg-white-500 border-2 border-blue-500 rounded-2xl shadow-lg -translate-x-1/2 -translate-y-1/2 outline-none'>
           <VisuallyHidden>
             <Dialog.Title>Congratulations - Rate the Roadmap</Dialog.Title>
           </VisuallyHidden>
           <div className='flex flex-col gap-4 items-center'>
-            <DotLottiePlayer
-              src='/clap.lottie'
-              className='w-32'
-              loop
-              autoplay
-            />
-            <h2 className='text-mobile-heading-2 lg:text-heading-2 font-bold text-center'>
-              Congratulations!
-            </h2>
-            <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
-              You have successfully completed the roadmap. Keep up the great
-              work and continue learning!
-            </p>
+            {isFinished && (
+              <>
+                <DotLottiePlayer
+                  src='/clap.lottie'
+                  className='w-32'
+                  loop
+                  autoplay
+                />
+                <h2 className='text-mobile-heading-2 lg:text-heading-2 font-bold text-center'>
+                  Congratulations!
+                </h2>
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  You have successfully completed the roadmap. Keep up the great
+                  work and continue learning!
+                </p>
+                <div className='relative dashedLine_2 w-full inset-0'></div>
+              </>
+            )}
             <h4 className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
-              Rate this roadmap 🎖️
+              {existingData?.rating?.is_rated &&
+                "Want to update your rating? 🎖️"}
+              {!existingData?.rating?.is_rated && "Rate this roadmap 🎖️"}
             </h4>
+            {existingData?.rating?.is_rated &&
+              existingData.rating.progression_total_finished_topics !==
+                existingData.rating.progression_total_topics && (
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  Last rated when you had{" "}
+                  <span className='font-bold text-blue-500'>
+                    {(
+                      (existingData.rating.progression_total_finished_topics /
+                        existingData.rating.progression_total_topics) *
+                      100
+                    ).toFixed(0)}
+                    %
+                  </span>{" "}
+                  of the roadmap completed on{" "}
+                  {dayjs(existingData.rating.created_at).format("D MMM YYYY")}
+                </p>
+              )}
+            {existingData?.rating?.is_rated &&
+              existingData.rating.progression_total_finished_topics ===
+                existingData.rating.progression_total_topics && (
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  Your feedback is still valuable! Please consider updating your
+                  rating if your experience has changed.
+                </p>
+              )}
+            {!existingData?.rating?.is_rated && !isFinished && (
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                Your haven't completed this roadmap yet, but your feedback is
+                still valuable! Please rate it based on your current experience.
+              </p>
+            )}
+            {!existingData?.rating?.is_rated && isFinished && (
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                Your feedback is valuable! Please rate this roadmap based on
+                your overall experience.
+              </p>
+            )}
             {/* Rating Stars */}
             <div className='flex gap-2 mb-4 cursor-pointer'>
               {[1, 2, 3, 4, 5].map((star) => (

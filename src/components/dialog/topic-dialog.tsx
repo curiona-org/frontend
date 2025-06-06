@@ -9,6 +9,7 @@ const roadmapService = new RoadmapService();
 
 interface TopicDialogProps {
   slug: string | null;
+  roadmapSlug: string;
   open: boolean;
   onClose: () => void;
   updateTopicStatus: (slug: string, isFinished: boolean) => void;
@@ -16,6 +17,7 @@ interface TopicDialogProps {
 
 const TopicDialog = ({
   slug,
+  roadmapSlug,
   open,
   onClose,
   updateTopicStatus,

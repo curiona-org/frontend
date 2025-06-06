@@ -1,10 +1,9 @@
-import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
+import Navbar from "@/components/ui/navbar";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "./providers";
-import localFont from "next/font/local";
 
 const satoshi = localFont({
   src: [
@@ -28,7 +27,7 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Roadmap Generator",
+  title: "Curiona - Personalized Learning Roadmaps",
   description: "Generate a personalized roadmap for your learning journey.",
 };
 
@@ -39,7 +38,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang='en'
       className={`${satoshi.variable} ${satoshi.variable}  antialiased`}
     >
       <body>

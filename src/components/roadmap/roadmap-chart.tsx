@@ -1,18 +1,18 @@
 "use client";
+import TopicDialog from "@/components/dialog/topic-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { GetRoadmapOutput } from "@/types/api-roadmap";
+import Topic from "@/types/topic";
 import {
-  ReactFlow,
-  ConnectionLineType,
-  useNodesState,
-  useEdgesState,
   addEdge,
+  ConnectionLineType,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useCallback, useState, useMemo } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useCallback, useMemo, useState } from "react";
 import RoadmapNode from "./roadmap-nodes";
-import Topic from "@/types/topic";
-import TopicDialog from "@/components/dialog/topic-dialog";
 
 interface ReactFlowProps {
   roadmap: GetRoadmapOutput;
@@ -160,7 +160,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   // Calculate dynamic height based on number of topics
   const flowHeight = useMemo(() => {
     const topicCount = roadmap.topics.length;
-    let calculatedHeight = Math.max(500, topicCount * 300 + 200);
+    const calculatedHeight = Math.max(500, topicCount * 300 + 200);
 
     const screenWidth = window.innerWidth;
 
@@ -234,7 +234,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   return (
     <>
       <div
-        className="nowheel"
+        className='nowheel'
         style={{
           width: "100%",
           height: `${flowHeight}px`,
@@ -265,6 +265,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
       </div>
       <TopicDialog
         slug={selectedSlug}
+        roadmapSlug={roadmap.slug}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         updateTopicStatus={handleUpdateTopicStatus}
