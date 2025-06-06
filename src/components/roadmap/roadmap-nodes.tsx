@@ -29,16 +29,16 @@ const RoadmapNode = (props: RoadmapProps) => {
   const maxChars = 50;
   const baseClass = "text-body-1-medium px-6 py-4 rounded-lg";
   const bgClass = isFinished
-    ? "bg-blue-500 border-2 border-blue-500 text-white-500"
-    : "bg-white-500 border-2 border-white-600";
+    ? "bg-blue-500 hover:bg-blue-700 border-2 border-blue-500 text-white-500 transition-colors duration-150"
+    : "bg-white-500 hover:bg-white-600 border-2 border-white-600 transition-colors duration-150";
 
   // 1. Subtopic kiri (hanya target)
   if (isLeftSubtopic) {
     return (
       <div className={`${baseClass} ${bgClass}`}>
         <Handle
-          type="target"
-          id="subtopic-left"
+          type='target'
+          id='subtopic-left'
           position={Position.Right}
           isConnectable={false}
           style={{
@@ -48,7 +48,7 @@ const RoadmapNode = (props: RoadmapProps) => {
             height: "10px",
           }}
         />
-        <div className="w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2">
+        <div className='w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2'>
           {truncateText(props.data.label, maxChars)}
         </div>
       </div>
@@ -60,8 +60,8 @@ const RoadmapNode = (props: RoadmapProps) => {
     return (
       <div className={`${baseClass} ${bgClass}`}>
         <Handle
-          type="target"
-          id="subtopic-right"
+          type='target'
+          id='subtopic-right'
           position={Position.Left}
           isConnectable={false}
           style={{
@@ -71,7 +71,7 @@ const RoadmapNode = (props: RoadmapProps) => {
             height: "10px",
           }}
         />
-        <div className="w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2">
+        <div className='w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2'>
           {truncateText(props.data.label, maxChars)}
         </div>
       </div>
@@ -84,10 +84,10 @@ const RoadmapNode = (props: RoadmapProps) => {
       <div className={`${baseClass} ${bgClass}`}>
         {/* handle bottom (jika ingin menghubungkan ke topik berikutnya secara vertikal) */}
         <Handle
-          type="source"
-          id="topic-bottom"
+          type='source'
+          id='topic-bottom'
           position={Position.Bottom}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -97,10 +97,10 @@ const RoadmapNode = (props: RoadmapProps) => {
         />
         {/* handle kiri */}
         <Handle
-          type="source"
-          id="topic-left"
+          type='source'
+          id='topic-left'
           position={Position.Left}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -110,10 +110,10 @@ const RoadmapNode = (props: RoadmapProps) => {
         />
         {/* handle kanan */}
         <Handle
-          type="source"
-          id="topic-right"
+          type='source'
+          id='topic-right'
           position={Position.Right}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -121,7 +121,7 @@ const RoadmapNode = (props: RoadmapProps) => {
             height: "10px",
           }}
         />
-        <div className="w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2">
+        <div className='w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2'>
           {truncateText(props.data.label, maxChars)}
         </div>
       </div>
@@ -134,10 +134,10 @@ const RoadmapNode = (props: RoadmapProps) => {
       <div className={`${baseClass} ${bgClass}`}>
         {/* handle top (untuk sambung dari topik sebelumnya) */}
         <Handle
-          type="target"
-          id="topic-top"
+          type='target'
+          id='topic-top'
           position={Position.Top}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -147,10 +147,10 @@ const RoadmapNode = (props: RoadmapProps) => {
         />
         {/* handle bottom (untuk sambung ke topik berikutnya) */}
         <Handle
-          type="source"
-          id="topic-bottom"
+          type='source'
+          id='topic-bottom'
           position={Position.Bottom}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -160,10 +160,10 @@ const RoadmapNode = (props: RoadmapProps) => {
         />
         {/* handle kiri */}
         <Handle
-          type="source"
-          id="topic-left"
+          type='source'
+          id='topic-left'
           position={Position.Left}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -173,10 +173,10 @@ const RoadmapNode = (props: RoadmapProps) => {
         />
         {/* handle kanan */}
         <Handle
-          type="source"
-          id="topic-right"
+          type='source'
+          id='topic-right'
           position={Position.Right}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={{
             background: "var(--white-500)",
             border: "1px solid var(--blue-500)",
@@ -184,7 +184,7 @@ const RoadmapNode = (props: RoadmapProps) => {
             height: "10px",
           }}
         />
-        <div className="w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2">
+        <div className='w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2'>
           {truncateText(props.data.label, maxChars)}
         </div>
       </div>
@@ -196,10 +196,10 @@ const RoadmapNode = (props: RoadmapProps) => {
     <div className={`${baseClass} ${bgClass}`}>
       {/* handle top (jika Anda ingin edge vertikal dari topik sebelumnya) */}
       <Handle
-        type="target"
-        id="topic-top"
+        type='target'
+        id='topic-top'
         position={Position.Top}
-        isConnectable={isConnectable}
+        isConnectable={false}
         style={{
           background: "var(--white-500)",
           border: "1px solid var(--blue-500)",
@@ -209,10 +209,10 @@ const RoadmapNode = (props: RoadmapProps) => {
       />
       {/* handle kiri, pakai "topic-left" biar edge subtopik terhubung */}
       <Handle
-        type="source"
-        id="topic-left"
+        type='source'
+        id='topic-left'
         position={Position.Left}
-        isConnectable={isConnectable}
+        isConnectable={false}
         style={{
           background: "var(--white-500)",
           border: "1px solid var(--blue-500)",
@@ -222,10 +222,10 @@ const RoadmapNode = (props: RoadmapProps) => {
       />
       {/* handle kanan, pakai "topic-right" biar edge subtopik terhubung */}
       <Handle
-        type="source"
-        id="topic-right"
+        type='source'
+        id='topic-right'
         position={Position.Right}
-        isConnectable={isConnectable}
+        isConnectable={false}
         style={{
           background: "var(--white-500)",
           border: "1px solid var(--blue-500)",
@@ -233,7 +233,7 @@ const RoadmapNode = (props: RoadmapProps) => {
           height: "10px",
         }}
       />
-      <div className="w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2">
+      <div className='w-[200px] h-[48px] flex justify-center items-center overflow-hidden text-center line-clamp-2'>
         {truncateText(props.data.label, maxChars)}
       </div>
     </div>
