@@ -2,6 +2,7 @@ import Footer from "@/components/ui/footer";
 import Navbar from "@/components/ui/navbar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import Providers from "./providers";
 
@@ -42,6 +43,29 @@ export default async function RootLayout({
       className={`${satoshi.variable} ${satoshi.variable}  antialiased`}
     >
       <body>
+        <head>
+          <Script id='maze-analytics'>
+            {`(function (m, a, z, e) {
+  var s, t;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  a.getElementsByTagName('head')[0].appendChild(s);
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, '`}
+          </Script>
+        </head>
         <Providers>
           <header>
             <Navbar />
