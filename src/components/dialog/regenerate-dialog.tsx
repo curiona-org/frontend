@@ -1,5 +1,6 @@
 "use client";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
@@ -17,20 +18,15 @@ interface RegenerateDialogProps {
     timeValue: number;
     timeUnit: TimeUnit;
     durationValue: number;
-    durationUnit: DurationUnit;
+    durationUnit: TimeUnit;
     skillLevel: SkillLevel;
   };
 }
-
-type TimeUnit = "hours" | "minutes";
-type DurationUnit = "months" | "weeks" | "days";
-type SkillLevel = "beginner" | "intermediate" | "advanced";
 
 const RegenerateDialog = ({
   slug,
   open,
   onClose,
-  onSuccess,
   initialPersonalization,
 }: RegenerateDialogProps) => {
   const [reason, setReason] = useState("");
@@ -41,7 +37,7 @@ const RegenerateDialog = ({
   const [timeError, setTimeError] = useState<string | null>(null);
 
   const [durationValue, setDurationValue] = useState<number>(1);
-  const [durationUnit, setDurationUnit] = useState<DurationUnit>("weeks");
+  const [durationUnit, setDurationUnit] = useState<TimeUnit>("weeks");
   const [durationError, setDurationError] = useState<string | null>(null);
 
   const [skillLevel, setSkillLevel] = useState<SkillLevel>("beginner");
@@ -278,7 +274,7 @@ const RegenerateDialog = ({
                           : "border-gray-300"
                       } rounded-lg transition-colors`}
                     >
-                      😌 I'm new to this topic.
+                      {`😌 I'm new to this topic.`}
                     </Button>
                     <Button
                       onClick={() => setSkillLevel("intermediate")}
@@ -298,7 +294,7 @@ const RegenerateDialog = ({
                           : "border-gray-300"
                       } rounded-lg transition-colors`}
                     >
-                      😎 I'm confident and want deeper insights.
+                      {`😎 I'm confident and want deeper insights.`}
                     </Button>
                   </div>
                 </div>
@@ -321,7 +317,7 @@ const RegenerateDialog = ({
                     <select
                       value={durationUnit}
                       onChange={(e) =>
-                        setDurationUnit(e.target.value as DurationUnit)
+                        setDurationUnit(e.target.value as TimeUnit)
                       }
                       className='flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500'
                     >

@@ -8,7 +8,6 @@ const roadmapService = new RoadmapService();
 
 interface RoadmapCardProps {
   roadmap: RoadmapSummary;
-  showProgress: boolean;
 }
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {

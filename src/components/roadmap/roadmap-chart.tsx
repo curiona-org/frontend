@@ -5,10 +5,13 @@ import { GetRoadmapOutput } from "@/types/api-roadmap";
 import Topic from "@/types/topic";
 import {
   addEdge,
+  Connection,
   ConnectionLineType,
   ReactFlow,
   useEdgesState,
   useNodesState,
+  type Edge,
+  type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useCallback, useMemo, useState } from "react";
@@ -19,7 +22,7 @@ interface ReactFlowProps {
   updateTopicStatus: (slug: string, isFinished: boolean) => void;
 }
 
-function splitSubtopicsEvenly(subtopics: any[]) {
+function splitSubtopicsEvenly(subtopics: Topic[]) {
   const mid = Math.ceil(subtopics.length / 2);
   return {
     left: subtopics.slice(0, mid),
@@ -28,8 +31,8 @@ function splitSubtopicsEvenly(subtopics: any[]) {
 }
 
 function generateFlowData(roadmap: GetRoadmapOutput) {
-  const nodes: any[] = [];
-  const edges: any[] = [];
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
   const topicSpacingY = 300;
   const subtopicOffsetX = 400;
   const subtopicSpacingY = 100;
@@ -217,16 +220,16 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   //   updateNodeFinishedStatus(slug, isFinished); // update node di lokal agar rerender
   // };
 
-  const handleNodeClick = useCallback((_, node: any) => {
+  const handleNodeClick = useCallback((_: unknown, node: Node) => {
     if (node.data?.slug) {
-      setSelectedSlug(node.data.slug);
+      setSelectedSlug(node.data.slug as string);
       setDialogOpen(true);
     }
   }, []);
 
   const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    []
+    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    [setEdges]
   );
 
   const proOptions = { hideAttribution: true };
@@ -269,7 +272,6 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         updateTopicStatus={handleUpdateTopicStatus}
-        onFinish={() => setDialogOpen(false)}
       />
     </>
   );

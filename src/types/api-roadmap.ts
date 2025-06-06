@@ -1,6 +1,10 @@
 import { Account } from "./account";
 import { FilteredList } from "./filtered-list";
-import { PersonalizationOptions } from "./personalization-options";
+import {
+  PersonalizationOptions,
+  SkillLevel,
+  TimeUnit,
+} from "./personalization-options";
 import { Roadmap } from "./roadmap";
 import { Topic } from "./topic";
 
@@ -33,6 +37,46 @@ export type GetRoadmapOutput = Roadmap & {
   is_bookmarked: boolean;
   progression: RoadmapProgressionSummary;
   topics: Topic[];
+  rating: {
+    is_rated: boolean;
+    roadmap_id: number;
+    progression_total_topics: number;
+    progression_total_finished_topics: number;
+    rating: number;
+    comment: string;
+    created_at: string;
+    updated_at: string;
+  };
+};
+
+export type GenerateRoadmapInput = {
+  topic: string;
+  personalization_options: {
+    daily_time_availability: {
+      value: number;
+      unit: TimeUnit;
+    };
+    total_duration: {
+      value: number;
+      unit: TimeUnit;
+    };
+    skill_level: SkillLevel;
+  };
+};
+
+export type RegenerateRoadmapInput = {
+  reason: string;
+  personalization_options: {
+    daily_time_availability: {
+      value: number;
+      unit: TimeUnit;
+    };
+    total_duration: {
+      value: number;
+      unit: TimeUnit;
+    };
+    skill_level: SkillLevel;
+  };
 };
 
 export type GenerateRoadmapOutput = { slug: string };

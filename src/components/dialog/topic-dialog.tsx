@@ -17,7 +17,6 @@ interface TopicDialogProps {
 
 const TopicDialog = ({
   slug,
-  roadmapSlug,
   open,
   onClose,
   updateTopicStatus,
@@ -100,99 +99,103 @@ const TopicDialog = ({
                 <div className='dashedLine my-6'></div>
 
                 {/* Youtube Videos */}
-                {data.external_resources?.youtube_videos.length > 0 && (
-                  <>
-                    <section className='flex flex-col gap-4'>
-                      <div className='text-mobile-heading-4-bold lg:text-heading-4-bold flex items-center gap-2'>
-                        <div className='bg-blue-600 text-white rounded p-1'>
-                          ▶️
+                {data.external_resources &&
+                  data.external_resources.youtube_videos.length > 0 && (
+                    <>
+                      <section className='flex flex-col gap-4'>
+                        <div className='text-mobile-heading-4-bold lg:text-heading-4-bold flex items-center gap-2'>
+                          <div className='bg-blue-600 text-white rounded p-1'>
+                            ▶️
+                          </div>
+                          <p>Youtube</p>
                         </div>
-                        <p>Youtube</p>
-                      </div>
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                        {data.external_resources.youtube_videos.map(
-                          (video, i) => {
-                            const videoId = extractYouTubeID(video.url);
-                            return (
-                              <div
-                                key={i}
-                                className='rounded overflow-hidden shadow-md'
-                              >
-                                {videoId ? (
-                                  <div className='max-w-sm h-full mx-auto bg-white-500 rounded-lg shadow-md overflow-hidden'>
-                                    {/* Video aspect ratio */}
-                                    <div className='aspect-video relative'>
-                                      <iframe
-                                        src={`https://www.youtube.com/embed/${videoId}`}
-                                        title={video.title}
-                                        className='absolute inset-0 w-full h-full'
-                                        frameBorder='0'
-                                        allowFullScreen
-                                      ></iframe>
-                                    </div>
-                                    {/* Info bawah */}
-                                    <div className='text-mobile-body-1-bold lg:text-body-1-bold p-2 bg-white border-t border-gray-200 flex flex-col'>
-                                      <p className='font-semibold'>
-                                        {video.title}
-                                      </p>
-                                      <span className='text-mobile-body-1-regular lg:text-body-1-regular text-sm text-gray-600'>
-                                        {video.author}
-                                      </span>
-                                    </div>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                          {data.external_resources &&
+                            data.external_resources.youtube_videos.map(
+                              (video, i) => {
+                                const videoId = extractYouTubeID(video.url);
+                                return (
+                                  <div
+                                    key={i}
+                                    className='rounded overflow-hidden shadow-md'
+                                  >
+                                    {videoId ? (
+                                      <div className='max-w-sm h-full mx-auto bg-white-500 rounded-lg shadow-md overflow-hidden'>
+                                        {/* Video aspect ratio */}
+                                        <div className='aspect-video relative'>
+                                          <iframe
+                                            src={`https://www.youtube.com/embed/${videoId}`}
+                                            title={video.title}
+                                            className='absolute inset-0 w-full h-full'
+                                            frameBorder='0'
+                                            allowFullScreen
+                                          ></iframe>
+                                        </div>
+                                        {/* Info bawah */}
+                                        <div className='text-mobile-body-1-bold lg:text-body-1-bold p-2 bg-white border-t border-gray-200 flex flex-col'>
+                                          <p className='font-semibold'>
+                                            {video.title}
+                                          </p>
+                                          <span className='text-mobile-body-1-regular lg:text-body-1-regular text-sm text-gray-600'>
+                                            {video.author}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <p>Invalid video URL</p>
+                                    )}
                                   </div>
-                                ) : (
-                                  <p>Invalid video URL</p>
-                                )}
-                              </div>
-                            );
-                          }
-                        )}
-                      </div>
-                    </section>
-                  </>
-                )}
+                                );
+                              }
+                            )}
+                        </div>
+                      </section>
+                    </>
+                  )}
 
                 <div className='dashedLine my-6'></div>
 
                 {/* Books */}
-                {data.external_resources?.books.length > 0 && (
-                  <section>
-                    <div className='text-mobile-heading-4-bold lg:text-heading-4-bold flex items-center gap-2 mb-3'>
-                      <div className='bg-blue-600 text-white rounded p-1'>
-                        📙
+                {data.external_resources &&
+                  data.external_resources.books.length > 0 && (
+                    <section>
+                      <div className='text-mobile-heading-4-bold lg:text-heading-4-bold flex items-center gap-2 mb-3'>
+                        <div className='bg-blue-600 text-white rounded p-1'>
+                          📙
+                        </div>
+                        <p className='font-bold'>Books</p>
                       </div>
-                      <p className='font-bold'>Books</p>
-                    </div>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                      {data.external_resources.books.map((book, i) => (
-                        <a
-                          key={i}
-                          href={book.url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className='flex gap-4 border rounded p-4 hover:shadow-lg transition'
-                        >
-                          <img
-                            src={book.cover_url}
-                            alt={book.title}
-                            className='w-20 h-28 object-cover rounded'
-                          />
-                          <div className='flex flex-col gap-2'>
-                            <p className='text-mobile-body-1-bold lg:text-body-1-bold'>
-                              {book.title}
-                            </p>
-                            <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                              {book.author}
-                            </p>
-                            <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                              Pages: {book.length}
-                            </p>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </section>
-                )}
+                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        {data.external_resources &&
+                          data.external_resources.books.map((book, i) => (
+                            <a
+                              key={i}
+                              href={book.url}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='flex gap-4 border rounded p-4 hover:shadow-lg transition'
+                            >
+                              <img
+                                src={book.cover_url}
+                                alt={book.title}
+                                className='w-20 h-28 object-cover rounded'
+                              />
+                              <div className='flex flex-col gap-2'>
+                                <p className='text-mobile-body-1-bold lg:text-body-1-bold'>
+                                  {book.title}
+                                </p>
+                                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                                  {book.author}
+                                </p>
+                                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                                  Pages: {book.length}
+                                </p>
+                              </div>
+                            </a>
+                          ))}
+                      </div>
+                    </section>
+                  )}
 
                 <div className='dashedLine my-6'></div>
 

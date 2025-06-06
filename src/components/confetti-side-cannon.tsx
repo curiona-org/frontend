@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
 import confetti from "canvas-confetti";
+import { useEffect } from "react";
 
 export function ConfettiSideCannons() {
   useEffect(() => {

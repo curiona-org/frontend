@@ -18,13 +18,8 @@ function truncateText(text: string, maxLength: number) {
 }
 
 const RoadmapNode = (props: RoadmapProps) => {
-  const {
-    isConnectable,
-    isFirstTopic,
-    isLastTopic,
-    isLeftSubtopic,
-    isRightSubtopic,
-  } = props.data;
+  const { isFirstTopic, isLastTopic, isLeftSubtopic, isRightSubtopic } =
+    props.data;
   const { isFinished } = props.data;
   const maxChars = 50;
   const baseClass = "text-body-1-medium px-6 py-4 rounded-lg";
