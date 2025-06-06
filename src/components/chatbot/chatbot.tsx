@@ -138,7 +138,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     );
     // koneksi websocket
     const ws = new WebSocket(
-      `ws://${config.WEBSOCKET_URL}/roadmaps/${slug}/assist`,
+      `${config.WEBSOCKET_URL}/roadmaps/${slug}/assist`,
       ["Authorization", session.tokens.access_token]
     );
     wsRef.current = ws;
