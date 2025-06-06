@@ -432,6 +432,10 @@ export default function RoadmapDetailClient({ initialRoadmap, slug }) {
       />
 
       <FinishedDialog
+        isFinished={
+          roadmap?.progression?.is_finished ||
+          roadmap?.progression?.finished_topics === roadmap?.total_topics
+        }
         open={isFinishedDialogOpen}
         onClose={() => setIsFinishedDialogOpen(false)}
         slug={roadmap.slug}

@@ -11,6 +11,7 @@ const roadmapService = new RoadmapService();
 
 interface FinishedDialogProps {
   open: boolean;
+  isFinished: boolean;
   onClose: () => void;
   onRated: (rating: number, comment: string) => void;
   slug: string;
@@ -18,6 +19,7 @@ interface FinishedDialogProps {
 }
 
 const FinishedDialog = ({
+  isFinished,
   open,
   onClose,
   onRated,
@@ -72,19 +74,23 @@ const FinishedDialog = ({
             <Dialog.Title>Congratulations - Rate the Roadmap</Dialog.Title>
           </VisuallyHidden>
           <div className='flex flex-col gap-4 items-center'>
-            <DotLottiePlayer
-              src='/clap.lottie'
-              className='w-32'
-              loop
-              autoplay
-            />
-            <h2 className='text-mobile-heading-2 lg:text-heading-2 font-bold text-center'>
-              Congratulations!
-            </h2>
-            <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
-              You have successfully completed the roadmap. Keep up the great
-              work and continue learning!
-            </p>
+            {isFinished && (
+              <>
+                <DotLottiePlayer
+                  src='/clap.lottie'
+                  className='w-32'
+                  loop
+                  autoplay
+                />
+                <h2 className='text-mobile-heading-2 lg:text-heading-2 font-bold text-center'>
+                  Congratulations!
+                </h2>
+                <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
+                  You have successfully completed the roadmap. Keep up the great
+                  work and continue learning!
+                </p>
+              </>
+            )}
             <h4 className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
               Rate this roadmap 🎖️
             </h4>
