@@ -62,7 +62,7 @@ const ProfileDetails = () => {
     };
 
     fetchProfileAndRoadmaps();
-  }, []);
+  }, [setName]);
 
   const handleEditClick = () => {
     setEditing(true);

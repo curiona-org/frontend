@@ -13,12 +13,7 @@ interface DeleteDialogProps {
   onSuccess?: () => void;
 }
 
-const DeleteDialog = ({
-  slug,
-  open,
-  onClose,
-  onSuccess,
-}: DeleteDialogProps) => {
+const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
   const router = useRouter();
 
   const handleDeleteRoadmap = async () => {
@@ -45,8 +40,8 @@ const DeleteDialog = ({
             </Dialog.Title>
 
             <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-              This action will permanently remove your current roadmap. You
-              won't be able to undo.
+              {`This action will permanently remove your current roadmap. You
+              won't be able to undo.`}
             </p>
 
             <div className='flex flex-col-reverse md:flex-row justify-between gap-6 text-mobile-body-1-medium lg:text-body-1-medium'>

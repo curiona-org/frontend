@@ -1,45 +1,12 @@
 "use client";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { RoadmapSummary } from "@/types/api-roadmap";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import Loader from "../loader/loader";
 
 const roadmapService = new RoadmapService();
-
-export interface RoadmapProps {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  total_topics: number;
-  created_at: Date;
-  updated_at: Date;
-  is_bookmarked: boolean;
-
-  progression: {
-    total_topics: number;
-    finished_topics: number;
-    completion_percentage: number;
-    is_finished: boolean;
-    finished_at: string;
-    created_at: Date;
-    updated_at: Date;
-  };
-
-  personalization_options: {
-    daily_time_availability: {
-      value: number;
-      unit: string;
-    };
-    total_duration: {
-      value: number;
-      unit: string;
-    };
-    skill_level: string;
-    additional_info?: string;
-  };
-}
 
 interface UserRoadmapListProps {
   filter?: "all" | "onprogress" | "saved" | "finished";
@@ -50,7 +17,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
   filter = "all",
   showPagination = true,
 }) => {
-  const [roadmaps, setRoadmaps] = useState<RoadmapProps[]>([]);
+  const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>([]);
   const [isPending, startTransition] = useTransition();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -98,17 +65,41 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
       try {
         // endpoint sudah mengembalikan data.pagination & nested progression
         startTransition(async () => {
-          let res;
+          let total = 1;
+          let total_pages = 1;
+          let current_page = 1;
+          let items: RoadmapSummary[] = [];
           if (filter === "all") {
-            res = await roadmapService.listUserRoadmap(currentPage);
+            const res = await roadmapService.listUserRoadmap(currentPage);
+            total = res.data.total;
+            total_pages = res.data.total_pages;
+            current_page = res.data.current_page;
+            items = res.data.items;
           } else if (filter === "onprogress") {
-            res = await roadmapService.listUserOnProgressRoadmap(currentPage);
+            const res = await roadmapService.listUserOnProgressRoadmap(
+              currentPage
+            );
+            total = res.data.total;
+            total_pages = res.data.total_pages;
+            current_page = res.data.current_page;
+            items = res.data.items;
           } else if (filter === "saved") {
-            res = await roadmapService.listBookmarkedRoadmaps(currentPage);
+            const res = await roadmapService.listBookmarkedRoadmaps(
+              currentPage
+            );
+            total = res.data.total;
+            total_pages = res.data.total_pages;
+            current_page = res.data.current_page;
+            items = res.data.items;
           } else if (filter === "finished") {
-            res = await roadmapService.listUserFinishedRoadmap(currentPage);
+            const res = await roadmapService.listUserFinishedRoadmap(
+              currentPage
+            );
+            total = res.data.total;
+            total_pages = res.data.total_pages;
+            current_page = res.data.current_page;
+            items = res.data.items;
           }
-          const { total, total_pages, current_page, items } = res.data;
 
           const mapped = items.map((item) => ({
             id: item.id,
@@ -116,9 +107,9 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
             slug: item.slug,
             description: item.description,
             total_topics: item.total_topics,
-            created_at: new Date(item.created_at),
-            updated_at: new Date(item.updated_at),
-            is_bookmarked: item.is_bookmarked ?? false,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            is_bookmarked: item.is_bookmarked,
 
             progression: {
               total_topics: item.progression.total_topics,
@@ -129,8 +120,8 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
                 item.progression.completion_percentage === 100
                   ? item.progression.updated_at
                   : "",
-              created_at: new Date(item.progression.created_at),
-              updated_at: new Date(item.progression.updated_at),
+              created_at: item.progression.created_at,
+              updated_at: item.progression.updated_at,
             },
 
             personalization_options: item.personalization_options,
@@ -157,30 +148,6 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
     setCurrentPage(1);
   }, [filter]);
 
-  const handleToggleSave = async (slug: string, saved: boolean) => {
-    try {
-      if (saved) {
-        await roadmapService.unbookmarkRoadmap(slug);
-      } else {
-        await roadmapService.bookmarkRoadmap(slug);
-      }
-
-      setRoadmaps((prev) =>
-        prev.map((r) =>
-          r.slug === slug
-            ? {
-                ...r,
-                is_bookmarked: !saved,
-              }
-            : r
-        )
-      );
-    } catch (error) {
-      console.error("Failed to toggle bookmark:", error);
-      alert("Gagal memperbarui bookmark. Silakan coba lagi.");
-    }
-  };
-
   return (
     <>
       <div
@@ -191,11 +158,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
         {isPending && <Loader />}
         {!isPending && roadmaps.length > 0 ? (
           roadmaps.map((roadmap) => (
-            <RoadmapCard
-              key={roadmap.id}
-              roadmap={roadmap}
-              onToggleSave={handleToggleSave}
-            />
+            <RoadmapCard key={roadmap.id} roadmap={roadmap} />
           ))
         ) : (
           <p className='text-center col-span-full text-gray-500'>

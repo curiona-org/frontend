@@ -51,7 +51,7 @@ const CommunityRoadmap = ({
     };
 
     startTransition(() => fetchRoadmaps());
-  }, [currentPage, search, orderBy]);
+  }, [currentPage, search, orderBy, limit]);
 
   // Pagination logic: slice the roadmaps array based on the current page
 
@@ -79,8 +79,6 @@ const CommunityRoadmap = ({
     }
   };
 
-  const pages = generatePageNumbers();
-
   return (
     <>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6'>
@@ -90,11 +88,7 @@ const CommunityRoadmap = ({
           </div>
         ) : roadmaps.length > 0 ? (
           roadmaps.map((roadmap) => (
-            <RoadmapCard
-              key={roadmap.id}
-              roadmap={roadmap}
-              showProgress={false}
-            />
+            <RoadmapCard key={roadmap.id} roadmap={roadmap} />
           ))
         ) : (
           <p className='text-center col-span-full text-gray-500'>

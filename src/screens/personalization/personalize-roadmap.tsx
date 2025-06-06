@@ -3,6 +3,7 @@
 import Loader from "@/components/loader/loader";
 import Button from "@/components/ui/button";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
 import { Progress } from "radix-ui";
 import React, { useState } from "react";
@@ -17,10 +18,10 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     timeAvailability: 0,
-    timeUnit: "hours" as "hours" | "minutes",
+    timeUnit: "hours" as TimeUnit,
     familiarity: "",
     duration: 0,
-    durationUnit: "months" as "months" | "weeks" | "days",
+    durationUnit: "months" as TimeUnit,
   });
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -149,13 +150,13 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       personalization_options: {
         daily_time_availability: {
           value: Number(formData.timeAvailability),
-          unit: formData.timeUnit,
+          unit: formData.timeUnit as TimeUnit,
         },
         total_duration: {
           value: Number(formData.duration),
-          unit: formData.durationUnit,
+          unit: formData.durationUnit as TimeUnit,
         },
-        skill_level: formData.familiarity,
+        skill_level: formData.familiarity as SkillLevel,
       },
     };
     try {
@@ -220,8 +221,8 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           {step === 1 && (
             <div className='space-y-6'>
               <p className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
-                How much time can you learn each day or week? We'll fit the plan
-                to your schedule 😌
+                {`How much time can you learn each day or week? We'll fit the plan
+                to your schedule 😌`}
               </p>
               {step1Error && (
                 <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>

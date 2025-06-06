@@ -123,7 +123,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     if (chunkQueueRef.current.length > 0 && !processingChunkRef.current) {
       processNextChunk();
     }
-  }, []);
+  }, [processNextChunk]);
 
   // WebSocket
   useEffect(() => {

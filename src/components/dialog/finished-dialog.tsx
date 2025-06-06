@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/ui/button";
 import { RoadmapService } from "@/lib/services/roadmap.service";
+import { GetRoadmapOutput } from "@/types/api-roadmap";
 import { DotLottiePlayer } from "@dotlottie/react-player";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import dayjs from "dayjs";
@@ -16,7 +17,7 @@ interface FinishedDialogProps {
   onClose: () => void;
   onRated: (rating: number, comment: string) => void;
   slug: string;
-  existingData: any;
+  existingData: GetRoadmapOutput;
 }
 
 const FinishedDialog = ({
@@ -125,8 +126,8 @@ const FinishedDialog = ({
               )}
             {!existingData?.rating?.is_rated && !isFinished && (
               <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
-                Your haven't completed this roadmap yet, but your feedback is
-                still valuable! Please rate it based on your current experience.
+                {`Your haven't completed this roadmap yet, but your feedback is
+                still valuable! Please rate it based on your current experience.`}
               </p>
             )}
             {!existingData?.rating?.is_rated && isFinished && (

@@ -8,12 +8,21 @@ import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import Button from "@/components/ui/button";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
+import { GetRoadmapOutput } from "@/types/api-roadmap";
 import { Progress } from "radix-ui";
 import { useEffect, useState } from "react";
 
 const roadmapService = new RoadmapService();
 
-export default function RoadmapDetailClient({ initialRoadmap, slug }) {
+type RoadmapDetailClientProps = {
+  initialRoadmap: GetRoadmapOutput;
+  slug: string;
+};
+
+export default function RoadmapDetailClient({
+  initialRoadmap,
+  slug,
+}: RoadmapDetailClientProps) {
   const { session } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const [showDetails, setShowDetails] = useState(true);

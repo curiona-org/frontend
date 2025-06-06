@@ -1,9 +1,11 @@
 import config from "@/lib/config";
 import { APIService } from "@/lib/services/api.service";
 import {
+  GenerateRoadmapInput,
   GenerateRoadmapOutput,
   GetRoadmapOutput,
   ListRoadmapsOutput,
+  RegenerateRoadmapInput,
   RoadmapModerationOuput,
 } from "@/types/api-roadmap";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
@@ -13,7 +15,7 @@ export class RoadmapService extends APIService {
     super(config.BACKEND_URL);
   }
 
-  async generateRoadmap(data) {
+  async generateRoadmap(data: GenerateRoadmapInput) {
     return this.post<GenerateRoadmapOutput>("/roadmaps", data).then(
       (res) => res?.data
     );
@@ -24,7 +26,7 @@ export class RoadmapService extends APIService {
     return response.data;
   }
 
-  async regenerateRoadmap(slug: string, data: any) {
+  async regenerateRoadmap(slug: string, data: RegenerateRoadmapInput) {
     return this.patch<GenerateRoadmapOutput>(
       `/roadmaps/${slug}/regenerate`,
       data
@@ -84,7 +86,9 @@ export class RoadmapService extends APIService {
   }
 
   async listBookmarkedRoadmaps(page = 1, limit = 6) {
-    return this.get<ListRoadmapsOutput>(`/bookmarks`).then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>(
+      `/bookmarks?page=${page}&limit=${limit}`
+    ).then((res) => res?.data);
   }
 
   async bookmarkRoadmap(slug: string) {
