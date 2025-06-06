@@ -65,7 +65,7 @@ const TopicDialog = ({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className='z-[100] fixed inset-0 bg-[#3C3C3C]/10 backdrop-blur-sm data-[state=open]:animate-fadeIn overflow-y-auto'>
-          <Dialog.Content className='fixed left-1/2 top-1/2 w-80 h-[600px] md:w-[700px] md:h-[700px] lg:w-[800px] lg:h-[800px] overflow-y-auto [&::-webkit-scrollbar]:bg-transparent [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-thumb]:bg-blue-500 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-blue-600 -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white-500 border-2 border-blue-500 p-10 text-blue-900 shadow-lg outline-none data-[state=open]:animate-fadeIn transition-all'>
+          <Dialog.Content className='fixed left-1/2 top-1/2 w-[400px] h-[600px] md:w-[700px] md:h-[700px] lg:w-[800px] lg:h-[800px] overflow-y-auto [&::-webkit-scrollbar]:bg-transparent [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-thumb]:bg-blue-500 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-blue-600 -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white-500 border-2 border-blue-500 p-10 text-blue-900 shadow-lg outline-none data-[state=open]:animate-fadeIn transition-all'>
             <Dialog.Title className='sr-only'>Topic Details</Dialog.Title>
             {!loading && data ? (
               <>
@@ -76,7 +76,7 @@ const TopicDialog = ({
                   <button
                     onClick={toggleFinished}
                     disabled={loading}
-                    className={`w-full md:w-40 text-sm border p-3 rounded-lg transition text-heading-3 ${
+                    className={`w-full md:max-w-48 text-sm border p-3 rounded-lg transition text-heading-3 ${
                       data.is_finished
                         ? "border-red-500 text-red-500"
                         : "border-blue-600 text-blue-600"
@@ -90,13 +90,13 @@ const TopicDialog = ({
                   </button>
                 </div>
 
-                <div className='dashedLine my-6'></div>
+                <div className='dashedLine my-4'></div>
 
-                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                <p className='text-mobile-heading-4-regular lg:text-body-1-regular'>
                   {data.description}
                 </p>
 
-                <div className='dashedLine my-6'></div>
+                <div className='dashedLine my-4'></div>
 
                 {/* Youtube Videos */}
                 {data.external_resources &&
@@ -133,9 +133,12 @@ const TopicDialog = ({
                                         </div>
                                         {/* Info bawah */}
                                         <div className='text-mobile-body-1-bold lg:text-body-1-bold p-2 bg-white border-t border-gray-200 flex flex-col'>
-                                          <p className='font-semibold'>
-                                            {video.title}
-                                          </p>
+                                          <p
+                                            className='font-semibold'
+                                            dangerouslySetInnerHTML={{
+                                              __html: video.title,
+                                            }}
+                                          ></p>
                                           <span className='text-mobile-body-1-regular lg:text-body-1-regular text-sm text-gray-600'>
                                             {video.author}
                                           </span>
@@ -181,9 +184,12 @@ const TopicDialog = ({
                                 className='w-20 h-28 object-cover rounded'
                               />
                               <div className='flex flex-col gap-2'>
-                                <p className='text-mobile-body-1-bold lg:text-body-1-bold'>
-                                  {book.title}
-                                </p>
+                                <p
+                                  className='text-mobile-body-1-bold lg:text-body-1-bold'
+                                  dangerouslySetInnerHTML={{
+                                    __html: book.title,
+                                  }}
+                                ></p>
                                 <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
                                   {book.author}
                                 </p>
@@ -200,9 +206,30 @@ const TopicDialog = ({
                 <div className='dashedLine my-6'></div>
 
                 {/* Pro Tips */}
-                <div className='bg-blue-100 text-blue-800 p-4 rounded border border-blue-300'>
-                  <p className='font-bold mb-1'>Pro tips:</p>
+                <div className='bg-blue-100 text-blue-800 text-mobile-heading-4-regular lg:text-body-1-regular p-4 rounded border border-blue-300 mb-4'>
+                  <p className='font-bold mb-1'>ℹ️ Tips & Tricks</p>
                   <p>{data.pro_tips}</p>
+                  <p>
+                    To get the most out of this topic, consider searching using
+                    keywords like
+                    <a
+                      href={`http://www.google.com/search?q=${data.external_search_query}`}
+                      target='_blank'
+                      rel='noopener'
+                      className='font-semibold hover:underline p-2'
+                    >
+                      🌍 {data.external_search_query}
+                    </a>
+                  </p>
+                </div>
+                {/* Disclaimer */}
+                <div className='bg-yellow-100 text-yellow-800 text-mobile-heading-4-regular lg:text-body-1-regular p-4 rounded border border-yellow-300'>
+                  <p className='font-bold mb-1'>⚠️ Disclaimer</p>
+                  <p>
+                    The resources provided may not be exhaustive or accurate.
+                    Please verify the content and consult multiple sources for a
+                    comprehensive understanding of the topic.
+                  </p>
                 </div>
               </>
             ) : (
