@@ -7,7 +7,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   disableEffects?: boolean;
 };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, asChild, disableEffects = false, ...props }, ref) => {
     const Comp = asChild ? Slot.Root : "button";
     return (
