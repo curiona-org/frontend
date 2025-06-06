@@ -1,4 +1,5 @@
 "use client";
+import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ const RegenerateDialog = ({
   initialPersonalization,
 }: RegenerateDialogProps) => {
   const [reason, setReason] = useState("");
+  const [reasonError, setReasonError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const [timeValue, setTimeValue] = useState<number>(1);
@@ -77,6 +79,15 @@ const RegenerateDialog = ({
       default:
         return 12;
     }
+  };
+
+  const handleReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length < 5) {
+      setReasonError("Reason must be at least 5 characters long");
+    } else {
+      setReasonError(null);
+    }
+    setReason(e.target.value);
   };
 
   const handleTimeAvailabilityChange = (value: number) => {
@@ -141,8 +152,10 @@ const RegenerateDialog = ({
       const result = response.data;
       router.push(`/roadmap/${result.slug}`);
     } catch (error) {
-      console.error("Failed to regenerate roadmap:", error);
-      alert("Failed to regenerate roadmap. Please try again.");
+      const err = handleCurionaError(error);
+      setReasonError(
+        ERROR_MESSAGES[err.code] || "An unexpected error occurred."
+      );
     } finally {
       setLoading(false);
     }
@@ -164,11 +177,17 @@ const RegenerateDialog = ({
 
             {/* Reason Input */}
             <input
-              placeholder='Type Here'
+              placeholder='Enter your reason for regenerating...'
+              minLength={5}
               value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              onChange={handleReasonChange}
               className='text-mobile-body-1-regular lg:text-body-1-regular w-full px-3 py-3 md:py-4 border border-white-800 rounded-lg focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500'
             />
+            {reasonError && (
+              <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+                {reasonError}
+              </p>
+            )}
 
             {/* Quick Reason Options */}
             <div className='text-mobile-caption lg:text-body-2 grid grid-cols-2 md:grid-cols-3 gap-2'>
@@ -190,7 +209,7 @@ const RegenerateDialog = ({
               onClick={() => setExpanded(!expanded)}
               className='flex justify-between items-center'
             >
-              <h3 className='text-mobile-body-1-regular lg:text-body-1-regular'>
+              <h3 className='text-mobile-body-1-regular lg:text-body-1-regular text-black-200'>
                 Personalization Option
               </h3>
               {expanded ? (
@@ -331,6 +350,7 @@ const RegenerateDialog = ({
                     </p>
                   )}
                 </div>
+                <div className='dashedLine' />
               </div>
             )}
 
@@ -353,7 +373,7 @@ const RegenerateDialog = ({
                   timeError !== null ||
                   durationError !== null
                 }
-                className='p-3 bg-blue-500 min-w-64 text-white-500 hover:bg-blue-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed'
+                className='p-3 bg-blue-500 md:min-w-64 text-white-500 hover:bg-blue-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 {loading ? (
                   <RotatingLoader className='size-6 border-[3px] border-white-500' />

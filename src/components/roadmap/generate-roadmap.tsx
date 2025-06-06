@@ -47,7 +47,7 @@ export default function GenerateRoadmap() {
       }
     } catch (error) {
       const err = handleCurionaError(error);
-      setError(ERROR_MESSAGES[err.code]);
+      setError(ERROR_MESSAGES[err.code] || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
