@@ -63,7 +63,7 @@ export default async function RootLayout({
   s.async = true;
   a.getElementsByTagName('head')[0].appendChild(s);
   m.mazeUniversalSnippetApiKey = e;
-})(window, document, '`}
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9b25f49f-3292-4392-ada6-92536486eb57');`}
           </Script>
         </head>
         <Providers>
