@@ -27,7 +27,7 @@ const SearchBar = () => {
       <p className='font-satoshi text-heading-4-regular'>
         Find inspiration in community-made roadmaps and start your own journey.
       </p>
-      <div className='flex items-center border border-gray-300 rounded-lg overflow-hidden w-full h-14'>
+      <div className='flex items-center border border-gray-300 bg-white-500 rounded-lg overflow-hidden w-full h-14'>
         {/* Input Search */}
         <Image src={Logo} alt='Logo' className='relative left-3' />
         <input
@@ -35,7 +35,7 @@ const SearchBar = () => {
           placeholder='Type a keyword to explore roadmaps...'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className='w-full px-4 py-2 text-black-500 focus:outline-none'
+          className='w-full px-6 py-2 text-black-500 focus:outline-none'
         />
 
         {/* Dropdown Filter */}

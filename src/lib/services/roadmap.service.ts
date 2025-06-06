@@ -1,9 +1,10 @@
 import config from "@/lib/config";
 import { APIService } from "@/lib/services/api.service";
 import {
-  ListRoadmapsOutput,
   GenerateRoadmapOutput,
   GetRoadmapOutput,
+  ListRoadmapsOutput,
+  RoadmapModerationOuput,
 } from "@/types/api-roadmap";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 
@@ -83,7 +84,7 @@ export class RoadmapService extends APIService {
   }
 
   async listBookmarkedRoadmaps(page = 1, limit = 6) {
-    return this.get(`/bookmarks`).then((res) => res?.data);
+    return this.get<ListRoadmapsOutput>(`/bookmarks`).then((res) => res?.data);
   }
 
   async bookmarkRoadmap(slug: string) {
@@ -98,5 +99,11 @@ export class RoadmapService extends APIService {
     return this.post(`/roadmaps/${slug}/rating`, { rating, comment }).then(
       (res) => res?.data
     );
+  }
+
+  async promptModeration(prompt: string) {
+    return this.post<RoadmapModerationOuput>(`/roadmaps/moderation`, {
+      prompt,
+    }).then((res) => res?.data);
   }
 }

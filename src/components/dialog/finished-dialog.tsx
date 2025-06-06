@@ -130,7 +130,7 @@ const FinishedDialog = ({
             <input
               type='text'
               placeholder='Share your thoughts about this roadmap'
-              className='text-mobile-body-1-regular lg:text-body-1-regular w-full p-4 border border-white-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='text-mobile-body-1-regular lg:text-body-1-regular w-full p-4 border-2 border-white-600 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
               value={thoughts}
               onChange={(e) => setThoughts(e.target.value)}
             />
