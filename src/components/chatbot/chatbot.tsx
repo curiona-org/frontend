@@ -1,5 +1,6 @@
 "use client";
 import config from "@/lib/config";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import dayjs from "dayjs";
 import { marked } from "marked";
@@ -40,6 +41,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   const { session } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [inputError, setInputError] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [isBotResponding, setIsBotResponding] = useState(false);
@@ -63,6 +65,16 @@ export default function Chatbot({ slug }: { slug: string }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 300) {
+      setInputError(true);
+      return;
+    } else {
+      setInputError(false);
+    }
+    setInput(e.target.value);
+  };
 
   // Process chunks from queue with delay
   const processNextChunk = async () => {
@@ -243,6 +255,10 @@ export default function Chatbot({ slug }: { slug: string }) {
   }, [session, isOpen, slug]);
 
   const handleSend = () => {
+    if (inputError) {
+      return;
+    }
+
     if (!input.trim() || !wsRef.current || isBotResponding) return;
 
     const userMessage = {
@@ -356,7 +372,7 @@ export default function Chatbot({ slug }: { slug: string }) {
               className={`p-4 rounded-md ${
                 msg.from === "bot"
                   ? "bg-white-500 shadow-md"
-                  : "w-60 bg-blue-600 shadow-md text-white-500 text-end"
+                  : "w-60 bg-blue-600 shadow-md text-white-500 text-end break-words"
               }`}
             >
               <div
@@ -411,26 +427,31 @@ export default function Chatbot({ slug }: { slug: string }) {
         <div ref={messagesEndRef} />
       </div>
       {/* Input box */}
-      <div className='p-3 flex items-center gap-2'>
+      <div className='p-3 grid grid-cols-10 items-center gap-2'>
         <input
           type='text'
           placeholder='Try asking about your roadmap...'
-          className='flex-1 border-2 border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400'
+          className={cn(
+            inputError && "border-red-500 focus:ring-red-400",
+            !inputError && "border-blue-500 focus:ring-blue-400",
+            "col-span-9 border-2 rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+          )}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInput}
           onKeyDown={(e) =>
             e.key === "Enter" && !isBotResponding && handleSend()
           }
         />
         <button
-          className={`${
-            isConnected && !isBotResponding
+          className={cn(
+            isConnected && !isBotResponding && !inputError
               ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-blue-300"
-          } text-white-500 rounded p-2`}
+              : "bg-blue-300",
+            "text-white-500 rounded p-2"
+          )}
           onClick={handleSend}
           aria-label='Send message'
-          disabled={!isConnected || isBotResponding}
+          disabled={!isConnected || isBotResponding || inputError}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -444,6 +465,15 @@ export default function Chatbot({ slug }: { slug: string }) {
             />
           </svg>
         </button>
+        <p
+          className={cn(
+            inputError && "text-red-500",
+            !inputError && "text-gray-500",
+            "col-span-10 text-xs"
+          )}
+        >
+          ({input.length} / 300)
+        </p>
       </div>
     </div>
   );
