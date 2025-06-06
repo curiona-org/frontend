@@ -76,20 +76,21 @@ export default function RoadmapDetailClient({
   };
 
   useEffect(() => {
-    // Pastikan roadmap sudah benar‐benar selesai
     const isFinished =
       roadmap?.progression?.finished_topics === roadmap?.total_topics ||
       roadmap?.progression?.is_finished;
 
-    if (!isFinished) return;
-    if (isFinished && !isRated) {
-      setIsFinishedDialogOpen(true);
+    if (isFinished && (roadmap?.rating?.is_rated || isRated)) {
       return;
     }
+    if (!isFinished) return;
 
-    if (typeof window !== "undefined") {
+    // While the user haven't rated the roadmap yet even if the user has already finished it,
+    /// we will not show the confetti, but show the finished dialog
+    if (isFinished && !roadmap?.rating?.is_rated && !isRated) {
       const hasSeen = localStorage.getItem(localStorageKey);
       if (hasSeen) {
+        setIsFinishedDialogOpen(true);
         return;
       }
 
@@ -171,6 +172,7 @@ export default function RoadmapDetailClient({
       topics: updatedTopics,
       progression: {
         ...roadmap.progression,
+        is_finished: finishedCount === roadmap.total_topics,
         finished_topics: finishedCount,
       },
     });

@@ -42,10 +42,9 @@ export default async function RootLayout({
       lang='en'
       className={`${satoshi.variable} ${satoshi.variable}  antialiased`}
     >
-      <body>
-        <head>
-          <Script id='maze-analytics'>
-            {`(function (m, a, z, e) {
+      <head>
+        <Script id='maze-analytics'>
+          {`(function (m, a, z, e) {
   var s, t;
   try {
     t = m.sessionStorage.getItem('maze-us');
@@ -64,8 +63,9 @@ export default async function RootLayout({
   a.getElementsByTagName('head')[0].appendChild(s);
   m.mazeUniversalSnippetApiKey = e;
 })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9b25f49f-3292-4392-ada6-92536486eb57');`}
-          </Script>
-        </head>
+        </Script>
+      </head>
+      <body>
         <Providers>
           <header>
             <Navbar />
