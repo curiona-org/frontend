@@ -33,7 +33,7 @@ export default function HomeAuthenticated() {
   }, [session]);
 
   return (
-    <div className='flex items-center justify-center min-h-screen px-6 lg:px-40 xl:px-72 py-32'>
+    <div className='flex justify-center min-h-screen px-6 lg:px-40 xl:px-72 py-32'>
       <div className='flex flex-col gap-10'>
         <div className='flex flex-col gap-4'>
           <div className='flex flex-wrap gap-4 items-center text-mobile-display-1 lg:text-display-1'>
