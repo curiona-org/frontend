@@ -16,7 +16,11 @@ export default function SignInPage() {
     authError,
     authIsLoading,
   } = useAuth();
-  const { register, handleSubmit } = useFormSignIn();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useFormSignIn();
   const [submitErrCount, setSubmitErrCount] = useState(0);
   const toastRef = useRef<ToastRef>(null);
 
@@ -83,16 +87,28 @@ export default function SignInPage() {
               type='email'
               className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500  focus:ring-blue-500'
               placeholder='Email'
+              aria-invalid={errors.email ? "true" : "false"}
               {...register("email")}
               required
             />
+            {errors.email && (
+              <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+                Please enter a valid email address.
+              </p>
+            )}
             <input
               type='password'
               className='text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500'
               placeholder='Password'
+              aria-invalid={errors.password ? "true" : "false"}
               {...register("password")}
               required
             />
+            {errors.password && (
+              <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+                Password must be at least 6 characters long.
+              </p>
+            )}
 
             <Button
               type='submit'
@@ -102,7 +118,7 @@ export default function SignInPage() {
               {authIsLoading ? (
                 <RotatingLoader className='size-4 border-[3px] border-white-500' />
               ) : (
-                "Continue"
+                "Sign In"
               )}
             </Button>
 

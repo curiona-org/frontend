@@ -15,7 +15,13 @@ export class AuthService {
   }
 
   async register(data: { name: string; email: string; password: string }) {
-    return apiClient.post<AuthOutput>("/auth", data).then((res) => res?.data);
+    return apiClient
+      .post<AuthOutput>("/auth", data, {
+        headers: {
+          "X-Register": true,
+        },
+      })
+      .then((res) => res?.data);
   }
 
   async refresh(token: string) {
