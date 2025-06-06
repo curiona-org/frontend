@@ -36,3 +36,8 @@ export type GetRoadmapOutput = Roadmap & {
 };
 
 export type GenerateRoadmapOutput = { slug: string };
+
+export type RoadmapModerationOuput = {
+  flagged: boolean;
+  reason: string;
+};

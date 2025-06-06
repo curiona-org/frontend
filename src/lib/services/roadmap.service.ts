@@ -4,6 +4,7 @@ import {
   GenerateRoadmapOutput,
   GetRoadmapOutput,
   ListRoadmapsOutput,
+  RoadmapModerationOuput,
 } from "@/types/api-roadmap";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 
@@ -98,5 +99,11 @@ export class RoadmapService extends APIService {
     return this.post(`/roadmaps/${slug}/rating`, { rating, comment }).then(
       (res) => res?.data
     );
+  }
+
+  async promptModeration(prompt: string) {
+    return this.post<RoadmapModerationOuput>(`/roadmaps/moderation`, {
+      prompt,
+    }).then((res) => res?.data);
   }
 }
