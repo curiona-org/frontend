@@ -9,7 +9,6 @@ interface ButtonSignOutProps {
 
 export default function ButtonSignOut({ className }: ButtonSignOutProps) {
   const { isLoggedIn, signOut, session } = useAuth();
-  // const router = useRouter();
 
   const handleSignOut = async () => {
     if (session?.user?.id) {
