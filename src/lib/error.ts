@@ -17,6 +17,7 @@ export enum CurionaErrorCodes {
   LLM_PROVIDER_UNAVAILABLE = "LLM_PROVIDER_UNAVAILABLE",
   LLM_PROMPT_GENERATION_FAILED = "LLM_PROMPT_GENERATION_FAILED",
   LLM_INVALID_DATA = "LLM_INVALID_DATA",
+  LLM_MAXIMUM_ROADMAP_GENERATION_REACHED = "LLM_MAXIMUM_ROADMAP_GENERATION_REACHED",
 }
 
 export const ERROR_MESSAGES: Record<CurionaErrorCodes, string> = {
@@ -45,6 +46,8 @@ export const ERROR_MESSAGES: Record<CurionaErrorCodes, string> = {
     "Oops! We encountered an unexpected error while generating the prompt for you. Please try again later.",
   [CurionaErrorCodes.LLM_INVALID_DATA]:
     "There was an issue with the data you provided. Please check and try again.",
+  [CurionaErrorCodes.LLM_MAXIMUM_ROADMAP_GENERATION_REACHED]:
+    "You have reached the maximum limit for roadmap generations (maximum of 5). Either finish a roadmap or delete an existing one to continue.",
 };
 
 export class CurionaError extends Error {

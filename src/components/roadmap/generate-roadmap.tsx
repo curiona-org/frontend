@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button";
+import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
 import { redirect, useRouter } from "next/navigation";
@@ -35,14 +36,20 @@ export default function GenerateRoadmap() {
       return;
     }
 
-    setIsLoading(true);
-    const moderationResult = await roadmapService.promptModeration(prompt);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const moderationResult = await roadmapService.promptModeration(prompt);
 
-    if (moderationResult.data.flagged) {
-      setError(moderationResult.data.reason);
-    } else {
-      router.push(`/personalization?topic=${encodeURIComponent(prompt)}`);
+      if (moderationResult.data.flagged) {
+        setError(moderationResult.data.reason);
+      } else {
+        router.push(`/personalization?topic=${encodeURIComponent(prompt)}`);
+      }
+    } catch (error) {
+      const err = handleCurionaError(error);
+      setError(ERROR_MESSAGES[err.code]);
+    } finally {
+      setIsLoading(false);
     }
   };
 

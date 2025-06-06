@@ -69,7 +69,6 @@ export default function Chatbot({ slug }: { slug: string }) {
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 300) {
       setInputError(true);
-      return;
     } else {
       setInputError(false);
     }
