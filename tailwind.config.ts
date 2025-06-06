@@ -362,6 +362,17 @@ export default {
             backgroundPosition: "bottom center",
           },
         },
+        shine: {
+          "0%": {
+            "background-position": "0% 0%",
+          },
+          "50%": {
+            "background-position": "100% 100%",
+          },
+          to: {
+            "background-position": "0% 0%",
+          },
+        },
       },
       animation: {
         hide: "hide 100ms ease-in",
@@ -370,6 +381,7 @@ export default {
         swipeOut: "swipeOut 100ms ease-out",
         "background-position-spin":
           "background-position-spin 3000ms infinite alternate",
+        shine: "shine var(--duration) infinite linear",
       },
     },
   },
