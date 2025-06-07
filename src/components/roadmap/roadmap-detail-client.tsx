@@ -190,9 +190,9 @@ export default function RoadmapDetailClient({
     const full = "★".repeat(rating);
     const empty = "☆".repeat(5 - rating);
     return (
-      <span className='text-xl leading-none'>
-        <span className='text-yellow-500'>{full}</span>
-        <span className='text-gray-300'>{empty}</span>
+      <span className="text-xl leading-none">
+        <span className="text-yellow-500">{full}</span>
+        <span className="text-gray-300">{empty}</span>
       </span>
     );
   };
@@ -200,30 +200,30 @@ export default function RoadmapDetailClient({
   const RenderZoomOverlay = () => {
     return (
       overlayVisible && (
-        <div className='fixed w-screen h-screen bg-[#3C3C3C]/10 flex justify-center items-center text-white text-lg z-50'>
-          <div className='bg-white-500 w-40 px-3 py-4 rounded-lg border border-blue-500'>
-            <div className='flex flex-col items-center gap-2'>
+        <div className="fixed w-screen h-screen bg-[#3C3C3C]/10 flex justify-center items-center text-white text-lg z-50">
+          <div className="bg-white-500 w-40 px-3 py-4 rounded-lg border border-blue-500">
+            <div className="flex flex-col items-center gap-2">
               <svg
-                width='32'
-                height='33'
-                viewBox='0 0 32 33'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-                className='animate-updown'
+                width="32"
+                height="33"
+                viewBox="0 0 32 33"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="animate-updown"
               >
                 <path
-                  d='M12.082 6.16722C11.0447 6.87855 10.9114 8.26989 11.4674 9.39922C12.4194 11.3332 14.046 14.5346 15.9174 17.7759C15.9174 17.7759 14.888 17.2199 13.344 16.8706C11.9174 16.5479 10.5554 17.5692 10.6434 19.0286C10.6654 19.3946 10.72 19.7752 10.8234 20.1519C11.008 20.8252 11.544 21.3199 12.166 21.6366C13.4807 22.3066 16.054 23.5012 19.0974 24.3099C20.2187 24.6072 21.3974 24.6326 22.4867 24.2352C23.2854 23.9446 24.344 23.4806 25.6134 22.7479C26.3119 22.3448 26.9968 21.9183 27.6667 21.4692C29.278 20.3872 30.1014 18.4972 29.774 16.5839C29.4609 14.7817 28.9689 13.0152 28.3054 11.3106C27.6027 9.49855 25.7674 8.45055 23.8647 8.84255C20.99 9.43522 18.4747 10.4866 18.4747 10.4866C17.948 9.57522 16.8394 7.96655 15.978 6.74522C15.2647 5.73389 14.0114 5.17655 12.8914 5.70322C12.6102 5.83646 12.3398 5.99137 12.0827 6.16655L12.082 6.16722ZM2.14003 6.64255C1.7447 6.41389 1.69203 5.86589 2.05336 5.58589C3.2867 4.62922 4.99603 3.54989 6.24003 3.28255C6.6427 3.19589 7.03336 3.42255 7.16003 3.81389C7.5507 5.02522 7.4707 7.04522 7.2587 8.59122C7.1967 9.04455 6.69603 9.27255 6.30003 9.04455L2.14003 6.64255ZM2.14003 21.0926C1.7447 21.3212 1.69203 21.8692 2.05336 22.1499C3.2867 23.1066 4.99603 24.1852 6.24003 24.4526C6.6427 24.5392 7.03336 24.3132 7.16003 23.9219C7.5507 22.7106 7.4707 20.6899 7.2587 19.1439C7.1967 18.6912 6.69603 18.4626 6.30003 18.6906L2.14003 21.0939V21.0926Z'
-                  stroke='#4B7CE8'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
+                  d="M12.082 6.16722C11.0447 6.87855 10.9114 8.26989 11.4674 9.39922C12.4194 11.3332 14.046 14.5346 15.9174 17.7759C15.9174 17.7759 14.888 17.2199 13.344 16.8706C11.9174 16.5479 10.5554 17.5692 10.6434 19.0286C10.6654 19.3946 10.72 19.7752 10.8234 20.1519C11.008 20.8252 11.544 21.3199 12.166 21.6366C13.4807 22.3066 16.054 23.5012 19.0974 24.3099C20.2187 24.6072 21.3974 24.6326 22.4867 24.2352C23.2854 23.9446 24.344 23.4806 25.6134 22.7479C26.3119 22.3448 26.9968 21.9183 27.6667 21.4692C29.278 20.3872 30.1014 18.4972 29.774 16.5839C29.4609 14.7817 28.9689 13.0152 28.3054 11.3106C27.6027 9.49855 25.7674 8.45055 23.8647 8.84255C20.99 9.43522 18.4747 10.4866 18.4747 10.4866C17.948 9.57522 16.8394 7.96655 15.978 6.74522C15.2647 5.73389 14.0114 5.17655 12.8914 5.70322C12.6102 5.83646 12.3398 5.99137 12.0827 6.16655L12.082 6.16722ZM2.14003 6.64255C1.7447 6.41389 1.69203 5.86589 2.05336 5.58589C3.2867 4.62922 4.99603 3.54989 6.24003 3.28255C6.6427 3.19589 7.03336 3.42255 7.16003 3.81389C7.5507 5.02522 7.4707 7.04522 7.2587 8.59122C7.1967 9.04455 6.69603 9.27255 6.30003 9.04455L2.14003 6.64255ZM2.14003 21.0926C1.7447 21.3212 1.69203 21.8692 2.05336 22.1499C3.2867 23.1066 4.99603 24.1852 6.24003 24.4526C6.6427 24.5392 7.03336 24.3132 7.16003 23.9219C7.5507 22.7106 7.4707 20.6899 7.2587 19.1439C7.1967 18.6912 6.69603 18.4626 6.30003 18.6906L2.14003 21.0939V21.0926Z"
+                  stroke="#4B7CE8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
-                  d='M4.5834 8.05225C3.53957 9.83939 2.99289 11.8733 3.00007 13.9429C3.00007 16.5202 3.81607 18.4736 4.5454 19.7042'
-                  stroke='#4B7CE8'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
+                  d="M4.5834 8.05225C3.53957 9.83939 2.99289 11.8733 3.00007 13.9429C3.00007 16.5202 3.81607 18.4736 4.5454 19.7042"
+                  stroke="#4B7CE8"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
               <span>Pinch to zoom</span>
@@ -238,13 +238,13 @@ export default function RoadmapDetailClient({
     <>
       {isMobile && <RenderZoomOverlay />}
       {showConfetti && <ConfettiSideCannons />}
-      <div className='px-6 lg:px-40 pt-32'>
-        <div className='bg-white-500 flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6'>
-          <div className='flex flex-wrap justify-between'>
-            <h1 className='text-mobile-display-2 lg:text-heading-1-bold'>
+      <div className="px-6 lg:px-40 pt-32">
+        <div className="bg-white-500 flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6">
+          <div className="flex flex-wrap justify-between">
+            <h1 className="text-mobile-display-2 lg:text-heading-1-bold">
               {roadmap.title}
             </h1>
-            <div className='flex flex-wrap items-center gap-4 mt-2'>
+            <div className="flex flex-wrap items-center gap-4 mt-2">
               <button
                 onClick={toggleSave}
                 disabled={loading}
@@ -262,7 +262,7 @@ export default function RoadmapDetailClient({
                       : "border-[#E5E5E5] hover:border-blue-500"
                   } rounded-lg p-2`}
                 >
-                  <span role='img' aria-label='folder'>
+                  <span role="img" aria-label="folder">
                     🗂️
                   </span>
                   <span
@@ -274,11 +274,11 @@ export default function RoadmapDetailClient({
               </button>
               <button
                 onClick={() => setRegenerateDialogOpen(true)}
-                aria-label='Regenerate roadmap'
-                className='hover:text-white-500'
+                aria-label="Regenerate roadmap"
+                className="hover:text-white-500"
               >
-                <div className='flex items-center gap-1 border border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2'>
-                  <span role='img' aria-label='refresh'>
+                <div className="flex items-center gap-1 border border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2">
+                  <span role="img" aria-label="refresh">
                     🔄
                   </span>
                   <span>Regenerate</span>
@@ -287,11 +287,11 @@ export default function RoadmapDetailClient({
               {session.user.id === roadmap.creator.id && (
                 <button
                   onClick={() => setDeleteDialogOpen(true)}
-                  aria-label='Delete roadmap'
-                  className='text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg'
+                  aria-label="Delete roadmap"
+                  className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
                 >
-                  <div className='flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2'>
-                    <span role='img' aria-label='refresh'>
+                  <div className="flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2">
+                    <span role="img" aria-label="refresh">
                       🗑️
                     </span>
                   </div>
@@ -300,52 +300,52 @@ export default function RoadmapDetailClient({
             </div>
           </div>
 
-          <div className='relative md:hidden dashedLine inset-0'></div>
+          <div className="relative md:hidden dashedLine inset-0"></div>
 
-          <div className='text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden'>
-            <div className='flex items-center'>
+          <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
+            <div className="flex items-center">
               <span>Your rating:</span>{" "}
               {roadmap.rating?.is_rated ? (
                 <>{renderStars(roadmap.rating.rating)}</>
               ) : (
-                <span className='text-xl leading-none text-gray-300'>
+                <span className="text-xl leading-none text-gray-300">
                   ☆☆☆☆☆
                 </span>
               )}
             </div>
             <Button
               onClick={() => setIsFinishedDialogOpen(true)}
-              aria-label='Edit rating'
-              className='bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none'
+              aria-label="Edit rating"
+              className="bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none"
             >
-              <span role='img' aria-label='edit'>
+              <span role="img" aria-label="edit">
                 ✏️
               </span>
             </Button>
           </div>
 
-          <div className='relative dashedLine inset-0'></div>
+          <div className="relative dashedLine inset-0"></div>
 
           <div className={`${showDetails ? "" : "hidden"}`}>
-            <div className='flex flex-col gap-6'>
-              <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+            <div className="flex flex-col gap-6">
+              <p className="text-mobile-body-1-regular lg:text-body-1-regular">
                 {roadmap.description}
               </p>
 
-              <div className='relative dashedLine inset-0'></div>
+              <div className="relative dashedLine inset-0"></div>
 
-              <div className='flex flex-col gap-5'>
-                <div className='flex flex-col md:flex-row justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3'>
-                  <span>
-                    📅 Date Created :{" "}
+              <div className="flex flex-col gap-5">
+                <div className="grid grid-cols-2 md:flex md:flex-row md:justify-between gap-3 text-mobile-body-1-regular lg:text-body-1-regular flex-wrap">
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>📅 Date Created : </span>
                     {new Date(roadmap.created_at).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "long",
                       year: "numeric",
                     })}
                   </span>
-                  <span>
-                    ⌛ Time Available :{" "}
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>⌛ Time Available : </span>
                     {
                       roadmap.personalization_options.daily_time_availability
                         .value
@@ -356,34 +356,34 @@ export default function RoadmapDetailClient({
                     }{" "}
                     / Per Day
                   </span>
-                  <span>
-                    🤯 Skill Level :{" "}
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
-                  <span>
-                    📆 Duration :{" "}
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>📆 Duration : </span>
                     {roadmap.personalization_options.total_duration.value}{" "}
                     {roadmap.personalization_options.total_duration.unit}
                   </span>
                 </div>
               </div>
 
-              <div className='relative dashedLine inset-0'></div>
+              <div className="relative dashedLine inset-0"></div>
             </div>
           </div>
 
-          <div className='flex flex-col gap-4'>
-            <div className='flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular'>
-              <span className='hidden md:block'>🏃 Learning Progress</span>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular">
+              <span className="hidden md:block">🏃 Learning Progress</span>
               <span>{`${finishedTopics}/${totalTopics} Topics Completed`}</span>
             </div>
             <Progress.Root
-              className='relative bg-blue-100 rounded-full h-3 overflow-hidden'
+              className="relative bg-blue-100 rounded-full h-3 overflow-hidden"
               value={finishedTopics}
               max={totalTopics}
             >
               <Progress.Indicator
-                className='bg-blue-600 h-full transition-all duration-300 ease-out'
+                className="bg-blue-600 h-full transition-all duration-300 ease-out"
                 style={{
                   width: `${(finishedTopics / totalTopics) * 100}%`,
                 }}
@@ -391,10 +391,10 @@ export default function RoadmapDetailClient({
             </Progress.Root>
           </div>
 
-          <div className='text-white-500 text-mobile-body-1-bold flex justify-end md:hidden'>
+          <div className="text-white-500 text-mobile-body-1-bold flex justify-end md:hidden">
             <Button
               onClick={toggleDetails}
-              className='w-full h-11 bg-blue-500 active:bg-blue-900 text-black px-3'
+              className="w-full h-11 bg-blue-500 active:bg-blue-900 text-black px-3"
             >
               {showDetails ? "Hide Roadmap Details" : "Show Roadmap Details"}
             </Button>
@@ -442,23 +442,23 @@ export default function RoadmapDetailClient({
         }}
       />
 
-      <div className='text-mobile-body-1-regular lg:text-body-1-regular hidden md:flex fixed bottom-20 left-12 z-50'>
-        <div className='flex items-center gap-2'>
+      <div className="text-mobile-body-1-regular lg:text-body-1-regular hidden md:flex fixed bottom-20 left-12 z-50">
+        <div className="flex items-center gap-2">
           <Button
             onClick={() => setIsFinishedDialogOpen(true)}
-            aria-label='Edit rating'
-            className='bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none'
+            aria-label="Edit rating"
+            className="bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none"
           >
-            <span role='img' aria-label='edit'>
+            <span role="img" aria-label="edit">
               ✏️
             </span>
           </Button>
-          <div className='flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg'>
+          <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg">
             <span>Your rating:</span>
             {roadmap.rating?.is_rated ? (
               <>{renderStars(roadmap.rating.rating)}</>
             ) : (
-              <span className='text-xl leading-none text-gray-300'>☆☆☆☆☆</span>
+              <span className="text-xl leading-none text-gray-300">☆☆☆☆☆</span>
             )}
           </div>
         </div>
