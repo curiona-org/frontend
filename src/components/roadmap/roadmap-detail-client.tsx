@@ -348,11 +348,11 @@ export default function RoadmapDetailClient({
                     }{" "}
                     / Day
                   </span>
-                  <span className="flex flex-col md:items-center md:flex md:flex-row">
+                  <span className="flex flex-col md:flex md:flex-row">
                     <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
-                  <span className="flex flex-col items-end md:items-center md:flex md:flex-row">
+                  <span className="flex flex-col items-end md:flex md:flex-row">
                     <span>📆 Duration : </span>
                     {roadmap.personalization_options.total_duration.value}{" "}
                     {roadmap.personalization_options.total_duration.unit}
