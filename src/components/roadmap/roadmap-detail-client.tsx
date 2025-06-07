@@ -187,12 +187,14 @@ export default function RoadmapDetailClient({
 
   // Fungsi bantu untuk men‐render bintang (★ = filled, ☆ = empty)
   const renderStars = (rating: number) => {
-    const StarIcon = (
+    const full = "★".repeat(rating);
+    const empty = "☆".repeat(5 - rating);
+    return (
       <span className="text-xl leading-none">
-        <span className={isRated ? "text-yellow-500" : "text-gray-300"}>★</span>
+        <span className="text-yellow-500">{full}</span>
+        <span className="text-gray-300">{empty}</span>
       </span>
     );
-    return StarIcon;
   };
 
   const RenderZoomOverlay = () => {
@@ -301,7 +303,16 @@ export default function RoadmapDetailClient({
           <div className="relative md:hidden dashedLine inset-0"></div>
 
           <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
-            {renderStars(roadmap.rating?.rating || 0)}
+            <div className="flex items-center">
+              <span>Your rating:</span>{" "}
+              {roadmap.rating?.is_rated ? (
+                <>{renderStars(roadmap.rating.rating)}</>
+              ) : (
+                <span className="text-xl leading-none text-gray-300">
+                  ☆☆☆☆☆
+                </span>
+              )}
+            </div>
             <Button
               onClick={() => setIsFinishedDialogOpen(true)}
               aria-label="Edit rating"
@@ -326,15 +337,15 @@ export default function RoadmapDetailClient({
               <div className="flex flex-col gap-5">
                 <div className="grid grid-cols-2 md:flex md:flex-row md:justify-between gap-3 text-mobile-body-1-regular lg:text-body-1-regular flex-wrap">
                   <span className="flex flex-col md:flex md:flex-row">
-                    <span>📅 Date Created :</span>
+                    <span>📅 Date Created : </span>
                     {new Date(roadmap.created_at).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "long",
                       year: "numeric",
                     })}
                   </span>
-                  <span className="flex flex-col items-end md:flex md:flex-row">
-                    <span>⌛ Time Available :</span>
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>⌛ Time Available : </span>
                     {
                       roadmap.personalization_options.daily_time_availability
                         .value
@@ -343,13 +354,13 @@ export default function RoadmapDetailClient({
                       roadmap.personalization_options.daily_time_availability
                         .unit
                     }{" "}
-                    / Day
+                    / Per Day
                   </span>
-                  <span className="flex flex-col md:flex md:flex-row">
+                  <span className="flex flex-col items-end md:items-center md:flex md:flex-row">
                     <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
-                  <span className="flex flex-col items-end md:flex md:flex-row">
+                  <span className="flex flex-col items-end md:items-center md:flex md:flex-row">
                     <span>📆 Duration : </span>
                     {roadmap.personalization_options.total_duration.value}{" "}
                     {roadmap.personalization_options.total_duration.unit}
