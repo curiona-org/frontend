@@ -186,15 +186,13 @@ export default function RoadmapDetailClient({
   const totalTopics = roadmap.total_topics || 0;
 
   // Fungsi bantu untuk men‐render bintang (★ = filled, ☆ = empty)
-  const renderStars = (rating: number) => {
-    const full = "★".repeat(rating);
-    const empty = "☆".repeat(5 - rating);
-    return (
+  const renderStars = (rating: number, isRated: boolean) => {
+    const StarIcon = (
       <span className="text-xl leading-none">
-        <span className="text-yellow-500">{full}</span>
-        <span className="text-gray-300">{empty}</span>
+        <span className={isRated ? "text-yellow-500" : "text-gray-300"}>★</span>
       </span>
     );
+    return StarIcon;
   };
 
   const RenderZoomOverlay = () => {
@@ -303,16 +301,10 @@ export default function RoadmapDetailClient({
           <div className="relative md:hidden dashedLine inset-0"></div>
 
           <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
-            <div className="flex items-center">
-              <span>Your rating:</span>{" "}
-              {roadmap.rating?.is_rated ? (
-                <>{renderStars(roadmap.rating.rating)}</>
-              ) : (
-                <span className="text-xl leading-none text-gray-300">
-                  ☆☆☆☆☆
-                </span>
-              )}
-            </div>
+            {renderStars(
+              roadmap.rating?.rating || 0,
+              Boolean(roadmap.rating?.is_rated)
+            )}
             <Button
               onClick={() => setIsFinishedDialogOpen(true)}
               aria-label="Edit rating"
@@ -344,7 +336,7 @@ export default function RoadmapDetailClient({
                       year: "numeric",
                     })}
                   </span>
-                  <span className="flex flex-col md:flex md:flex-row">
+                  <span className="flex flex-col items-end md:flex md:flex-row">
                     <span>⌛ Time Available : </span>
                     {
                       roadmap.personalization_options.daily_time_availability
@@ -354,9 +346,9 @@ export default function RoadmapDetailClient({
                       roadmap.personalization_options.daily_time_availability
                         .unit
                     }{" "}
-                    / Per Day
+                    / Day
                   </span>
-                  <span className="flex flex-col items-end md:items-center md:flex md:flex-row">
+                  <span className="flex flex-col md:items-center md:flex md:flex-row">
                     <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
