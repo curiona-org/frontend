@@ -197,6 +197,28 @@ export default function RoadmapDetailClient({
     );
   };
 
+  // Di atas komponen (atau di util file), tambahkan helper ini:
+  const renderStarSVG = (filled: boolean, key: number) => (
+    <svg
+      key={key}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill={filled ? "#F6CE53" : "none"}
+      stroke={filled ? "none" : "#ccc"}
+      strokeWidth="2"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+    </svg>
+  );
+
+  const renderStarsSVG = (rating: number) => (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((i) => renderStarSVG(i <= rating, i))}
+    </div>
+  );
+
   const RenderZoomOverlay = () => {
     return (
       overlayVisible && (
@@ -303,16 +325,35 @@ export default function RoadmapDetailClient({
           <div className="relative md:hidden dashedLine inset-0"></div>
 
           <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
-            <div className="flex items-center">
-              <span>Your rating:</span>{" "}
+            <div className="flex items-center gap-1">
+              <span>Your rating:</span>
               {roadmap.rating?.is_rated ? (
-                <>{renderStars(roadmap.rating.rating)}</>
+                /* bintang penuh */
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="#F6CE53"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
               ) : (
-                <span className="text-xl leading-none text-gray-300">
-                  ☆☆☆☆☆
-                </span>
+                /* bintang kosong */
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ccc"
+                  strokeWidth="2"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
               )}
             </div>
+
             <Button
               onClick={() => setIsFinishedDialogOpen(true)}
               aria-label="Edit rating"
@@ -453,13 +494,13 @@ export default function RoadmapDetailClient({
               ✏️
             </span>
           </Button>
-          <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg">
+          <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg gap-2">
             <span>Your rating:</span>
-            {roadmap.rating?.is_rated ? (
-              <>{renderStars(roadmap.rating.rating)}</>
-            ) : (
-              <span className="text-xl leading-none text-gray-300">☆☆☆☆☆</span>
-            )}
+            {
+              roadmap.rating?.is_rated
+                ? renderStarsSVG(roadmap.rating.rating)
+                : renderStarsSVG(0) /* semua outline */
+            }
           </div>
         </div>
       </div>
