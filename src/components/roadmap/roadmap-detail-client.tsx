@@ -360,8 +360,8 @@ export default function RoadmapDetailClient({
                     <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
-                  <span>
-                    📆 Duration :{" "}
+                  <span className="flex flex-col md:flex md:flex-row">
+                    <span>📆 Duration : </span>
                     {roadmap.personalization_options.total_duration.value}{" "}
                     {roadmap.personalization_options.total_duration.unit}
                   </span>
