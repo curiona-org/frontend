@@ -335,7 +335,7 @@ export default function RoadmapDetailClient({
               <div className='relative dashedLine inset-0'></div>
 
               <div className='flex flex-col gap-5'>
-                <div className='flex flex-col md:flex-row justify-between text-mobile-body-1-regular lg:text-body-1-regular flex-wrap gap-3'>
+                <div className='grid grid-cols-2 md:flex md:flex-row md:justify-between gap-3 text-mobile-body-1-regular lg:text-body-1-regular flex-wrap'>
                   <span>
                     📅 Date Created :{" "}
                     {new Date(roadmap.created_at).toLocaleDateString("en-GB", {
