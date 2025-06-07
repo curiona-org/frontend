@@ -79,7 +79,7 @@ export default async function RootLayout({
 })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9b25f49f-3292-4392-ada6-92536486eb57');`}
         </Script>
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
           <header>
             <Navbar />
