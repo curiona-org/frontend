@@ -15,6 +15,7 @@ export default function SignUpPage() {
     signInGoogle,
     authError,
     authIsLoading,
+    clearAuthError,
   } = useAuth();
   const {
     register,
@@ -43,7 +44,13 @@ export default function SignUpPage() {
         });
       }, 100);
     }
-  }, [authError]);
+
+    return () => {
+      // Clear the error when the component unmounts or when authError changes
+      clearAuthError();
+      setSubmitErrCount(0);
+    };
+  }, [authError, clearAuthError]);
 
   useEffect(() => {
     if (!authIsLoading && authError && submitErrCount > 0) {

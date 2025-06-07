@@ -23,6 +23,7 @@ type AuthContextType = {
   signInGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
+  clearAuthError: () => void;
 };
 
 type AuthProviderProps = {
@@ -41,6 +42,7 @@ const AuthContext = createContext<AuthContextType>({
   signInGoogle: async () => {},
   signOut: async () => {},
   refreshSession: async () => {},
+  clearAuthError: () => {},
 });
 
 export const useAuth = () => {
@@ -187,6 +189,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   };
 
+  // Clear auth error
+  const clearAuthError = () => {
+    setError(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -200,6 +207,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         signInGoogle,
         signOut,
         refreshSession,
+        clearAuthError,
       }}
     >
       {children}

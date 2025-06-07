@@ -126,8 +126,8 @@ const FinishedDialog = ({
               )}
             {!existingData?.rating?.is_rated && !isFinished && (
               <p className='text-mobile-body-1-regular lg:text-body-1-regular text-center'>
-                {Your haven't completed this roadmap yet, but your feedback is
-                still valuable! Please rate it based on your current experience.}
+                {`Your haven't completed this roadmap yet, but your feedback is
+                still valuable! Please rate it based on your current experience.`}
               </p>
             )}
             {!existingData?.rating?.is_rated && isFinished && (
