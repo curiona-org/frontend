@@ -4,6 +4,7 @@ import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
 import { signInAction, signInGoogleAction } from "@/app/(auth)/sign-in/actions";
 import { signUpAction } from "@/app/(auth)/sign-up/actions";
 import { handleCurionaError } from "@/lib/error";
+import { APIResponse } from "@/lib/services/api.service";
 import { Session, shouldRefreshToken } from "@/lib/session";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -90,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
       const result = await signUpAction(params);
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
         return;
@@ -111,8 +112,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       setIsLoggedIn(true);
       setIsLoading(false);
     } catch (error) {
-      const err = handleCurionaError(error);
+      const err = error as APIResponse;
       setError(err.message || "Failed to sign up");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -124,7 +126,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
       const result = await signInAction(params);
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
         return;
@@ -145,8 +147,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       setIsLoggedIn(true);
       setIsLoading(false);
     } catch (error) {
-      const err = handleCurionaError(error);
+      const err = error as APIResponse;
       setError(err.message || "Failed to sign in");
+    } finally {
       setIsLoading(false);
     }
   };

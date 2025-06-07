@@ -6,6 +6,7 @@ export type APIResponse<T = Record<string, unknown>> = {
   success: boolean;
   message: string;
   data: T;
+  code?: string;
   error?: ValidationError[] | string;
 };
 

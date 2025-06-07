@@ -19,7 +19,7 @@ export async function signUpAction({
   name,
   email,
   password,
-}: SignUpActionInput): Promise<APIResponse<AuthOutput>> {
+}: SignUpActionInput): Promise<APIResponse<AuthOutput | null>> {
   try {
     const result = await authService.register({ name, email, password });
 
@@ -58,6 +58,12 @@ export async function signUpAction({
 
     return result;
   } catch (error) {
-    throw handleCurionaError(error);
+    const err = handleCurionaError(error);
+    return {
+      success: false,
+      message: err.message,
+      code: err.code,
+      data: null,
+    };
   }
 }
