@@ -30,6 +30,19 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "Curiona - Personalized Learning Roadmaps",
   description: "Generate a personalized roadmap for your learning journey.",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: {
+      url: "/favicon.ico",
+      type: "image/x-icon",
+      sizes: "any",
+    },
+    apple: {
+      url: "/apple-touch-icon.png",
+      type: "image/png",
+      sizes: "any",
+    },
+  },
 };
 
 export default async function RootLayout({
