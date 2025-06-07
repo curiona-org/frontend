@@ -70,7 +70,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
           Personal Information
         </p>
 
-        <div className='flex flex-col md:grid md:grid-cols-4 md:gap-x-12'>
+        <div className='flex flex-col md:grid md:grid-cols-3 md:gap-x-12'>
           <div className='col-span-2 flex justify-between items-center md:block'>
             <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
               <span role='img' aria-label='user' className='mr-2'>
