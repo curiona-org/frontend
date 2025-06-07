@@ -185,19 +185,6 @@ export default function RoadmapDetailClient({
   const finishedTopics = roadmap?.progression?.finished_topics || 0;
   const totalTopics = roadmap.total_topics || 0;
 
-  // Fungsi bantu untuk men‐render bintang (★ = filled, ☆ = empty)
-  const renderStars = (rating: number) => {
-    const full = "★".repeat(rating);
-    const empty = "☆".repeat(5 - rating);
-    return (
-      <span className="text-xl leading-none">
-        <span className="text-yellow-500">{full}</span>
-        <span className="text-gray-300">{empty}</span>
-      </span>
-    );
-  };
-
-  // Di atas komponen (atau di util file), tambahkan helper ini:
   const renderStarSVG = (filled: boolean, key: number) => (
     <svg
       key={key}
@@ -328,7 +315,6 @@ export default function RoadmapDetailClient({
             <div className="flex items-center gap-1">
               <span>Your rating:</span>
               {roadmap.rating?.is_rated ? (
-                /* bintang penuh */
                 <svg
                   width="24"
                   height="24"
@@ -339,7 +325,6 @@ export default function RoadmapDetailClient({
                   <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                 </svg>
               ) : (
-                /* bintang kosong */
                 <svg
                   width="24"
                   height="24"
@@ -496,11 +481,9 @@ export default function RoadmapDetailClient({
           </Button>
           <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg gap-2">
             <span>Your rating:</span>
-            {
-              roadmap.rating?.is_rated
-                ? renderStarsSVG(roadmap.rating.rating)
-                : renderStarsSVG(0) /* semua outline */
-            }
+            {roadmap.rating?.is_rated
+              ? renderStarsSVG(roadmap.rating.rating)
+              : renderStarsSVG(0)}
           </div>
         </div>
       </div>
