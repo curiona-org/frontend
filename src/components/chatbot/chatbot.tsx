@@ -334,6 +334,9 @@ export default function Chatbot({ slug }: { slug: string }) {
               {isConnected && (
                 <span className='text-green-500'>• Connected</span>
               )}
+              {!isConnected && (
+                <span className='text-red-500'>• Disconnected</span>
+              )}
             </span>
           </div>
         </div>
