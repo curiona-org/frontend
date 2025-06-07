@@ -12,13 +12,21 @@ export default function NotFoundPage() {
         <p className='mt-6 text-lg font-medium text-pretty text-gray-500 sm:text-heading-4'>
           Sorry, we couldn’t find the page you’re looking for.
         </p>
-        <div className='mt-10 flex items-center justify-center gap-x-6'>
+        <div className='mt-10 flex flex-col-reverse md:flex-row items-center justify-center gap-y-6 md:gap-y-0 md:gap-x-6'>
           <Link href='/'>
             <Button
               type='submit'
-              className='text-mobile-body-1-bold lg:text-body-1-bold min-w-48 py-4 text-white-500 bg-blue-500 hover:bg-blue-900 flex justify-center items-center'
+              className='text-mobile-body-1-medium lg:text-body-1-medium py-4 px-6 text-white-500 bg-gray-500 hover:bg-gray-900 flex justify-center items-center'
             >
-              Go Back home
+              Go Back home 🏠
+            </Button>
+          </Link>
+          <Link href='/community'>
+            <Button
+              type='submit'
+              className='text-mobile-body-1-medium lg:text-body-1-medium py-4 px-6 text-white-500 bg-blue-500 hover:bg-blue-900 flex justify-center items-center'
+            >
+              Browse the Community 🌟
             </Button>
           </Link>
         </div>
