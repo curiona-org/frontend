@@ -3,8 +3,8 @@ import config from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import dayjs from "dayjs";
-import { marked } from "marked";
-import { useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
 import { BorderBeam } from "../magicui/border-beam";
 
 interface Message {
@@ -51,10 +51,6 @@ export default function Chatbot({ slug }: { slug: string }) {
   const chunkQueueRef = useRef<{ content: string; done: boolean }[]>([]);
   const processingChunkRef = useRef(false);
 
-  const simpleMarkdownToHTML = (text: string) => {
-    return marked(text);
-  };
-
   // Typing speed in milliseconds (higher = slower)
   const typingDelayRef = useRef(0);
 
@@ -76,7 +72,7 @@ export default function Chatbot({ slug }: { slug: string }) {
   };
 
   // Process chunks from queue with delay
-  const processNextChunk = async () => {
+  const processNextChunk = useCallback(async () => {
     if (processingChunkRef.current || chunkQueueRef.current.length === 0)
       return;
 
@@ -127,7 +123,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     if (chunkQueueRef.current.length > 0) {
       processNextChunk();
     }
-  };
+  }, [chunkQueueRef]);
 
   // Process chunks when they're added to the queue
   useEffect(() => {
@@ -302,10 +298,6 @@ export default function Chatbot({ slug }: { slug: string }) {
     setInput("");
   };
 
-  const formatTime = (timestamp: string) => {
-    return dayjs(timestamp).format("HH:mm");
-  };
-
   if (!isOpen) {
     return (
       <div
@@ -358,45 +350,7 @@ export default function Chatbot({ slug }: { slug: string }) {
       {/* Chat messages */}
       <div className='flex flex-col overflow-y-auto p-8 space-y-8 h-full'>
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex items-end ${
-              msg.from === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            {msg.from === "bot" && (
-              <span className='text-heading-3 mr-2'>🤖</span>
-            )}
-            <div
-              className={`p-4 rounded-md ${
-                msg.from === "bot"
-                  ? "bg-white-500 shadow-md"
-                  : "w-60 bg-blue-600 shadow-md text-white-500 text-end break-words"
-              }`}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: simpleMarkdownToHTML(msg.text),
-                }}
-              />
-              {msg.timestamp && (
-                <div
-                  className={`text-xs mt-2 ${
-                    msg.from === "bot" ? "text-gray-400" : "text-blue-200"
-                  }`}
-                >
-                  {formatTime(msg.timestamp)}
-                </div>
-              )}
-            </div>
-            {msg.from === "user" && (
-              <img
-                src={session.user.avatar}
-                alt='User Avatar'
-                className='w-8 h-8 rounded-full ml-2'
-              />
-            )}
-          </div>
+          <Message key={idx} message={msg} avatar={session.user.avatar} />
         ))}
         {/* Typing indicator when bot is responding but no message is being shown yet */}
         {isBotResponding &&
@@ -477,3 +431,149 @@ export default function Chatbot({ slug }: { slug: string }) {
     </div>
   );
 }
+
+const Message = memo(
+  ({ message, avatar }: { message: Message; avatar: string }) => {
+    return (
+      <div
+        className={`flex items-end ${
+          message.from === "user" ? "justify-end" : "justify-start"
+        }`}
+      >
+        {message.from === "bot" && (
+          <span className='text-heading-3 mr-2'>🤖</span>
+        )}
+        <div
+          className={`p-4 rounded-md ${
+            message.from === "bot"
+              ? "bg-white-500 shadow-md text-black-500"
+              : "w-60 bg-blue-600 shadow-md text-white-500 text-end break-words"
+          }`}
+        >
+          <Markdown
+            components={{
+              h1: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <h1
+                    className='text-heading-3 font-bold text-black-500 py-2'
+                    {...rest}
+                  />
+                );
+              },
+              h2: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <h2
+                    className='text-heading-3 font-bold text-black-500 py-2'
+                    {...rest}
+                  />
+                );
+              },
+              h3: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <h3
+                    className='text-heading-4-bold text-black-500 py-2'
+                    {...rest}
+                  />
+                );
+              },
+              h4: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <h4
+                    className='text-heading-4-bold text-black-500 py-2'
+                    {...rest}
+                  />
+                );
+              },
+              p: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <p className='text-body-1-regular py-2 leading-6' {...rest} />
+                );
+              },
+              pre: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <pre
+                    className='bg-gray-100 p-4 rounded-md overflow-x-auto'
+                    {...rest}
+                  />
+                );
+              },
+              code: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <code
+                    className='bg-gray-200 text-blue-500 px-1 py-0.5 rounded'
+                    {...rest}
+                  />
+                );
+              },
+              ul: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return <ul className='list-disc pl-5 space-y-1' {...rest} />;
+              },
+              ol: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return <ol className='list-decimal pl-5 space-y-1' {...rest} />;
+              },
+              li: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return <li className='text-body-1-regular' {...rest} />;
+              },
+              a: (props) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { node, ...rest } = props;
+                return (
+                  <a
+                    className='text-blue-500 hover:underline'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label='Disclaimer: This is an external link generated by the bot, please verify the link before clicking.'
+                    title='Disclaimer: This is an external link generated by the bot, please verify the link before clicking.'
+                    {...rest}
+                  />
+                );
+              },
+              hr: () => <hr className='my-2 border-gray-300' />,
+              br: () => <div className='my-2' />,
+            }}
+          >
+            {message.text}
+          </Markdown>
+          {message.timestamp && (
+            <div
+              className={`text-xs mt-2 ${
+                message.from === "bot" ? "text-gray-400" : "text-blue-200"
+              }`}
+            >
+              {dayjs(message.timestamp).format("HH:mm")}
+            </div>
+          )}
+        </div>
+        {message.from === "user" && (
+          <img
+            src={avatar}
+            alt='User Avatar'
+            className='w-8 h-8 rounded-full ml-2'
+          />
+        )}
+      </div>
+    );
+  }
+);
+
+Message.displayName = "Message";
