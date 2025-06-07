@@ -52,17 +52,17 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
 
   return (
     <Link href={`/roadmap/${roadmap.slug}`}>
-      <div className='flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300'>
-        <div className='flex justify-between items-center'>
-          <div className='flex-grow'>
-            <h3 className='text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold truncate text-wrap'>
+      <div className="flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
+        <div className="flex justify-between items-center">
+          <div className="flex-grow">
+            <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold truncate text-wrap">
               {roadmap.title.length > 50
                 ? roadmap.title.slice(0, 50) + "..."
                 : roadmap.title}
             </h3>
           </div>
           {isLoggedIn && (
-            <div className='shrink-0'>
+            <div className="shrink-0">
               <button
                 onClick={toggleSave}
                 disabled={loading}
@@ -80,7 +80,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
                       : "border-[#E5E5E5] hover:border-blue-500"
                   } rounded-lg p-2`}
                 >
-                  <span role='img' aria-label='folder'>
+                  <span role="img" aria-label="folder">
                     🗂️
                   </span>
                   <span
@@ -95,28 +95,28 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Divider */}
-        <div className='relative my-4 h-[1px]'>
-          <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
-          <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+        <div className="relative my-4 h-[1px]">
+          <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+          <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
         {/* Description */}
-        <p className='text-mobile-body-1-regular lg:text-body-2'>
+        <p className="text-mobile-body-1-regular lg:text-body-1-regular">
           {roadmap.description.length > 80
             ? roadmap.description.slice(0, 80) + "..."
             : roadmap.description}
         </p>
 
         {/* Divider */}
-        <div className='relative my-4 h-[1px]'>
-          <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
-          <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+        <div className="relative my-4 h-[1px]">
+          <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+          <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
         {/* Topics */}
-        <div className='flex items-center justify-between text-mobile-body-1-regular lg:text-body-2'>
-          <div className='flex items-center gap-1'>
-            <span role='img' aria-label='lightbulb'>
+        <div className="flex items-center justify-between text-mobile-body-1-regular lg:text-body-1-regular">
+          <div className="flex items-center gap-1">
+            <span role="img" aria-label="lightbulb">
               💡
             </span>
             <span>Total Topics</span>
@@ -125,15 +125,15 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Divider */}
-        <div className='relative my-4 h-[1px]'>
-          <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
-          <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+        <div className="relative my-4 h-[1px]">
+          <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+          <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
         {/* Skill Level */}
-        <div className='flex items-center justify-between text-mobile-body-1-regular lg:text-body-2'>
-          <div className='flex items-center gap-1'>
-            <span role='img' aria-label='bicep'>
+        <div className="flex items-center justify-between text-mobile-body-1-regular lg:text-body-1-regular">
+          <div className="flex items-center gap-1">
+            <span role="img" aria-label="bicep">
               💪
             </span>
             <span>Skill Level</span>
@@ -144,16 +144,16 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         {/* Divider */}
         {isLoggedIn && (
           <>
-            <div className='relative my-4 h-[1px]'>
-              <div className='dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300'></div>
-              <div className='solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+            <div className="relative my-4 h-[1px]">
+              <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
+              <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
 
-            <div className='text-body-2'>
+            <div className="text-mobile-body-1-regular lg:text-body-1-regular">
               {/* Progress Learning Section */}
-              <div className='flex items-center justify-between text-mobile-body-1-regular lg:text-body-2'>
-                <div className='flex items-center gap-1'>
-                  <span role='img' aria-label='runningperson'>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <span role="img" aria-label="runningperson">
                     🏃
                   </span>
                   <span>Learning Progress</span>
@@ -164,12 +164,12 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
               </div>
 
               <Progress.Root
-                className='relative pt-4'
+                className="relative pt-4"
                 value={finishedTopics}
                 max={totalTopics}
               >
                 <Progress.Indicator
-                  className='bg-blue-600 h-2 rounded-full'
+                  className="bg-blue-600 h-2 rounded-full"
                   style={{ width: `${completionPercent}%` }}
                 />
               </Progress.Root>
