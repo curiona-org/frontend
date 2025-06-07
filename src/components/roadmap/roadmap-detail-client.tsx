@@ -185,12 +185,10 @@ export default function RoadmapDetailClient({
   const finishedTopics = roadmap?.progression?.finished_topics || 0;
   const totalTopics = roadmap.total_topics || 0;
 
-  const renderStarSVG = (filled: boolean, key: number) => (
+  const StarIcon = ({ filled }: { filled: boolean }) => (
     <svg
-      key={key}
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
+      className="w-6 h-6" // konsisten: 24px × 24px
+      viewBox="0 0 24 24" // satu versi saja
       fill={filled ? "#F6CE53" : "none"}
       stroke={filled ? "none" : "#ccc"}
       strokeWidth="2"
@@ -198,12 +196,6 @@ export default function RoadmapDetailClient({
     >
       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
     </svg>
-  );
-
-  const renderStarsSVG = (rating: number) => (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((i) => renderStarSVG(i <= rating, i))}
-    </div>
   );
 
   const RenderZoomOverlay = () => {
@@ -254,7 +246,14 @@ export default function RoadmapDetailClient({
               {roadmap.title}
             </h1>
             <div className="flex flex-wrap items-center gap-4 mt-2">
-              <button
+              <Button
+                onClick={() => setIsFinishedDialogOpen(true)}
+                aria-label="Rating"
+                className="flex items-center gap-2 p-2 border border-[#E5E5E5] md:hidden"
+              >
+                <StarIcon filled={!!roadmap.rating?.is_rated} />
+              </Button>
+              <Button
                 onClick={toggleSave}
                 disabled={loading}
                 className={`${
@@ -269,7 +268,7 @@ export default function RoadmapDetailClient({
                     saved
                       ? "border-blue-500"
                       : "border-[#E5E5E5] hover:border-blue-500"
-                  } rounded-lg p-2`}
+                  } p-2`}
                 >
                   <span role="img" aria-label="folder">
                     🗂️
@@ -280,8 +279,8 @@ export default function RoadmapDetailClient({
                     {saved ? "Saved!" : "Save"}
                   </span>
                 </div>
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setRegenerateDialogOpen(true)}
                 aria-label="Regenerate roadmap"
                 className="hover:text-white-500"
@@ -292,9 +291,9 @@ export default function RoadmapDetailClient({
                   </span>
                   <span>Regenerate</span>
                 </div>
-              </button>
+              </Button>
               {session.user.id === roadmap.creator.id && (
-                <button
+                <Button
                   onClick={() => setDeleteDialogOpen(true)}
                   aria-label="Delete roadmap"
                   className="text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg"
@@ -304,51 +303,12 @@ export default function RoadmapDetailClient({
                       🗑️
                     </span>
                   </div>
-                </button>
+                </Button>
               )}
             </div>
           </div>
 
           <div className="relative md:hidden dashedLine inset-0"></div>
-
-          <div className="text-mobile-body-1-regular lg:text-body-1-regular flex items-center gap-2 md:hidden">
-            <div className="flex items-center gap-1">
-              <span>Your rating:</span>
-              {roadmap.rating?.is_rated ? (
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="#F6CE53"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                </svg>
-              ) : (
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#ccc"
-                  strokeWidth="2"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                </svg>
-              )}
-            </div>
-
-            <Button
-              onClick={() => setIsFinishedDialogOpen(true)}
-              aria-label="Edit rating"
-              className="bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none"
-            >
-              <span role="img" aria-label="edit">
-                ✏️
-              </span>
-            </Button>
-          </div>
 
           <div className="relative dashedLine inset-0"></div>
 
@@ -481,9 +441,9 @@ export default function RoadmapDetailClient({
           </Button>
           <div className="flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg gap-2">
             <span>Your rating:</span>
-            {roadmap.rating?.is_rated
-              ? renderStarsSVG(roadmap.rating.rating)
-              : renderStarsSVG(0)}
+            {[1, 2, 3, 4, 5].map((i) => (
+              <StarIcon key={i} filled={i <= (roadmap.rating?.rating ?? 0)} />
+            ))}
           </div>
         </div>
       </div>
