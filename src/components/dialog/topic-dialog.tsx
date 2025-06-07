@@ -69,7 +69,7 @@ const TopicDialog = ({
             <Dialog.Title className='sr-only'>Topic Details</Dialog.Title>
             {!loading && data ? (
               <>
-                <div className='flex flex-wrap gap-4 justify-between items-center'>
+                <div className='flex gap-4 justify-between items-start'>
                   <Dialog.Title className='text-mobile-heading-2-bold lg:text-heading-2-bold'>
                     {data.title}
                   </Dialog.Title>
