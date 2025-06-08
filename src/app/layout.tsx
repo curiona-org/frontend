@@ -76,7 +76,7 @@ export default async function RootLayout({
   s.async = true;
   a.getElementsByTagName('head')[0].appendChild(s);
   m.mazeUniversalSnippetApiKey = e;
-})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '9b25f49f-3292-4392-ada6-92536486eb57');`}
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'e75cf20f-09b5-4239-8361-7394ebda4f08');`}
         </Script>
       </head>
       <body suppressHydrationWarning>
