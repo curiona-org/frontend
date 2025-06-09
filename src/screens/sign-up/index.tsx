@@ -77,6 +77,7 @@ export default function SignUpPage() {
     }
 
     await signUp({ name, email, password });
+    redirect("/");
   });
 
   return (

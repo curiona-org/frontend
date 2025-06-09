@@ -77,6 +77,7 @@ export default function SignInPage() {
     }
 
     await signIn({ email, password });
+    redirect("/");
   });
 
   return (
