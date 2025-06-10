@@ -110,11 +110,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoggedIn(true);
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign up");
     } finally {
-      setIsLoggedIn(true);
       setIsLoading(false);
     }
   };
@@ -143,11 +143,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoggedIn(true);
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign in");
     } finally {
-      setIsLoggedIn(true);
       setIsLoading(false);
     }
   };
