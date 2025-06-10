@@ -66,7 +66,7 @@ export default function SignUpPage() {
   }, [authError, authIsLoading, submitErrCount]);
 
   useEffect(() => {
-    if (isLoggedIn || session) {
+    if (isLoggedIn && session) {
       redirect("/");
     }
   }, [isLoggedIn, session]);
@@ -77,10 +77,6 @@ export default function SignUpPage() {
     }
 
     await signUp({ name, email, password });
-
-    if (isLoggedIn || session) {
-      redirect("/");
-    }
   });
 
   return (
