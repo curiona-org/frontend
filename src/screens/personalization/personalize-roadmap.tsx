@@ -221,7 +221,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           {step === 1 && (
             <div className='space-y-6'>
               <p className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
-                {`How much time can you learn each day or week? We'll fit the plan
+                {`How much time can you learn each day? We'll fit the plan
                 to your schedule 😌`}
               </p>
               {step1Error && (
