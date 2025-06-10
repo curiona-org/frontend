@@ -66,7 +66,7 @@ export default function SignInPage() {
   }, [authError, authIsLoading, submitErrCount]);
 
   useEffect(() => {
-    if (isLoggedIn && session) {
+    if (isLoggedIn || session) {
       redirect("/");
     }
   }, [isLoggedIn, session]);
@@ -77,7 +77,9 @@ export default function SignInPage() {
     }
 
     await signIn({ email, password });
-    redirect("/");
+    if (isLoggedIn || session) {
+      redirect("/");
+    }
   });
 
   return (
