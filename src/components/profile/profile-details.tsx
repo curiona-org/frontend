@@ -16,7 +16,7 @@ const ProfileDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [editing, setEditing] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>("");
-  const { setName, session } = useAuth();
+  const { updateProfile, session } = useAuth();
   const [generatedRoadmap, setGeneratedRoadmap] = useState<number>(0);
   const [onProgressRoadmap, setOnProgressRoadmap] = useState<number>(0);
   const [roadmapFinished, setRoadmapFinished] = useState<number>(0);
@@ -28,7 +28,7 @@ const ProfileDetails = () => {
         const profileResponse = await profileService.profile();
         if (profileResponse && profileResponse.data) {
           const profileData: GetProfileOutput = profileResponse.data;
-          setName(profileData.name);
+          await updateProfile(profileData.name);
           setNewName(profileData.name);
         }
 
@@ -85,7 +85,7 @@ const ProfileDetails = () => {
 
       const updatedProfile = await service.profile();
       if (updatedProfile && updatedProfile.data) {
-        setName(updatedProfile.data.name);
+        await updateProfile(updatedProfile.data.name);
       }
       setEditing(false);
     } catch (error) {

@@ -3,6 +3,7 @@
 import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
 import { signInAction, signInGoogleAction } from "@/app/(auth)/sign-in/actions";
 import { signUpAction } from "@/app/(auth)/sign-up/actions";
+import { updateProfileAction } from "@/app/profile/actions";
 import { handleCurionaError } from "@/lib/error";
 import { APIResponse } from "@/lib/services/api.service";
 import { Session, shouldRefreshToken } from "@/lib/session";
@@ -13,7 +14,7 @@ type AuthContextType = {
   authError: string | null;
   authIsLoading: boolean;
   isLoggedIn: boolean;
-  setName: (name: string) => void;
+  updateProfile: (name: string) => void;
   signUp: (params: {
     name: string;
     email: string;
@@ -36,7 +37,7 @@ const AuthContext = createContext<AuthContextType>({
   authError: null,
   authIsLoading: true,
   isLoggedIn: false,
-  setName: () => {},
+  updateProfile: () => {},
   signUp: async () => {},
   signIn: async () => {},
   signInGoogle: async () => {},
@@ -71,15 +72,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     return () => clearInterval(checkTokenInterval);
   }, [session]);
 
-  const setName = (name: string) => {
+  const updateProfile = async (name: string) => {
     if (!session) return;
-    setSession({
-      ...session,
-      user: {
-        ...session.user,
-        name,
-      },
-    });
+
+    try {
+      setIsLoading(true);
+
+      const result = await updateProfileAction(name);
+      if (!result.success || !result.data) {
+        setError(result.message);
+        setIsLoading(false);
+        return;
+      }
+
+      setSession({
+        ...session,
+        user: {
+          ...session.user,
+          name,
+        },
+      });
+    } catch (error) {
+      const err = handleCurionaError(error);
+      setError(err.message || "Failed to update profile");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Register new user
@@ -197,7 +215,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         authError,
         authIsLoading: isLoading,
         isLoggedIn,
-        setName,
+        updateProfile,
         signUp,
         signIn,
         signInGoogle,
