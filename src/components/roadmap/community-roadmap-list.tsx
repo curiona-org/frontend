@@ -95,75 +95,75 @@ const CommunityRoadmap = ({
             No Data Available
           </p>
         )}
-        
-        {/* Pagination Controls */}
-        {showPagination && (
-          <div className="flex flex-wrap justify-center md:justify-between items-center text-body-1-regular">
-            {/* Showing page info */}
-            <div className="text-center mt-4">
-              <span>
-                Showing {1 + (currentPage - 1) * pageSize} to{" "}
-                {Math.min(currentPage * pageSize, totalData)} of {totalData}{" "}
-                results
-              </span>
-            </div>
-
-            <div className="flex justify-center items-center mt-6 space-x-0">
-              <button
-                className="py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-              >
-                ⏪
-              </button>
-              <button
-                className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                ◀️
-              </button>
-
-              {/* Page Numbers with Ellipsis */}
-              {generatePageNumbers().map((page, index) => (
-                <button
-                  key={index}
-                  className={`py-2 px-4 ${
-                    page === currentPage
-                      ? "bg-blue-500 text-white-500 border-none"
-                      : page === "..."
-                      ? "bg-white-500 border border-black-100"
-                      : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
-                  }`}
-                  onClick={() =>
-                    page === "..."
-                      ? handleCustomPage()
-                      : handlePageChange(page as number)
-                  }
-                  disabled={page === "..."}
-                >
-                  {page}
-                </button>
-              ))}
-
-              <button
-                className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                ▶️
-              </button>
-              <button
-                className="py-2 px-4 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
-              >
-                ⏩
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Pagination Controls */}
+      {showPagination && (
+        <div className="flex flex-wrap justify-center md:justify-between items-center text-body-1-regular mx-20">
+          {/* Showing page info */}
+          <div className="text-center mt-4">
+            <span>
+              Showing {1 + (currentPage - 1) * pageSize} to{" "}
+              {Math.min(currentPage * pageSize, totalData)} of {totalData}{" "}
+              results
+            </span>
+          </div>
+
+          <div className="flex justify-center items-center mt-6 space-x-0">
+            <button
+              className="py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            >
+              ⏪
+            </button>
+            <button
+              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              ◀️
+            </button>
+
+            {/* Page Numbers with Ellipsis */}
+            {generatePageNumbers().map((page, index) => (
+              <button
+                key={index}
+                className={`py-2 px-4 ${
+                  page === currentPage
+                    ? "bg-blue-500 text-white-500 border-none"
+                    : page === "..."
+                    ? "bg-white-500 border border-black-100"
+                    : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
+                }`}
+                onClick={() =>
+                  page === "..."
+                    ? handleCustomPage()
+                    : handlePageChange(page as number)
+                }
+                disabled={page === "..."}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              className="py-2 px-4 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              ▶️
+            </button>
+            <button
+              className="py-2 px-4 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+            >
+              ⏩
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
