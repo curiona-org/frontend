@@ -292,7 +292,11 @@ export default function RoadmapDetailClient({
     setRatingLoading(true);
     try {
       // kirim rating dengan comment kosong
-      await roadmapService.rateRoadmap(slug, localRating, "");
+      await roadmapService.rateRoadmap(
+        slug,
+        localRating,
+        roadmap.rating.comment
+      );
       // update state awal
       setInitialRating(localRating);
       setIsRated(true);
@@ -305,7 +309,7 @@ export default function RoadmapDetailClient({
                 ...prev.rating,
                 is_rated: true,
                 rating: localRating,
-                comment: "", // kosong
+                comment: prev.rating.comment,
                 progression_total_finished_topics:
                   prev.progression?.finished_topics ?? 0,
                 progression_total_topics: prev.total_topics,
