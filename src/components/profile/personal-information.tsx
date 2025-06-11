@@ -1,4 +1,6 @@
+import { useAuth } from "@/providers/auth-provider";
 import React, { useState } from "react";
+import RotatingLoader from "../loader/rotating-loader";
 import Button from "../ui/button";
 
 interface PersonalInformationProps {
@@ -26,6 +28,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
   onSaveClick,
   onCancelClick,
 }) => {
+  const { authIsLoading } = useAuth();
   const [editNameError, setEditNameError] = useState("");
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,12 +141,19 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
             <Button
               onClick={handleSaveClick}
               disabled={editNameError !== ""}
-              className='flex md:flex-col w-full md:w-20 justify-center border-2 border-green-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300'
+              className='flex md:flex-col w-full md:w-20 items-center justify-center border-2 border-green-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300'
             >
-              <span role='img' aria-label='save'>
-                💾
-              </span>
-              Save
+              {!authIsLoading && (
+                <>
+                  <span role='img' aria-label='save'>
+                    💾
+                  </span>
+                  Save
+                </>
+              )}
+              {authIsLoading && (
+                <RotatingLoader className='size-6 border-[3px] border-green-500' />
+              )}
             </Button>
             <Button
               onClick={() => {
