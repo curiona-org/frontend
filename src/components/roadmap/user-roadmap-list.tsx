@@ -161,77 +161,77 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
             <RoadmapCard key={roadmap.id} roadmap={roadmap} />
           ))
         ) : (
-          <p className="text-center col-span-full text-gray-500">
+          <p className='text-center col-span-full text-gray-500'>
             No Data Available
           </p>
         )}
-        
-        {/* Pagination Controls */}
-        {showPagination && (
-          <div className="flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-body-1-regular mt-6">
-            <div>
-              Showing {(currentPage - 1) * pageSize + 1} to{" "}
-              {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
-              results
-            </div>
-            <div className="flex items-center space-x-0">
-              <button
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-                className="py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50"
-              >
-                ⏪
-              </button>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
-              >
-                ◀️
-              </button>
-
-              {generatePageNumbers().map((p, i) =>
-                p === "..." ? (
-                  <button
-                    key={i}
-                    onClick={handleCustomPage}
-                    className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100"
-                  >
-                    ...
-                  </button>
-                ) : (
-                  <button
-                    key={i}
-                    onClick={() => handlePageChange(p as number)}
-                    className={`py-2 px-4 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 ${
-                      p === currentPage
-                        ? "bg-blue-600 text-white-500 border-blue-600"
-                        : "bg-white-500"
-                    }`}
-                  >
-                    {p}
-                  </button>
-                )
-              )}
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
-              >
-                ▶️
-              </button>
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
-                className="py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50"
-              >
-                ⏩
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Pagination Controls */}
+      {showPagination && (
+        <div className='flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-body-1-regular mt-6'>
+          <div>
+            Showing {(currentPage - 1) * pageSize + 1} to{" "}
+            {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
+            results
+          </div>
+          <div className='flex items-center space-x-0'>
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className='py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50'
+            >
+              ⏪
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50'
+            >
+              ◀️
+            </button>
+
+            {generatePageNumbers().map((p, i) =>
+              p === "..." ? (
+                <button
+                  key={i}
+                  onClick={handleCustomPage}
+                  className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100'
+                >
+                  ...
+                </button>
+              ) : (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(p as number)}
+                  className={`py-2 px-4 border border-gray-300 hover:bg-gray-100 disabled:opacity-50 ${
+                    p === currentPage
+                      ? "bg-blue-600 text-white-500 border-blue-600"
+                      : "bg-white-500"
+                  }`}
+                >
+                  {p}
+                </button>
+              )
+            )}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50'
+            >
+              ▶️
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className='py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50'
+            >
+              ⏩
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
