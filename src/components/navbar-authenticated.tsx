@@ -71,10 +71,9 @@ const NavigationBarAuthenticated = () => {
         <div className='flex items-center justify-between'>
           <Link href='/'>
             <div className='flex gap-2 items-center'>
-              <Image src={Logo} alt='Logo' priority />
-              <span className='hidden md:block text-heading-2 font-medium text-blue-500'>
-                Curiona
-              </span>
+              <div className='w-10 sm:w-12'>
+                <Image src={Logo} alt='Logo' priority />
+              </div>
             </div>
           </Link>
 

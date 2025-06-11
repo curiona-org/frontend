@@ -391,13 +391,13 @@ export default function RoadmapDetailClient({
     <>
       {isMobile && <RenderZoomOverlay />}
       {showConfetti && <ConfettiSideCannons />}
-      <div className='px-6 lg:px-40 pt-32'>
+      <div className='px-6 pt-24 lg:px-40 md:pt-32'>
         <div className='bg-white-500 flex flex-col gap-6 border-2 border-blue-500 rounded-lg p-6'>
           <div className='flex flex-wrap justify-between'>
             <h1 className='text-mobile-display-2 lg:text-heading-1-bold'>
               {roadmap.title}
             </h1>
-            <div className='flex flex-wrap items-center gap-4 mt-2'>
+            <div className='flex flex-wrap items-center gap-2 md:gap-4 mt-2'>
               <Button
                 onClick={() => setIsFinishedDialogOpen(true)}
                 aria-label='Rating'
@@ -415,7 +415,7 @@ export default function RoadmapDetailClient({
                   aria-label='Import to Calendar'
                 >
                   <div
-                    className={`flex items-center gap-1 border-2 rounded-lg border-[#E5E5E5] hover:border-blue-500 p-2`}
+                    className={`text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 rounded-lg border-[#E5E5E5] hover:border-blue-500 p-2`}
                   >
                     <span role='img' aria-label='folder'>
                       🗓️
@@ -435,7 +435,7 @@ export default function RoadmapDetailClient({
                 aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
               >
                 <div
-                  className={`flex items-center gap-1 border-2 rounded-lg ${
+                  className={`text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 rounded-lg ${
                     saved
                       ? "border-blue-500"
                       : "border-[#E5E5E5] hover:border-blue-500"
@@ -456,7 +456,7 @@ export default function RoadmapDetailClient({
                 aria-label='Regenerate roadmap'
                 className='hover:text-white-500'
               >
-                <div className='flex items-center gap-1 border-2 border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2'>
+                <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2'>
                   <span role='img' aria-label='refresh'>
                     🔄
                   </span>
@@ -469,7 +469,7 @@ export default function RoadmapDetailClient({
                   aria-label='Delete roadmap'
                   className='text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg'
                 >
-                  <div className='flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2'>
+                  <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2'>
                     <span role='img' aria-label='refresh'>
                       🗑️
                     </span>
