@@ -102,9 +102,9 @@ const ProfileDetails = () => {
   }
 
   return (
-    <div className='min-h-screen px-6 lg:px-40 py-32'>
+    <div className='min-h-screen px-6 lg:px-40 py-24 md:py-32'>
       <div className='flex justify-center items-center'>
-        <div className='flex flex-col gap-6 p-8 rounded-2xl shadow-xl max-w-5xl w-full bg-white-500'>
+        <div className='flex flex-col gap-3 md:gap-6 p-8 rounded-2xl shadow-xl max-w-5xl w-full bg-white-500'>
           <PersonalInformation
             name={session?.user.name}
             email={session?.user.email}
