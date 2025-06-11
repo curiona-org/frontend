@@ -636,7 +636,9 @@ export default function RoadmapDetailClient({
               {ratingLoading ? (
                 <RotatingLoader className='size-6 border-[3px] border-white-500' />
               ) : (
-                "Save"
+                <div className='flex text-body-1-bold items-center px-2 py-1 hover:bg-blue-50 text-blue-500 rounded'>
+                  Save
+                </div>
               )}
             </Button>
           )}
