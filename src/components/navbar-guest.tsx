@@ -1,24 +1,15 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import Button from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import Logo from "/public/logo.svg";
 
 const NavigationBarGuest = () => {
-  const [authButtonText, setAuthButtonText] = useState("Sign In");
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (pathname === "/sign-in") {
-      setAuthButtonText("Sign Up");
-    } else {
-      setAuthButtonText("Sign In");
-    }
-  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,23 +27,33 @@ const NavigationBarGuest = () => {
         isScrolled ? "bg-white-500 shadow-md" : "bg-transparent"
       }`}
     >
-      <Link href="/">
-        <div className="flex gap-2 items-center">
-          <Image src={Logo} alt="Logo" priority />
-          <span className="text-heading-2 font-medium text-blue-500">
+      <Link href='/'>
+        <div className='flex gap-2 items-center'>
+          <Image src={Logo} alt='Logo' priority />
+          <span className='text-heading-2 font-medium text-white-500'>
             Curiona
           </span>
         </div>
       </Link>
 
-      <Link
-        className="text-mobile-body-1-bold lg:text-body-1-bold"
-        href={pathname === "/sign-in" ? "/sign-up" : "/sign-in"}
-      >
-        <Button className="w-24 lg:w-[124px] h-11 bg-blue-500 hover:bg-blue-900 text-white-500">
-          {authButtonText}
-        </Button>
-      </Link>
+      <div className='flex justify-between items-center gap-4'>
+        <Link
+          className='text-mobile-body-1-bold lg:text-body-1-bold'
+          href='/sign-in'
+        >
+          <Button className='w-24 lg:w-[124px] h-11 border-2 border-black-100 bg-white-500 hover:bg-white-600 text-black-200'>
+            Sign in
+          </Button>
+        </Link>
+        <Link
+          className='text-mobile-body-1-bold lg:text-body-1-bold'
+          href='/sign-up'
+        >
+          <Button className='w-24 lg:w-[124px] h-11 bg-blue-500 hover:bg-blue-900 text-white-500'>
+            Sign Up
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
