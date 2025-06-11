@@ -6,8 +6,8 @@ export const RoadmapSchema = z.object({
   slug: z.string(),
   description: z.string(),
   total_topics: z.number(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
+  created_at: z.coerce.string(),
+  updated_at: z.coerce.string(),
 });
 
 export type Roadmap = z.infer<typeof RoadmapSchema>;
