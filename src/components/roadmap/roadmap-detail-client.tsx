@@ -593,7 +593,16 @@ export default function RoadmapDetailClient({
         }}
       />
 
-      <div className='text-mobile-body-1-regular lg:text-body-1-regular hidden md:flex fixed bottom-20 left-12 z-50'>
+      <div className='text-mobile-body-1-regular lg:text-body-1-regular hidden md:flex fixed bottom-20 left-12 z-50 gap-4'>
+        <Button
+          onClick={() => setIsFinishedDialogOpen(true)}
+          aria-label='Edit rating'
+          className='bg-white-500 p-2 border-2 border-blue-500 text-gray-600 hover:text-gray-800 focus:outline-none'
+        >
+          <span role='img' aria-label='edit'>
+            ✏️
+          </span>
+        </Button>
         <div className='flex items-center bg-white-500 border-2 border-blue-500 px-3 py-2 rounded-lg shadow-lg gap-2'>
           <span>Your rating:</span>
           {/* clickable stars: */}
