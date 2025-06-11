@@ -310,11 +310,11 @@ export default function RoadmapDetailClient({
                   prev.progression?.finished_topics ?? 0,
                 progression_total_topics: prev.total_topics,
                 // created_at: bisa diisi timestamp sekarang, tapi lebih baik refetch:
-                created_at: prev.created_at,
+                created_at: prev.created_at.toISOString(),
                 // jika FinishedDialog butuh created_at rating, nanti bisa di-refresh lewat fetchRoadmap
                 // created_at di rating object disimpan di backend
                 created_at_rating: new Date().toISOString(),
-              } as any,
+              },
             }
           : prev
       );
@@ -584,7 +584,7 @@ export default function RoadmapDetailClient({
         onClose={() => setIsFinishedDialogOpen(false)}
         slug={roadmap.slug}
         existingData={roadmap}
-        onRated={(ratingArg, commentArg) => {
+        onRated={() => {
           // Callback saat user submit via dialog
           setIsFinishedDialogOpen(false);
           setIsRated(true);
@@ -610,7 +610,7 @@ export default function RoadmapDetailClient({
               }}
               aria-label={`Rate ${i} star`}
             >
-              <StarIcon filled={i <= localRating} size={6} />
+              <StarIcon filled={i <= localRating} />
             </button>
           ))}
           {/* Tombol Save muncul hanya jika rating berubah dan >0 */}
