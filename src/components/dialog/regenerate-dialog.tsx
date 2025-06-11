@@ -161,6 +161,19 @@ const RegenerateDialog = ({
     }
   };
 
+  const preventDecimalInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "." || e.key === ",") {
+      e.preventDefault();
+    }
+  };
+
+  const preventPasteDecimal = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const paste = e.clipboardData.getData("text");
+    if (/[.,]/.test(paste)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
@@ -253,7 +266,11 @@ const RegenerateDialog = ({
                       <input
                         type="number"
                         min="1"
+                        step={1}
+                        inputMode="numeric"
                         value={timeValue}
+                        onKeyDown={preventDecimalInput}
+                        onPaste={preventPasteDecimal}
                         onChange={(e) =>
                           handleTimeAvailabilityChange(Number(e.target.value))
                         }
@@ -329,7 +346,10 @@ const RegenerateDialog = ({
                       <input
                         type="number"
                         min="1"
+                        step={1}
                         value={durationValue}
+                        onKeyDown={preventDecimalInput}
+                        onPaste={preventPasteDecimal}
                         onChange={(e) =>
                           handleDurationChange(Number(e.target.value))
                         }
