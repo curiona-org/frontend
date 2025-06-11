@@ -103,7 +103,7 @@ const NavigationBarAuthenticated = () => {
 
           <button
             ref={toggleButtonRef}
-            className='flex items-center justify-center lg:hidden w-11 h-11 text-gray-500 border-2 border-blue-100 rounded-lg'
+            className='flex items-center justify-center lg:hidden w-11 h-11 text-gray-500 border-2 border-blue-100 bg-white-500 rounded-lg'
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-expanded={isMobileMenuOpen}
             aria-label='Toggle menu'
