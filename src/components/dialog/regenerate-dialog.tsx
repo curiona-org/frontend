@@ -208,10 +208,10 @@ const RegenerateDialog = ({
             <div className="flex flex-col gap-6">
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="flex justify-between items-center"
+                className="flex justify-between items-center text-blue-500"
               >
-                <h3 className="text-mobile-body-1-regular lg:text-body-1-regular text-black-500">
-                  Personalization Option
+                <h3 className="text-mobile-body-1-regular lg:text-body-1-regular">
+                  Configure Personalization Option
                 </h3>
                 {expanded ? (
                   <svg
