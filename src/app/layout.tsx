@@ -88,6 +88,13 @@ export default async function RootLayout({
   m.mazeUniversalSnippetApiKey = e;
 })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'e75cf20f-09b5-4239-8361-7394ebda4f08');`}
         </Script>
+        <Script id='clarity-analytics'>
+          {`(function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rxrdbyu3h2");`}
+        </Script>
       </head>
       <body suppressHydrationWarning>
         <Providers>
