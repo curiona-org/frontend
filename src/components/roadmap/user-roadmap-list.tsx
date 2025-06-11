@@ -169,7 +169,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
       {/* Pagination Controls */}
       {showPagination && (
-        <div className='flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-body-1-regular mt-6'>
+        <div className='flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-body-1-regular mx-6'>
           <div>
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}

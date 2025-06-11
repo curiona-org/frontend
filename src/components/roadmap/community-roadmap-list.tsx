@@ -109,7 +109,7 @@ const CommunityRoadmap = ({
             </span>
           </div>
 
-          <div className='flex justify-center items-center mt-6 space-x-0'>
+          <div className='flex justify-center items-center mt-6 space-x-0 mx-6'>
             <button
               className='py-2 px-4 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50'
               onClick={() => handlePageChange(1)}
