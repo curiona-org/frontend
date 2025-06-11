@@ -26,12 +26,7 @@ const NavigationBarGuest = () => {
       }`}
     >
       <Link href='/'>
-        <div className='flex gap-2 items-center'>
-          <Image src={Logo} alt='Logo' priority />
-          <span className='text-heading-2 font-medium text-white-500'>
-            Curiona
-          </span>
-        </div>
+        <Image src={Logo} alt='Logo' priority />
       </Link>
 
       <div className='flex justify-between items-center gap-4'>
