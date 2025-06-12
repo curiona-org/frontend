@@ -6,7 +6,7 @@ import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
 import { redirect, useRouter } from "next/navigation";
-import { useRef, useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import RotatingLoader from "../loader/rotating-loader";
 import { ShineBorder } from "../magicui/shine-border";
 
@@ -18,23 +18,7 @@ export default function GenerateRoadmap() {
   const [inputTopic, setInputTopic] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const [inputRef, setFocus] = useFocus<HTMLInputElement>();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const autoResize = () => {
-    const ta = textareaRef.current;
-    if (ta) {
-      ta.style.height = "auto";
-      // Optional: jika ingin maxHeight
-      const maxHeight = 200; // misalnya 200px; sesuaikan
-      ta.style.height = `${Math.min(ta.scrollHeight, maxHeight)}px`;
-      // Jika scrollHeight > maxHeight, biarkan overflow-y: auto agar scrollbar muncul
-    }
-  };
-
-  useEffect(() => {
-    autoResize();
-  }, []);
+  const [textareaRef, setFocus] = useFocus<HTMLTextAreaElement>();
 
   const recommendationPrompts = [
     { label: "Guide me to ...", value: "Guide me to " },
@@ -53,6 +37,18 @@ export default function GenerateRoadmap() {
       value: "Develop a plan to become proficient in ",
     },
   ];
+
+  const adjustTextareaHeight = () => {
+    const ta = textareaRef.current;
+    if (ta) {
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputTopic]);
 
   const handleGenerate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,32 +99,29 @@ export default function GenerateRoadmap() {
             borderWidth={2}
             shineColor={["#4b7ce8", "#5C469C"]}
           />
-          <form onSubmit={handleGenerate} className="relative w-full h-full">
+          <form onSubmit={handleGenerate} className="relative w-full">
             <textarea
               ref={textareaRef}
+              maxLength={150}
               placeholder="Enter a topic to generate your personalized roadmap..."
-              className={`w-full bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none ${
+              className={`w-full h-full bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none ${
                 error ? "border-red-500" : ""
               }`}
               style={{
                 paddingRight: "80px",
-                overflow: "hidden",
-                transition: "height 0.2s ease",
+                lineHeight: "1.5",
                 minHeight: "4rem",
-                lineHeight: "1.5rem",
               }}
               value={inputTopic}
-              minLength={5}
-              maxLength={150}
               onChange={(e) => {
                 setInputTopic(e.target.value);
                 if (error) setError("");
               }}
+              onInput={adjustTextareaHeight}
             />
             <Button
               // onClick={handleGenerate}
               className="absolute right-3 top-1/2 -translate-y-1/2 bg-blue-500 p-3 text-white hover:bg-blue-900"
-              type="submit"
             >
               {isLoading && (
                 <RotatingLoader className="size-4 border-[3px] border-white-500" />
@@ -158,9 +151,13 @@ export default function GenerateRoadmap() {
               if (error) setError("");
               setInputTopic(prompt.value);
               setTimeout(() => {
-                autoResize();
                 setFocus();
-              });
+                const ta = textareaRef.current;
+                if (ta) {
+                  const len = ta.value.length;
+                  ta.setSelectionRange(len, len);
+                }
+              }, 0);
             }}
             className="flex-grow p-2 text-black-300 border-2 border-black-100 bg-white-500 rounded-2xl hover:bg-white-600 transition-colors duration-200"
           >
