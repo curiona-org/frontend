@@ -2,6 +2,8 @@
 
 import Loader from "@/components/loader/loader";
 import Button from "@/components/ui/button";
+import { toast } from "@/components/ui/toast-sonner";
+import { handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
@@ -162,16 +164,26 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
     try {
       const response = await roadmapService.generateRoadmap(payload);
       if (!response.success) {
-        throw new Error("Failed to submit data");
+        toast({
+          type: "error",
+          title: "Error",
+          description: response.message || "Failed to generate roadmap.",
+        });
       }
       const result = response.data;
-      if (result?.slug) {
-        router.push(`/roadmap/${result.slug}`);
-      } else {
-        alert("Roadmap generated, but no slug was returned.");
-      }
+      toast({
+        type: "success",
+        title: "Success",
+        description: "Roadmap generated successfully!",
+      });
+      router.push(`/roadmap/${result.slug}`);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      const err = handleCurionaError(error);
+      toast({
+        type: "error",
+        title: "Error",
+        description: err.message || "Failed to generate roadmap.",
+      });
     } finally {
       setIsLoading(false);
     }
