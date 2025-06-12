@@ -1,10 +1,12 @@
 "use clinet";
+import RotatingLoader from "@/components/loader/rotating-loader";
 import Button from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-sonner";
 import { handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
+import { useState } from "react";
 
 const roadmapService = new RoadmapService();
 
@@ -17,8 +19,10 @@ interface DeleteDialogProps {
 
 const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteRoadmap = async () => {
+    setLoading(true);
     try {
       const response = await roadmapService.deleteRoadmapBySlug(slug);
 
@@ -46,6 +50,8 @@ const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
           err.message ||
           "There was a problem on our end. Please try again later",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,12 +79,15 @@ const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
                 Cancel
               </Button>
               <Button
-                className='w-full p-3 text-white-500 bg-red-500'
+                className='w-full p-3 text-white-500 bg-red-500 flex items-center justify-center'
                 onClick={handleDeleteRoadmap}
                 aria-label='Close Chat'
                 title='Close Chat'
               >
-                Delete roadmap 🚮
+                {loading && (
+                  <RotatingLoader className='size-6 border-[3px] border-white-500' />
+                )}
+                {!loading && "Delete roadmap 🚮"}
               </Button>
             </div>
           </Dialog.Content>
