@@ -421,14 +421,14 @@ export default function Chatbot({ slug }: { slug: string }) {
       </div>
       {/* Input box */}
       <div className="p-3">
-        <div className="relative">
+        <div className="relative w-full">
           <textarea
             ref={inputRef}
             placeholder="Try asking about your roadmap..."
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full border-2 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 resize-none overflow-y-auto"
+              "w-full border-2 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 resize-none overflow-y-auto bg-white"
             )}
             value={input}
             onChange={handleInput}
@@ -448,11 +448,13 @@ export default function Chatbot({ slug }: { slug: string }) {
               isConnected && !isBotResponding && !inputError
                 ? "text-white bg-blue-600 hover:bg-blue-700"
                 : "text-white bg-blue-300 cursor-not-allowed",
-              "absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded"
+              "absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded z-10"
             )}
             aria-label="Send message"
           >
-            <svg /* ikon send */>{/* path */}</svg>
+            <svg /* ikon send */ viewBox="0 0 256 256" width="20" height="20">
+              <path fill="currentColor" d="M225.88 30.12a13.83 13.83..." />
+            </svg>
           </button>
         </div>
         <p
