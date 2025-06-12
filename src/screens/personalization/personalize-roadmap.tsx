@@ -184,8 +184,6 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         title: "Error",
         description: err.message || "Failed to generate roadmap.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
