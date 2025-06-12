@@ -1,3 +1,4 @@
+import { refreshSessionAction } from "@/app/(auth)/actions";
 import { auth } from "@/lib/auth";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import config from "../config";
@@ -83,31 +84,31 @@ export class APIService {
       return request;
     });
 
-    // this.instance.interceptors.response.use(
-    //   (response) => response,
-    //   async (error) => {
-    //     const originalRequest = error.config;
+    this.instance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
 
-    //     if (
-    //       error.response &&
-    //       error.response.status === 401 &&
-    //       !originalRequest._retry
-    //     ) {
-    //       originalRequest._retry = true;
-    //       const refreshResult = await refreshSessionAction();
+        if (
+          error.response &&
+          error.response.status === 401 &&
+          !originalRequest._retry
+        ) {
+          originalRequest._retry = true;
+          const refreshResult = await refreshSessionAction();
 
-    //       originalRequest.headers[
-    //         "Authorization"
-    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
+          originalRequest.headers[
+            "Authorization"
+          ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
 
-    //       this.instance.defaults.headers.common[
-    //         "Authorization"
-    //       ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
-    //       return this.instance(originalRequest);
-    //     }
-    //     return Promise.reject(error);
-    //   }
-    // );
+          this.instance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${refreshResult.newSession?.tokens.access_token}`;
+          return this.instance(originalRequest);
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   private isAuthorizationAttached() {

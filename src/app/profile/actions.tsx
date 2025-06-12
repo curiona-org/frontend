@@ -10,10 +10,34 @@ import { ProfileService } from "@/lib/services/profile.service";
 import { Session } from "@/lib/session";
 import { cookies } from "next/headers";
 
-const service = new ProfileService();
-
 export async function getProfile() {
   try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get(config.SESSION_COOKIE_NAME);
+
+    if (!sessionCookie?.value) {
+      return {
+        success: false,
+        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
+        code: CurionaErrorCodes.UNAUTHORIZED,
+        data: null,
+      };
+    }
+
+    const session = await decrypt<Session>(
+      decodeURIComponent(sessionCookie.value)
+    );
+
+    if (!session) {
+      return {
+        success: false,
+        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
+        code: CurionaErrorCodes.UNAUTHORIZED,
+        data: null,
+      };
+    }
+
+    const service = new ProfileService(session.tokens.access_token);
     const result = await service.profile();
     if (!result.success || !result.data) {
       return {
@@ -42,8 +66,6 @@ export async function getProfile() {
 
 export async function updateProfileAction(newName: string) {
   try {
-    const result = await service.updateProfile(newName);
-
     // update session cookie user details
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(config.SESSION_COOKIE_NAME);
@@ -69,6 +91,9 @@ export async function updateProfileAction(newName: string) {
         data: null,
       };
     }
+
+    const service = new ProfileService(session.tokens.access_token);
+    const result = await service.updateProfile(newName);
 
     session.user.name = newName;
     const payload = await encrypt<Session>(session);
