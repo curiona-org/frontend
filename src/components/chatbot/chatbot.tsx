@@ -67,31 +67,22 @@ export default function Chatbot({ slug }: { slug: string }) {
     // Ukur scrollHeight
     const scrollHeight = ta.scrollHeight;
 
+    // Selalu gunakan display flex untuk konsistensi
+    ta.style.display = "flex";
+    ta.style.alignItems = "center";
+    ta.style.height = `${minHeight}px`;
+
     // Untuk single line text (placeholder atau input pendek)
     if (scrollHeight <= 44) {
-      // Gunakan pendekatan yang berhasil dari komponen GenerateRoadmap
-      ta.style.height = `${minHeight}px`;
-      ta.style.paddingTop = "1.25rem"; // 20px
-      ta.style.paddingBottom = "1.25rem"; // 20px
-      ta.style.display = "flex";
-      ta.style.alignItems = "center";
+      ta.style.paddingTop = "0"; // Biarkan flex centering bekerja
+      ta.style.paddingBottom = "0"; // Biarkan flex centering bekerja
       ta.style.overflowY = "hidden";
     }
-    // Untuk 2-3 baris
-    else if (scrollHeight <= 100) {
-      ta.style.height = `${minHeight}px`;
-      ta.style.paddingTop = "0.75rem"; // 12px
-      ta.style.paddingBottom = "0.75rem"; // 12px
-      ta.style.display = "block";
-      ta.style.overflowY = "auto";
-    }
-    // Lebih dari 3 baris
+    // Untuk teks yang lebih panjang
     else {
-      ta.style.height = `${minHeight}px`;
-      ta.style.paddingTop = "0.75rem";
-      ta.style.paddingBottom = "0.75rem";
-      ta.style.display = "block";
       ta.style.overflowY = "auto";
+      // Tetap gunakan display flex dan alignItems center
+      // tapi atur overflow agar bisa di-scroll
     }
   }, []);
 
