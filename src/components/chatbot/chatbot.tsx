@@ -57,37 +57,41 @@ export default function Chatbot({ slug }: { slug: string }) {
   const adjustInputHeight = useCallback(() => {
     const ta = inputRef.current;
     if (!ta) return;
+
     // Reset height agar kita dapat mengukur scrollHeight dengan benar
     ta.style.height = "auto";
 
-    const computed = window.getComputedStyle(ta);
-    const lineH = parseFloat(computed.lineHeight); // misal 24px
-    const paddingTopDefault = parseFloat(computed.paddingTop); // misal 8px
-    const paddingBottomDefault = parseFloat(computed.paddingBottom); // misal 8px
-    const minH = parseFloat(computed.minHeight); // misal 64px (4rem)
+    // Gunakan nilai yang konsisten untuk perhitungan
+    const lineH = 24; // Sesuaikan dengan line-height yang digunakan
+    const paddingTopDefault = 12; // 0.75rem dalam px
+    const paddingBottomDefault = 12; // 0.75rem dalam px
+    const minH = 64; // 4rem dalam px
+
+    // Dapatkan scrollHeight
     const scrollH = ta.scrollHeight;
-    // Konten (tanpa padding)
+
+    // Konten (tanpa padding default)
     const contentH = scrollH - paddingTopDefault - paddingBottomDefault;
 
-    if (contentH <= lineH + 1) {
+    if (contentH <= lineH) {
       // Kosong atau satu baris: centering vertical
+      const verticalPadding = (minH - lineH) / 2;
+      ta.style.paddingTop = `${verticalPadding}px`;
+      ta.style.paddingBottom = `${verticalPadding}px`;
       ta.style.height = `${minH}px`;
       ta.style.overflowY = "hidden";
-      const pad = (minH - lineH) / 2;
-      ta.style.paddingTop = `${pad}px`;
-      ta.style.paddingBottom = `${pad}px`;
-    } else if (contentH <= lineH * 2 + 1) {
-      // Dua baris: tetap minHeight, tanpa scrollbar, restore padding default
+    } else if (contentH <= lineH * 3) {
+      // 2-3 baris: tetap gunakan minHeight, tanpa scrollbar
+      ta.style.paddingTop = `${paddingTopDefault}px`;
+      ta.style.paddingBottom = `${paddingBottomDefault}px`;
       ta.style.height = `${minH}px`;
       ta.style.overflowY = "hidden";
-      ta.style.paddingTop = ""; // kembali ke kelas py-2 default
-      ta.style.paddingBottom = "";
     } else {
-      // Lebih dari dua baris: tetap tinggi minHeight, tampilkan scrollbar vertical
+      // Lebih dari 3 baris: tetap tinggi minHeight, tampilkan scrollbar vertical
+      ta.style.paddingTop = `${paddingTopDefault}px`;
+      ta.style.paddingBottom = `${paddingBottomDefault}px`;
       ta.style.height = `${minH}px`;
       ta.style.overflowY = "auto";
-      ta.style.paddingTop = ""; // padding default
-      ta.style.paddingBottom = "";
     }
   }, []);
 
@@ -343,7 +347,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-20 h-20 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
+        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-16 h-16 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
         aria-label="Open Chat"
         title="Open Chat"
       >
@@ -433,7 +437,7 @@ export default function Chatbot({ slug }: { slug: string }) {
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full bg-transparent px-5 border-2 rounded-lg resize-none overflow-y-auto focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400 placeholder-blue-500"
+              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400 placeholder-blue-500"
             )}
             value={input}
             onChange={handleInput}
@@ -449,8 +453,8 @@ export default function Chatbot({ slug }: { slug: string }) {
               minHeight: "4rem",
               paddingRight: "4rem",
               transition: "height 0.2s ease",
-              paddingTop: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
-              paddingBottom: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
+              // Hapus paddingTop dan paddingBottom inline style yang menyebabkan masalah
+              // Akan diatur oleh adjustInputHeight
             }}
           />
           <Button
@@ -462,7 +466,7 @@ export default function Chatbot({ slug }: { slug: string }) {
                 : "bg-blue-300 text-white cursor-not-allowed",
               "absolute right-3 p-2"
             )}
-            style={{ top: "45%", transform: "translateY(-45%)" }}
+            style={{ top: "50%", transform: "translateY(-50%)" }} // Ubah ke 50% untuk perataan vertikal yang lebih baik
             aria-label="Send message"
           >
             <svg
