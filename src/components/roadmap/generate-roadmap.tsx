@@ -42,8 +42,31 @@ export default function GenerateRoadmap() {
   const adjustTextareaHeight = () => {
     const ta = textareaRef.current;
     if (ta) {
+      // Reset height dulu
       ta.style.height = "auto";
-      ta.style.height = ta.scrollHeight + "px";
+      const scrollH = ta.scrollHeight;
+      ta.style.height = `${scrollH}px`;
+
+      // Baca computed style
+      const computed = window.getComputedStyle(ta);
+      const fontSize = parseFloat(computed.fontSize); // px
+      const lineH = parseFloat(computed.lineHeight); // px
+      const minH = parseFloat(computed.minHeight); // px
+
+      // Default padding dari desain (misal 0.75rem)
+      const defaultPadRem = 0.75;
+      const DEFAULT_PADDING = defaultPadRem * fontSize; // px
+
+      if (scrollH <= lineH + 2) {
+        // Single-line: center vertical
+        const pad = (minH - lineH) / 2;
+        ta.style.paddingTop = `${pad}px`;
+        ta.style.paddingBottom = `${pad}px`;
+      } else {
+        // Multi-line: padding default
+        ta.style.paddingTop = `${DEFAULT_PADDING}px`;
+        ta.style.paddingBottom = `${DEFAULT_PADDING}px`;
+      }
     }
   };
 
@@ -124,11 +147,7 @@ export default function GenerateRoadmap() {
                 lineHeight: "1.5",
                 minHeight: "4rem",
                 paddingLeft: "1.25rem",
-                paddingRight: "5rem",
-                paddingBottom: "0.75rem",
-                paddingTop: inputTopic
-                  ? "0.75rem"
-                  : "calc((4rem - 1.5rem) / 2)",
+                paddingRight: "5rem"
               }}
               value={inputTopic}
               onChange={(e) => {
