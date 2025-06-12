@@ -157,7 +157,6 @@ input[type="number"] {
   animation: updown 1s ease-in-out infinite;
 }
 
-/* Di global.css */
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
