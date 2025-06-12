@@ -31,8 +31,8 @@ export default function GenerateRoadmap() {
       value: "Help me build a roadmap for ",
     },
     {
-      label: "Develop a plan to become proficient in...",
-      value: "Develop a plan to become proficient in ",
+      label: "Develop a plan to achieve...",
+      value: "Develop a plan to achieve ",
     },
   ];
 
@@ -127,7 +127,7 @@ export default function GenerateRoadmap() {
   };
 
   return (
-    <div className='w-full flex flex-col gap-4'>
+    <div className='flex flex-col gap-4'>
       <div className='flex sm:justify-end sm:-mt-10'>
         <p className='text-gray-500 text-mobile-heading-4-regular lg:text-body-2-regular'>
           {inputTopic.length}/150
@@ -187,20 +187,80 @@ export default function GenerateRoadmap() {
         </div>
       </div>
       {error && <p className='text-red-500 text-sm'>{error}</p>}
-      <div className='flex flex-wrap gap-2 justify-start'>
+
+      {/* Prompt recommendations for desktop view */}
+      <div className='hidden sm:flex flex-row flex-wrap gap-2 justify-start'>
         {recommendationPrompts.map((prompt, idx) => (
           <Button
-            key={`${idx}-recommendation`}
+            key={idx}
             onClick={() => {
               if (error) setError("");
               setInputTopic(prompt.value);
               setShouldFocusEnd(true);
             }}
-            className='flex-grow p-2 text-black-300 border-2 border-black-100 bg-white-500 rounded-2xl hover:bg-white-600 transition-colors duration-200'
+            className='inline-flex flex-grow justify-center items-center p-2 gap-2 text-black-300 border-2 border-black-100 bg-white-500 !rounded-full hover:bg-white-600 transition-colors duration-200'
           >
-            {prompt.label}
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              className='size-5 stroke-black-100'
+            >
+              <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+              <path d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0' />
+              <path d='M9 12h6' />
+              <path d='M12 9v6' />
+            </svg>{" "}
+            <span className='text-body-2 sm:text-body-1-regular'>
+              {prompt.label}
+            </span>
           </Button>
         ))}
+      </div>
+
+      {/* Prompt recommendations for mobile view */}
+      <div className='sm:hidden w-full overflow-hidden'>
+        <div className='w-full relative'>
+          <div className='absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white-500 to-transparent z-10 pointer-events-none'></div>
+          <div className='absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white-500 to-transparent z-10 pointer-events-none'></div>
+          <div className='flex flex-row gap-2 px-4 justify-start w-full overflow-x-auto [&::-webkit-scrollbar]:hidden'>
+            {recommendationPrompts.map((prompt, idx) => (
+              <div key={idx} className='flex-shrink-0'>
+                <Button
+                  onClick={() => {
+                    if (error) setError("");
+                    setInputTopic(prompt.value);
+                    setShouldFocusEnd(true);
+                  }}
+                  className='inline-flex justify-center items-center p-2 gap-2 text-black-300 border-2 border-black-100 bg-white-500 !rounded-full hover:bg-white-600 transition-colors duration-200'
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    className='size-5 stroke-black-100'
+                  >
+                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                    <path d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0' />
+                    <path d='M9 12h6' />
+                    <path d='M12 9v6' />
+                  </svg>{" "}
+                  <span className='text-body-2 sm:text-body-1-regular'>
+                    {prompt.label}
+                  </span>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

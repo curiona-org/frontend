@@ -34,7 +34,7 @@ export default function HomeAuthenticated() {
 
   return (
     <div className='flex justify-center min-h-screen px-6 lg:px-40 xl:px-64 2xl:px-72 py-32'>
-      <div className='flex flex-col gap-10'>
+      <div className='w-full flex flex-col gap-10'>
         <div className='flex flex-col gap-4 mt-20'>
           <div className='flex flex-wrap gap-4 items-center text-mobile-display-1 lg:text-display-1'>
             <h1>Create Your </h1>
