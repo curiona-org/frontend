@@ -58,40 +58,40 @@ export default function Chatbot({ slug }: { slug: string }) {
     const ta = inputRef.current;
     if (!ta) return;
 
-    // Reset height agar kita dapat mengukur scrollHeight dengan benar
+    // Reset height untuk pengukuran yang akurat
     ta.style.height = "auto";
 
-    // Gunakan nilai yang konsisten untuk perhitungan
-    const lineH = 24; // Sesuaikan dengan line-height yang digunakan
-    const paddingTopDefault = 12; // 0.75rem dalam px
-    const paddingBottomDefault = 12; // 0.75rem dalam px
-    const minH = 64; // 4rem dalam px
+    // Ukuran yang lebih akurat
+    const lineHeight = 24; // Sesuaikan dengan line-height yang digunakan
+    const minHeight = 64; // 4rem
 
-    // Dapatkan scrollHeight
-    const scrollH = ta.scrollHeight;
+    // Ukur scrollHeight
+    const scrollHeight = ta.scrollHeight;
 
-    // Konten (tanpa padding default)
-    const contentH = scrollH - paddingTopDefault - paddingBottomDefault;
-
-    if (contentH <= lineH) {
-      // Kosong atau satu baris: centering vertical
-      const verticalPadding = (minH - lineH) / 2;
-      ta.style.paddingTop = `${verticalPadding}px`;
-      ta.style.paddingBottom = `${verticalPadding}px`;
-      ta.style.height = `${minH}px`;
+    // Untuk input kosong atau satu baris
+    if (scrollHeight <= 44) {
+      // Sesuaikan nilai ini berdasarkan pengujian
+      // Centering vertikal dengan flex
+      ta.style.display = "flex";
+      ta.style.alignItems = "center";
+      ta.style.height = `${minHeight}px`;
       ta.style.overflowY = "hidden";
-    } else if (contentH <= lineH * 3) {
-      // 2-3 baris: tetap gunakan minHeight, tanpa scrollbar
-      ta.style.paddingTop = `${paddingTopDefault}px`;
-      ta.style.paddingBottom = `${paddingBottomDefault}px`;
-      ta.style.height = `${minH}px`;
+    }
+    // Untuk 2-3 baris
+    else if (scrollHeight <= lineHeight * 3 + 20) {
+      ta.style.display = "block"; // Kembali ke display block
+      ta.style.height = `${minHeight}px`;
       ta.style.overflowY = "hidden";
-    } else {
-      // Lebih dari 3 baris: tetap tinggi minHeight, tampilkan scrollbar vertical
-      ta.style.paddingTop = `${paddingTopDefault}px`;
-      ta.style.paddingBottom = `${paddingBottomDefault}px`;
-      ta.style.height = `${minH}px`;
+      ta.style.paddingTop = "12px";
+      ta.style.paddingBottom = "12px";
+    }
+    // Lebih dari 3 baris
+    else {
+      ta.style.display = "block";
+      ta.style.height = `${minHeight}px`;
       ta.style.overflowY = "auto";
+      ta.style.paddingTop = "12px";
+      ta.style.paddingBottom = "12px";
     }
   }, []);
 
@@ -437,7 +437,7 @@ export default function Chatbot({ slug }: { slug: string }) {
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400 placeholder-blue-500"
+              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400"
             )}
             value={input}
             onChange={handleInput}
@@ -453,8 +453,9 @@ export default function Chatbot({ slug }: { slug: string }) {
               minHeight: "4rem",
               paddingRight: "4rem",
               transition: "height 0.2s ease",
-              // Hapus paddingTop dan paddingBottom inline style yang menyebabkan masalah
-              // Akan diatur oleh adjustInputHeight
+              // Untuk perataan vertikal awal (akan diubah oleh adjustInputHeight)
+              display: "flex",
+              alignItems: "center",
             }}
           />
           <Button
