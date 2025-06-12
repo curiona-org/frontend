@@ -140,14 +140,14 @@ export default function GenerateRoadmap() {
               rows={1}
               maxLength={150}
               placeholder="Enter a topic to generate your personalized roadmap..."
-              className={`w-full bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none ${
+              className={`w-full bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none resize-none ${
                 error ? "border-red-500" : ""
               }`}
               style={{
                 lineHeight: "1.5",
                 minHeight: "4rem",
                 paddingLeft: "1.25rem",
-                paddingRight: "5rem"
+                paddingRight: "5rem",
               }}
               value={inputTopic}
               onChange={(e) => {
