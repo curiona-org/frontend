@@ -343,7 +343,7 @@ export default function Chatbot({ slug }: { slug: string }) {
         aria-label="Open Chat"
         title="Open Chat"
       >
-        <span className="text-mobile-display-2 lg:text-display-2 select-none">
+        <span className="text-mobile-heading-1 lg:text-heading-1 select-none">
           🤖
         </span>
         <BorderBeam duration={6} size={100} />
