@@ -479,7 +479,7 @@ export default function RoadmapDetailClient({
                 aria-label='Regenerate roadmap'
                 className='hover:text-white-500'
               >
-                <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 border-[#E5E5E5] hover:bg-blue-500 hover:border-blue-700 rounded-lg p-2'>
+                <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 border-[#E5E5E5] hover:border-blue-700 p-2'>
                   <span role='img' aria-label='refresh'>
                     🔄
                   </span>
@@ -492,7 +492,7 @@ export default function RoadmapDetailClient({
                   aria-label='Delete roadmap'
                   className='text-gray-400 hover:text-blue-500 transition-all ease-out duration-300 rounded-lg'
                 >
-                  <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 rounded-lg p-2'>
+                  <div className='text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border bg-red-50 border-red-400 hover:bg-red-500 hover:border-red-700 p-2'>
                     <span role='img' aria-label='refresh'>
                       🗑️
                     </span>
