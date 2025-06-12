@@ -339,7 +339,7 @@ export default function Chatbot({ slug }: { slug: string }) {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-16 h-16 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
+        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-16 h-16 md:w-20 md:h-20 lg:w-28 lg:h-28 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
         aria-label="Open Chat"
         title="Open Chat"
       >
