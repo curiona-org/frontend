@@ -57,30 +57,44 @@ export default function Chatbot({ slug }: { slug: string }) {
   const adjustInputHeight = useCallback(() => {
     const ta = inputRef.current;
     if (!ta) return;
-    // Reset height untuk ukur scrollHeight
+    // Reset height sebelum mengukur scrollHeight
     ta.style.height = "auto";
 
-    // Baca computed style untuk line-height dan padding horizontal
     const computed = window.getComputedStyle(ta);
-    const lineH = parseFloat(computed.lineHeight); // px, misal 24px
-    const paddingTop = parseFloat(computed.paddingTop); // px
-    const paddingBottom = parseFloat(computed.paddingBottom); // px
-
-    // Hitung tinggi maksimal konten = 2 baris
-    const maxContentHeight = lineH * 2;
-    // Total tinggi maksimal textarea = 2 baris + padding-vertikal
-    const maxHeight = maxContentHeight + paddingTop + paddingBottom;
-    // Tinggi konten saat ini (termasuk padding)
+    const lineH = parseFloat(computed.lineHeight); // misal 24px
+    const paddingTop = parseFloat(computed.paddingTop); // misal 12px (0.75rem)
+    const paddingBottom = parseFloat(computed.paddingBottom);
+    const minH = parseFloat(computed.minHeight); // misal 64px (4rem)
+    // tinggi konten maksimal = 2 baris
+    const maxContentH = lineH * 2; // misal 48px
+    const maxH = maxContentH + paddingTop + paddingBottom; // total max height including padding
     const scrollH = ta.scrollHeight;
 
-    if (scrollH <= maxContentHeight + 1) {
-      // jika isi ≤2 baris, set height sesuai scrollHeight → auto-grow/shrink
+    if (scrollH <= lineH + 1) {
+      // hanya 1 baris teks (atau kosong)
+      // tetapkan height = minHeight agar kotak tetap tinggi desain
+      ta.style.height = `${minH}px`;
+      ta.style.overflowY = "hidden";
+      // center teks/placeholder: paddingTop = (minH - lineH)/2, paddingBottom sama
+      const pad = (minH - lineH) / 2;
+      ta.style.paddingTop = `${pad}px`;
+      ta.style.paddingBottom = `${pad}px`;
+    } else if (scrollH <= maxContentH + 1) {
+      // antara 1–2 baris: auto-grow ke tinggi konten (scrollH mencakup konten+paddingTop/paddingBottom default)
+      // Namun karena height di-reset auto, scrollH umumnya = contentHeight + padding
+      // Kita set height = scrollH, overflow hidden, padding kembali ke default
       ta.style.height = `${scrollH}px`;
       ta.style.overflowY = "hidden";
+      // restore padding default (menggunakan computed paddingTop/paddingBottom)
+      ta.style.paddingTop = `${paddingTop}px`;
+      ta.style.paddingBottom = `${paddingBottom}px`;
     } else {
-      // isi >2 baris, batasi height ke maxHeight, tampilkan scrollbar vertikal
-      ta.style.height = `${maxHeight}px`;
+      // >2 baris: batasi height ke maxH agar hanya tampak 2 baris, aktifkan scrollbar
+      ta.style.height = `${maxH}px`;
       ta.style.overflowY = "auto";
+      // restore padding default agar teks multi-baris punya padding normal
+      ta.style.paddingTop = `${paddingTop}px`;
+      ta.style.paddingBottom = `${paddingBottom}px`;
     }
   }, []);
 
@@ -426,7 +440,7 @@ export default function Chatbot({ slug }: { slug: string }) {
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full bg-transparent px-5 border-2 rounded-lg focus:outline-none focus:ring-2 focus:border-blue-500 resize-none overflow-y-auto bg-white placeholder-gray-400"
+              "w-full bg-transparent px-5 border-2 rounded-lg resize-none overflow-y-auto focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400"
             )}
             value={input}
             onChange={handleInput}
@@ -442,7 +456,8 @@ export default function Chatbot({ slug }: { slug: string }) {
               transition: "height 0.2s ease",
               paddingTop: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
               paddingBottom: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
-              minHeight: "2.5rem",
+              minHeight: "4rem",
+              paddingRight: "3.5rem",
             }}
           />
           <Button
@@ -450,9 +465,9 @@ export default function Chatbot({ slug }: { slug: string }) {
             disabled={!isConnected || isBotResponding || inputError}
             className={cn(
               isConnected && !isBotResponding && !inputError
-                ? "text-white bg-blue-600 hover:bg-blue-700"
-                : "text-white bg-blue-300 cursor-not-allowed",
-              "absolute right-3 top-1/2 -translate-y-1/2 bg-blue-500 p-3"
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-blue-300 text-white cursor-not-allowed",
+              "absolute right-3 top-1/2 -translate-y-1/2 p-2"
             )}
             aria-label="Send message"
           >
