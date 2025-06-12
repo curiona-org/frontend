@@ -175,14 +175,14 @@ const CommunityRoadmap = ({
 
           <div className="flex justify-center items-center mt-6 space-x-0">
             <button
-              className="w-8 h-8 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
             >
               ⏪
             </button>
             <button
-              className="w-8 h-8 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
@@ -193,7 +193,7 @@ const CommunityRoadmap = ({
             {generatePageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`w-8 h-8 ${
+                className={`text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 ${
                   page === currentPage
                     ? "bg-blue-500 text-white-500 border-none"
                     : page === "..."
@@ -212,14 +212,14 @@ const CommunityRoadmap = ({
             ))}
 
             <button
-              className="w-8 h-8 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
               ▶️
             </button>
             <button
-              className="w-8 h-8 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
             >
