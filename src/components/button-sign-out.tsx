@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/button";
+import { toast } from "@/components/ui/toast-sonner";
 import { cn } from "@/lib/helpers/common.helper";
 import { useAuth } from "@/providers/auth-provider";
 import { redirect } from "next/navigation";
@@ -15,6 +16,12 @@ export default function ButtonSignOut({ className }: ButtonSignOutProps) {
       sessionStorage.removeItem(`login_${session.user.id}`);
     }
     await signOut();
+
+    toast({
+      type: "info",
+      title: "Notice",
+      description: "You have been signed out successfully.",
+    });
     redirect("/");
   };
 
