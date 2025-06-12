@@ -61,40 +61,41 @@ export default function Chatbot({ slug }: { slug: string }) {
     // Reset height untuk pengukuran yang akurat
     ta.style.height = "auto";
 
-    // Ukuran yang lebih akurat
-    const lineHeight = 24; // Sesuaikan dengan line-height yang digunakan
+    // Ukuran yang konsisten
     const minHeight = 64; // 4rem
 
     // Ukur scrollHeight
     const scrollHeight = ta.scrollHeight;
 
-    // Untuk input kosong atau satu baris
+    // Untuk single line text (placeholder atau input pendek)
     if (scrollHeight <= 44) {
-      // Sesuaikan nilai ini berdasarkan pengujian
-      // Centering vertikal dengan flex
+      // Gunakan pendekatan yang berhasil dari komponen GenerateRoadmap
+      ta.style.height = `${minHeight}px`;
+      ta.style.paddingTop = "1.25rem"; // 20px
+      ta.style.paddingBottom = "1.25rem"; // 20px
       ta.style.display = "flex";
       ta.style.alignItems = "center";
-      ta.style.height = `${minHeight}px`;
       ta.style.overflowY = "hidden";
     }
     // Untuk 2-3 baris
-    else if (scrollHeight <= lineHeight * 3 + 20) {
-      ta.style.display = "block"; // Kembali ke display block
+    else if (scrollHeight <= 100) {
       ta.style.height = `${minHeight}px`;
-      ta.style.overflowY = "hidden";
-      ta.style.paddingTop = "12px";
-      ta.style.paddingBottom = "12px";
+      ta.style.paddingTop = "0.75rem"; // 12px
+      ta.style.paddingBottom = "0.75rem"; // 12px
+      ta.style.display = "block";
+      ta.style.overflowY = "auto";
     }
     // Lebih dari 3 baris
     else {
-      ta.style.display = "block";
       ta.style.height = `${minHeight}px`;
+      ta.style.paddingTop = "0.75rem";
+      ta.style.paddingBottom = "0.75rem";
+      ta.style.display = "block";
       ta.style.overflowY = "auto";
-      ta.style.paddingTop = "12px";
-      ta.style.paddingBottom = "12px";
     }
   }, []);
 
+  // Gunakan useLayoutEffect untuk menghindari flicker
   useEffect(() => {
     adjustInputHeight();
   }, [input, adjustInputHeight]);
@@ -437,7 +438,7 @@ export default function Chatbot({ slug }: { slug: string }) {
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400 placeholder-blue-500"
+              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400"
             )}
             value={input}
             onChange={handleInput}
@@ -453,8 +454,11 @@ export default function Chatbot({ slug }: { slug: string }) {
               minHeight: "4rem",
               paddingRight: "4rem",
               transition: "height 0.2s ease",
-              // Hapus paddingTop dan paddingBottom inline style yang menyebabkan masalah
-              // Akan diatur oleh adjustInputHeight
+              // Properti awal untuk display flex dan vertical alignment
+              display: "flex",
+              alignItems: "center",
+              paddingTop: "1.25rem",
+              paddingBottom: "1.25rem",
             }}
           />
           <Button
