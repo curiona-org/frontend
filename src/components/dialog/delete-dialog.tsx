@@ -1,8 +1,10 @@
 "use clinet";
+import Button from "@/components/ui/button";
+import { toast } from "@/components/ui/toast-sonner";
+import { handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
-import Button from "../ui/button";
 
 const roadmapService = new RoadmapService();
 
@@ -21,12 +23,29 @@ const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
       const response = await roadmapService.deleteRoadmapBySlug(slug);
 
       if (!response.success) {
-        throw new Error("Failed to delete roadmap");
+        toast({
+          type: "error",
+          title: "Error",
+          description: response.message || "Failed to delete roadmap",
+        });
+        return;
       } else {
+        toast({
+          type: "success",
+          title: "Success",
+          description: "Roadmap deleted successfully",
+        });
         router.push("/");
       }
     } catch (error) {
-      console.log("Error deleting roadmap:", error);
+      const err = handleCurionaError(error);
+      toast({
+        type: "error",
+        title: "Error",
+        description:
+          err.message ||
+          "There was a problem on our end. Please try again later",
+      });
     }
   };
 

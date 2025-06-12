@@ -1,9 +1,9 @@
-import Toast, { ToastRef } from "@/components/ui/toast";
+import RotatingLoader from "@/components/loader/rotating-loader";
+import Button from "@/components/ui/button";
+import { toast } from "@/components/ui/toast-sonner";
 import { useAuth } from "@/providers/auth-provider";
 import { GetProfileOutput } from "@/types/api-profile";
-import React, { useRef, useState } from "react";
-import RotatingLoader from "../loader/rotating-loader";
-import Button from "../ui/button";
+import React, { useState } from "react";
 
 interface PersonalInformationProps {
   data: GetProfileOutput;
@@ -15,7 +15,6 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [editNameError, setEditNameError] = useState("");
 
-  const toastRef = useRef<ToastRef>(null);
   const handleEditClick = () => {
     setEditing(true);
   };
@@ -59,14 +58,14 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
     try {
       await updateProfile(newName);
       setEditing(false);
-      toastRef.current?.open({
+      toast({
         type: "success",
         title: "Success",
         description: "Your profile has been updated",
       });
     } catch (error) {
       console.error("Error updating profile:", error);
-      toastRef.current?.open({
+      toast({
         type: "error",
         title: "Error",
         description: authError || "Failed to update profile",
@@ -76,126 +75,123 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
   };
 
   return (
-    <>
-      <Toast ref={toastRef} />
-      <div className='flex flex-wrap md:flex-nowrap gap-4 md:gap-8 items-center justify-between'>
-        <img
-          src={data.avatar}
-          alt={data.name}
-          className='size-28 select-none rounded-full object-cover border-4 border-blue-500'
-        />
+    <div className='flex flex-wrap md:flex-nowrap gap-4 md:gap-8 items-center justify-between'>
+      <img
+        src={data.avatar}
+        alt={data.name}
+        className='size-28 select-none rounded-full object-cover border-4 border-blue-500'
+      />
 
-        <div className='w-full flex flex-col gap-4'>
-          <p className='text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold text-gray-800'>
-            Personal Information
-          </p>
-          <div className='flex flex-col gap-2'>
-            <div className='md:grid md:grid-cols-3 md:gap-x-12'>
-              <div className='w-full flex justify-between items-center md:block'>
-                <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
-                  <span role='img' aria-label='user' className='mr-2'>
-                    🙂
-                  </span>
-                  Full Name
-                </p>
-                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                  {editing ? (
-                    <>
-                      <input
-                        type='text'
-                        value={newName}
-                        onChange={handleNameChange}
-                        className='w-full border-b-2 border-blue-600 focus:outline-none bg-blue-50'
-                        autoFocus
-                      />
-                    </>
-                  ) : (
-                    data.name
-                  )}
-                </p>
-              </div>
-
-              <div className='w-full flex justify-between items-center md:block'>
-                <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
-                  <span role='img' aria-label='email' className='mr-2'>
-                    📬
-                  </span>
-                  Email
-                </p>
-                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                  {data.email}
-                </p>
-              </div>
-
-              <div className='w-full flex justify-between items-center md:block'>
-                <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
-                  <span role='img' aria-label='calendar' className='mr-2'>
-                    🏠
-                  </span>
-                  Joined On
-                </p>
-                <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                  {new Date(data.joined_at).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-            </div>
-            {editNameError && (
-              <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
-                {editNameError}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className='w-full md:w-fit flex gap-4'>
-          {editing ? (
-            <>
-              <Button
-                onClick={handleSaveClick}
-                disabled={editNameError !== ""}
-                className='flex md:flex-col w-full md:w-20 items-center justify-center border-2 border-green-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300'
-              >
-                {!authIsLoading && (
-                  <>
-                    <span role='img' aria-label='save'>
-                      💾
-                    </span>
-                    Save
-                  </>
-                )}
-                {authIsLoading && (
-                  <RotatingLoader className='size-6 border-[3px] border-green-500' />
-                )}
-              </Button>
-              <Button
-                onClick={handleCancelClick}
-                className='flex md:flex-col w-full md:w-20 justify-center border-2 border-red-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-red-100'
-              >
-                <span role='img' aria-label='cancel'>
-                  ❌
+      <div className='w-full flex flex-col gap-4'>
+        <p className='text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold text-gray-800'>
+          Personal Information
+        </p>
+        <div className='flex flex-col gap-2'>
+          <div className='md:grid md:grid-cols-3 md:gap-x-12'>
+            <div className='w-full flex justify-between items-center md:block'>
+              <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
+                <span role='img' aria-label='user' className='mr-2'>
+                  🙂
                 </span>
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={handleEditClick}
-              className='w-full md:w-32 py-3 border-2 border-[#E5E5E5] text-mobile-body-1-regular lg:text-body-1-regular hover:bg-gray-100'
-            >
-              <span role='img' aria-label='pencil'>
-                ✏️
-              </span>
-              Edit Profile
-            </Button>
+                Full Name
+              </p>
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                {editing ? (
+                  <>
+                    <input
+                      type='text'
+                      value={newName}
+                      onChange={handleNameChange}
+                      className='w-full border-b-2 border-blue-600 focus:outline-none bg-blue-50'
+                      autoFocus
+                    />
+                  </>
+                ) : (
+                  data.name
+                )}
+              </p>
+            </div>
+
+            <div className='w-full flex justify-between items-center md:block'>
+              <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
+                <span role='img' aria-label='email' className='mr-2'>
+                  📬
+                </span>
+                Email
+              </p>
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                {data.email}
+              </p>
+            </div>
+
+            <div className='w-full flex justify-between items-center md:block'>
+              <p className='flex text-mobile-body-1-medium lg:text-body-1-medium text-black-200 items-center mb-2'>
+                <span role='img' aria-label='calendar' className='mr-2'>
+                  🏠
+                </span>
+                Joined On
+              </p>
+              <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
+                {new Date(data.joined_at).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
+          {editNameError && (
+            <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+              {editNameError}
+            </p>
           )}
         </div>
       </div>
-    </>
+
+      {/* Buttons */}
+      <div className='w-full md:w-fit flex gap-4'>
+        {editing ? (
+          <>
+            <Button
+              onClick={handleSaveClick}
+              disabled={editNameError !== ""}
+              className='flex md:flex-col w-full md:w-20 items-center justify-center border-2 border-green-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-green-100 disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-300'
+            >
+              {!authIsLoading && (
+                <>
+                  <span role='img' aria-label='save'>
+                    💾
+                  </span>
+                  Save
+                </>
+              )}
+              {authIsLoading && (
+                <RotatingLoader className='size-6 border-[3px] border-green-500' />
+              )}
+            </Button>
+            <Button
+              onClick={handleCancelClick}
+              className='flex md:flex-col w-full md:w-20 justify-center border-2 border-red-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-red-100'
+            >
+              <span role='img' aria-label='cancel'>
+                ❌
+              </span>
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <Button
+            onClick={handleEditClick}
+            className='w-full md:w-32 py-3 border-2 border-[#E5E5E5] text-mobile-body-1-regular lg:text-body-1-regular hover:bg-gray-100'
+          >
+            <span role='img' aria-label='pencil'>
+              ✏️
+            </span>
+            Edit Profile
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };
 
