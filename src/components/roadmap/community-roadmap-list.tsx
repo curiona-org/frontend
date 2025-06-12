@@ -2,6 +2,7 @@ import { listCommunityRoadmaps } from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import { useEffect, useState, useTransition } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CommunityRoadmapListProps {
   search: string;
@@ -16,6 +17,7 @@ const CommunityRoadmap = ({
   showPagination = true,
   limit = 9,
 }: CommunityRoadmapListProps) => {
+  const isMobile = useIsMobile();
   const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -59,32 +61,61 @@ const CommunityRoadmap = ({
     }
   };
 
-  const generatePageNumbers = () => {
-    const maxVisiblePages = 3; // Jumlah maksimal halaman yang ditampilkan (tidak termasuk ellipsis)
-
-    if (totalPages <= maxVisiblePages) {
-      // Jika total halaman <= 3, tampilkan semua halaman
+  // Desktop pagination
+  const generateDesktopPageNumbers = () => {
+    if (totalPages <= 10) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     } else {
       const pages = [];
 
-      // Logika untuk menentukan halaman yang ditampilkan
+      if (currentPage <= 5) {
+        for (let i = 1; i <= 7; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 4) {
+        pages.push(1);
+        pages.push("...");
+        for (let i = totalPages - 6; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("...");
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(totalPages);
+      }
+
+      return pages;
+    }
+  };
+
+  // Mobile pagination
+  const generateMobilePageNumbers = () => {
+    const maxVisiblePages = 3;
+
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+      const pages = [];
+
       if (currentPage <= 2) {
-        // Jika halaman saat ini adalah 1 atau 2, tampilkan 1, 2, ..., totalPages
         pages.push(1, 2);
         if (totalPages > 3) {
           pages.push("...");
         }
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 1) {
-        // Jika halaman saat ini adalah totalPages atau totalPages-1, tampilkan 1, ..., totalPages-1, totalPages
         pages.push(1);
         if (totalPages > 3) {
           pages.push("...");
         }
         pages.push(totalPages - 1, totalPages);
       } else {
-        // Jika halaman saat ini di tengah, tampilkan currentPage-1, currentPage, ..., totalPages
         pages.push(currentPage - 1, currentPage);
         if (currentPage < totalPages - 1) {
           pages.push("...");
@@ -94,6 +125,12 @@ const CommunityRoadmap = ({
 
       return pages;
     }
+  };
+
+  const generatePageNumbers = () => {
+    return isMobile
+      ? generateMobilePageNumbers()
+      : generateDesktopPageNumbers();
   };
 
   const handleCustomPage = () => {
