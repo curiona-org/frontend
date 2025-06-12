@@ -146,7 +146,7 @@ export default function GenerateRoadmap() {
               rows={1}
               maxLength={150}
               placeholder="Enter a topic to generate your personalized roadmap..."
-              className={`w-full bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none resize-none ${
+              className={`w-full text-mobile-heading-4-regular lg:text-heading-4-regular bg-transparent px-5 rounded-[var(--card-content-radius)] focus:outline-none resize-none ${
                 error ? "border-red-500" : ""
               } flex items-center`}
               style={{

@@ -24,7 +24,7 @@ const SearchBar = () => {
         <h1>Explore Community</h1>
         <span className="text-blue-500 dashedBorder px-5 py-1">Roadmaps</span>
       </div>
-      <p className="font-satoshi text-heading-4-regular">
+      <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
         Find inspiration in community-made roadmaps and start your own journey.
       </p>
       <div className="flex items-center border border-gray-300 bg-white-500 rounded-lg overflow-hidden w-full h-14">
@@ -35,13 +35,13 @@ const SearchBar = () => {
           placeholder="Type a keyword to explore roadmaps..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full px-6 py-2 text-black-500 focus:outline-none"
+          className="w-full text-mobile-heading-4-regular lg:text-heading-4-regular px-6 py-2 text-black-500 focus:outline-none"
         />
 
         {/* Dropdown Filter */}
         <div className="relative">
           <select
-            className="px-4 py-2 bg-white text-black border-l border-gray-300 cursor-pointer focus:outline-none"
+            className="text-mobile-heading-4-regular lg:text-heading-4-regular px-4 py-2 bg-white text-black border-l border-gray-300 cursor-pointer focus:outline-none"
             value={orderBy}
             onChange={(e) => setOrderBy(e.target.value as "newest" | "oldest")}
           >
