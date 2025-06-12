@@ -420,54 +420,45 @@ export default function Chatbot({ slug }: { slug: string }) {
         <div ref={messagesEndRef} />
       </div>
       {/* Input box */}
-      <div className="p-3 grid grid-cols-10 items-center gap-2">
-        <textarea
-          ref={inputRef}
-          placeholder="Try asking about your roadmap..."
-          className={cn(
-            inputError && "border-red-500 focus:ring-red-400",
-            !inputError && "border-blue-500 focus:ring-blue-400",
-            "col-span-9 border-2 rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
-          )}
-          value={input}
-          onChange={handleInput}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !isBotResponding) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-          rows={1}
-          style={{ lineHeight: "1.5" }}
-        />
-        <button
-          className={cn(
-            isConnected && !isBotResponding && !inputError
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-blue-300",
-            "text-white-500 rounded p-2"
-          )}
-          onClick={handleSend}
-          aria-label="Send message"
-          disabled={!isConnected || isBotResponding || inputError}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 256 256"
+      <div className="p-3">
+        <div className="relative">
+          <textarea
+            ref={inputRef}
+            placeholder="Try asking about your roadmap..."
+            className={cn(
+              inputError && "border-red-500 focus:ring-red-400",
+              !inputError && "border-blue-500 focus:ring-blue-400",
+              "w-full border-2 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 resize-none overflow-y-auto"
+            )}
+            value={input}
+            onChange={handleInput}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isBotResponding) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            rows={1}
+            style={{ lineHeight: "1.5", transition: "height 0.2s ease" }}
+          />
+          <button
+            onClick={handleSend}
+            disabled={!isConnected || isBotResponding || inputError}
+            className={cn(
+              isConnected && !isBotResponding && !inputError
+                ? "text-white bg-blue-600 hover:bg-blue-700"
+                : "text-white bg-blue-300 cursor-not-allowed",
+              "absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded"
+            )}
+            aria-label="Send message"
           >
-            <path
-              fill="currentColor"
-              d="M225.88 30.12a13.83 13.83 0 0 0-13.7-3.58h-.11L20.14 84.77A14 14 0 0 0 18 110.85l85.56 41.64L145.12 238a13.87 13.87 0 0 0 12.61 8c.4 0 .81 0 1.21-.05a13.9 13.9 0 0 0 12.29-10.09l58.2-191.93v-.11a13.83 13.83 0 0 0-3.55-13.7m-8 10.4l-58.15 191.91v.11a2 2 0 0 1-3.76.26l-40.68-83.58l49-49a6 6 0 1 0-8.49-8.49l-49 49L23.15 100a2 2 0 0 1 .31-3.74h.11l191.91-58.18a1.94 1.94 0 0 1 1.92.52a2 2 0 0 1 .52 1.92Z"
-            />
-          </svg>
-        </button>
+            <svg /* ikon send */>{/* path */}</svg>
+          </button>
+        </div>
         <p
           className={cn(
-            inputError && "text-red-500",
-            !inputError && "text-gray-500",
-            "col-span-10 text-xs"
+            inputError ? "text-red-500" : "text-gray-500",
+            "mt-1 text-xs"
           )}
         >
           ({input.length} / 300)
