@@ -51,6 +51,42 @@ export default function Chatbot({ slug }: { slug: string }) {
   const chunkQueueRef = useRef<{ content: string; done: boolean }[]>([]);
   const processingChunkRef = useRef(false);
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustInputHeight = useCallback(() => {
+    const ta = inputRef.current;
+    if (!ta) return;
+    // Reset height agar dapat ukur scrollHeight dengan benar
+    ta.style.height = "auto";
+
+    // Baca computed style
+    const computed = window.getComputedStyle(ta);
+    const lineH = parseFloat(computed.lineHeight); // px, misal 24
+    const paddingTop = parseFloat(computed.paddingTop); // px
+    const paddingBottom = parseFloat(computed.paddingBottom); // px
+
+    // Hitung maxHeight: 2 baris konten + padding
+    const maxContentHeight = lineH * 2;
+    const maxHeight = maxContentHeight + paddingTop + paddingBottom;
+
+    // Ukur tinggi konten
+    const scrollH = ta.scrollHeight;
+
+    if (scrollH <= maxContentHeight + 1) {
+      // konten 1 atau 2 baris (termasuk toleransi 1px)
+      ta.style.height = `${scrollH}px`;
+      ta.style.overflowY = "hidden";
+    } else {
+      // konten lebih dari 2 baris
+      ta.style.height = `${maxHeight}px`;
+      ta.style.overflowY = "auto";
+    }
+  }, []);
+
+  useEffect(() => {
+    adjustInputHeight();
+  }, [input, adjustInputHeight]);
+
   // Typing speed in milliseconds (higher = slower)
   const typingDelayRef = useRef(0);
 
@@ -62,13 +98,14 @@ export default function Chatbot({ slug }: { slug: string }) {
     scrollToBottom();
   }, [messages]);
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 300) {
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    if (val.length > 300) {
       setInputError(true);
     } else {
       setInputError(false);
     }
-    setInput(e.target.value);
+    setInput(val);
   };
 
   // Process chunks from queue with delay
@@ -302,11 +339,11 @@ export default function Chatbot({ slug }: { slug: string }) {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className='fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-20 h-20 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg'
-        aria-label='Open Chat'
-        title='Open Chat'
+        className="fixed bottom-0 -right-10 lg:right-0 mr-20 mb-20 w-20 h-20 lg:w-32 lg:h-32 flex items-center justify-center cursor-pointer bg-white-500 rounded-3xl shadow-lg"
+        aria-label="Open Chat"
+        title="Open Chat"
       >
-        <span className='text-mobile-display-2 lg:text-display-2 select-none'>
+        <span className="text-mobile-display-2 lg:text-display-2 select-none">
           🤖
         </span>
         <BorderBeam duration={6} size={100} />
@@ -320,38 +357,38 @@ export default function Chatbot({ slug }: { slug: string }) {
   }
 
   return (
-    <div className='fixed bottom-0 lg:bottom-8 -right-0 lg:right-8 w-full h-[525px] md:w-[480px] lg:h-[525px] bg-white-500 border-2 border-blue-500 rounded-2xl shadow-lg flex flex-col'>
+    <div className="fixed bottom-0 lg:bottom-8 -right-0 lg:right-8 w-full h-[525px] md:w-[480px] lg:h-[525px] bg-white-500 border-2 border-blue-500 rounded-2xl shadow-lg flex flex-col">
       {/* Header */}
-      <div className='flex items-center justify-between p-3'>
-        <div className='flex items-center gap-2'>
-          <div className='text-heading-1 text-white rounded-full p-1'>🤖</div>
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center gap-2">
+          <div className="text-heading-1 text-white rounded-full p-1">🤖</div>
           <div>
-            <h4 className='text-mobile-heading-4-bold lg:text-heading-4-bold text-blue-600'>
+            <h4 className="text-mobile-heading-4-bold lg:text-heading-4-bold text-blue-600">
               Eriona
             </h4>
-            <span className='text-mobile-body-1-regular lg:text-body-1-regular text-blue-400'>
+            <span className="text-mobile-body-1-regular lg:text-body-1-regular text-blue-400">
               Your Roadmap Assistant{" "}
               {isConnected && (
-                <span className='text-green-500'>• Connected</span>
+                <span className="text-green-500">• Connected</span>
               )}
               {!isConnected && (
-                <span className='text-red-500'>• Disconnected</span>
+                <span className="text-red-500">• Disconnected</span>
               )}
             </span>
           </div>
         </div>
         <button
-          className='w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold'
+          className="w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold"
           onClick={() => setIsOpen(false)}
-          aria-label='Close Chat'
-          title='Close Chat'
+          aria-label="Close Chat"
+          title="Close Chat"
         >
           ✕
         </button>
       </div>
-      <div className='dashedLine'></div>
+      <div className="dashedLine"></div>
       {/* Chat messages */}
-      <div className='flex flex-col overflow-y-auto p-8 space-y-8 h-full'>
+      <div className="flex flex-col overflow-y-auto p-8 space-y-8 h-full">
         {messages.map((msg, idx) => (
           <Message key={idx} message={msg} avatar={session.user.avatar} />
         ))}
@@ -360,20 +397,20 @@ export default function Chatbot({ slug }: { slug: string }) {
           messages.length > 0 &&
           messages[messages.length - 1].from === "user" &&
           chunkQueueRef.current.length === 0 && (
-            <div className='flex items-end justify-start'>
-              <span className='text-heading-3 mr-2'>🤖</span>
-              <div className='p-4 rounded-md bg-white-500 shadow-md'>
-                <div className='flex space-x-1'>
+            <div className="flex items-end justify-start">
+              <span className="text-heading-3 mr-2">🤖</span>
+              <div className="p-4 rounded-md bg-white-500 shadow-md">
+                <div className="flex space-x-1">
                   <div
-                    className='w-2 h-2 bg-gray-300 rounded-full animate-bounce'
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
                     style={{ animationDelay: "0ms" }}
                   ></div>
                   <div
-                    className='w-2 h-2 bg-gray-300 rounded-full animate-bounce'
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
                     style={{ animationDelay: "300ms" }}
                   ></div>
                   <div
-                    className='w-2 h-2 bg-gray-300 rounded-full animate-bounce'
+                    className="w-2 h-2 bg-gray-300 rounded-full animate-bounce"
                     style={{ animationDelay: "600ms" }}
                   ></div>
                 </div>
@@ -383,10 +420,10 @@ export default function Chatbot({ slug }: { slug: string }) {
         <div ref={messagesEndRef} />
       </div>
       {/* Input box */}
-      <div className='p-3 grid grid-cols-10 items-center gap-2'>
-        <input
-          type='text'
-          placeholder='Try asking about your roadmap...'
+      <div className="p-3 grid grid-cols-10 items-center gap-2">
+        <textarea
+          ref={inputRef}
+          placeholder="Try asking about your roadmap..."
           className={cn(
             inputError && "border-red-500 focus:ring-red-400",
             !inputError && "border-blue-500 focus:ring-blue-400",
@@ -394,9 +431,14 @@ export default function Chatbot({ slug }: { slug: string }) {
           )}
           value={input}
           onChange={handleInput}
-          onKeyDown={(e) =>
-            e.key === "Enter" && !isBotResponding && handleSend()
-          }
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !isBotResponding) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+          rows={1}
+          style={{ lineHeight: "1.5" }}
         />
         <button
           className={cn(
@@ -406,18 +448,18 @@ export default function Chatbot({ slug }: { slug: string }) {
             "text-white-500 rounded p-2"
           )}
           onClick={handleSend}
-          aria-label='Send message'
+          aria-label="Send message"
           disabled={!isConnected || isBotResponding || inputError}
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='20'
-            height='20'
-            viewBox='0 0 256 256'
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 256 256"
           >
             <path
-              fill='currentColor'
-              d='M225.88 30.12a13.83 13.83 0 0 0-13.7-3.58h-.11L20.14 84.77A14 14 0 0 0 18 110.85l85.56 41.64L145.12 238a13.87 13.87 0 0 0 12.61 8c.4 0 .81 0 1.21-.05a13.9 13.9 0 0 0 12.29-10.09l58.2-191.93v-.11a13.83 13.83 0 0 0-3.55-13.7m-8 10.4l-58.15 191.91v.11a2 2 0 0 1-3.76.26l-40.68-83.58l49-49a6 6 0 1 0-8.49-8.49l-49 49L23.15 100a2 2 0 0 1 .31-3.74h.11l191.91-58.18a1.94 1.94 0 0 1 1.92.52a2 2 0 0 1 .52 1.92Z'
+              fill="currentColor"
+              d="M225.88 30.12a13.83 13.83 0 0 0-13.7-3.58h-.11L20.14 84.77A14 14 0 0 0 18 110.85l85.56 41.64L145.12 238a13.87 13.87 0 0 0 12.61 8c.4 0 .81 0 1.21-.05a13.9 13.9 0 0 0 12.29-10.09l58.2-191.93v-.11a13.83 13.83 0 0 0-3.55-13.7m-8 10.4l-58.15 191.91v.11a2 2 0 0 1-3.76.26l-40.68-83.58l49-49a6 6 0 1 0-8.49-8.49l-49 49L23.15 100a2 2 0 0 1 .31-3.74h.11l191.91-58.18a1.94 1.94 0 0 1 1.92.52a2 2 0 0 1 .52 1.92Z"
             />
           </svg>
         </button>
@@ -444,7 +486,7 @@ const Message = memo(
         }`}
       >
         {message.from === "bot" && (
-          <span className='text-heading-3 mr-2'>🤖</span>
+          <span className="text-heading-3 mr-2">🤖</span>
         )}
         <div
           className={`p-4 rounded-md ${
@@ -460,7 +502,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h1
-                    className='text-heading-3 font-bold text-black-500 py-2'
+                    className="text-heading-3 font-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -470,7 +512,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h2
-                    className='text-heading-3 font-bold text-black-500 py-2'
+                    className="text-heading-3 font-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -480,7 +522,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h3
-                    className='text-heading-4-bold text-black-500 py-2'
+                    className="text-heading-4-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -490,7 +532,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h4
-                    className='text-heading-4-bold text-black-500 py-2'
+                    className="text-heading-4-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -499,7 +541,7 @@ const Message = memo(
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
                 return (
-                  <p className='text-body-1-regular py-2 leading-6' {...rest} />
+                  <p className="text-body-1-regular py-2 leading-6" {...rest} />
                 );
               },
               pre: (props) => {
@@ -507,7 +549,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <pre
-                    className='bg-gray-100 p-4 rounded-md overflow-x-auto'
+                    className="bg-gray-100 p-4 rounded-md overflow-x-auto"
                     {...rest}
                   />
                 );
@@ -517,7 +559,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <code
-                    className='bg-gray-200 text-blue-500 px-1 py-0.5 rounded'
+                    className="bg-gray-200 text-blue-500 px-1 py-0.5 rounded"
                     {...rest}
                   />
                 );
@@ -525,34 +567,34 @@ const Message = memo(
               ul: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
-                return <ul className='list-disc pl-5 space-y-1' {...rest} />;
+                return <ul className="list-disc pl-5 space-y-1" {...rest} />;
               },
               ol: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
-                return <ol className='list-decimal pl-5 space-y-1' {...rest} />;
+                return <ol className="list-decimal pl-5 space-y-1" {...rest} />;
               },
               li: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
-                return <li className='text-body-1-regular' {...rest} />;
+                return <li className="text-body-1-regular" {...rest} />;
               },
               a: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
                 return (
                   <a
-                    className='text-blue-500 hover:underline'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    aria-label='Disclaimer: This is an external link generated by the bot, please verify the link before clicking.'
-                    title='Disclaimer: This is an external link generated by the bot, please verify the link before clicking.'
+                    className="text-blue-500 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Disclaimer: This is an external link generated by the bot, please verify the link before clicking."
+                    title="Disclaimer: This is an external link generated by the bot, please verify the link before clicking."
                     {...rest}
                   />
                 );
               },
-              hr: () => <hr className='my-2 border-gray-300' />,
-              br: () => <div className='my-2' />,
+              hr: () => <hr className="my-2 border-gray-300" />,
+              br: () => <div className="my-2" />,
             }}
           >
             {message.text}
@@ -570,8 +612,8 @@ const Message = memo(
         {message.from === "user" && (
           <img
             src={avatar}
-            alt='User Avatar'
-            className='w-8 h-8 rounded-full ml-2'
+            alt="User Avatar"
+            className="w-8 h-8 rounded-full ml-2"
           />
         )}
       </div>
