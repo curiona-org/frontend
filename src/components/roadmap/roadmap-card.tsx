@@ -4,6 +4,7 @@ import { RoadmapSummary } from "@/types/api-roadmap";
 import Link from "next/link";
 import { Progress } from "radix-ui";
 import { useState } from "react";
+import RotatingLoader from "../loader/rotating-loader";
 
 const roadmapService = new RoadmapService();
 
@@ -13,30 +14,6 @@ interface RoadmapCardProps {
 
 const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
   const { isLoggedIn } = useAuth();
-  const [saved, setSaved] = useState(roadmap.is_bookmarked);
-  const [loading, setLoading] = useState(false);
-
-  const toggleSave = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (loading) return;
-
-    setLoading(true);
-    try {
-      if (saved) {
-        await roadmapService.unbookmarkRoadmap(roadmap.slug);
-        setSaved(false);
-      } else {
-        await roadmapService.bookmarkRoadmap(roadmap.slug);
-        setSaved(true);
-      }
-    } catch (error) {
-      console.error("Failed to toggle bookmark:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Format skill level capitalization
   const skillLevel =
@@ -62,35 +39,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
             </h3>
           </div>
           {isLoggedIn && (
-            <div className='shrink-0'>
-              <button
-                onClick={toggleSave}
-                disabled={loading}
-                className={`${
-                  saved
-                    ? "bg-blue-500 text-white-500"
-                    : "text-gray-400 hover:text-blue-500"
-                } transition-all ease-out duration-300 rounded-lg`}
-                aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
-              >
-                <div
-                  className={`flex items-center gap-1 border ${
-                    saved
-                      ? "border-blue-500"
-                      : "border-[#E5E5E5] hover:border-blue-500"
-                  } rounded-lg p-2`}
-                >
-                  <span role='img' aria-label='folder'>
-                    🗂️
-                  </span>
-                  <span
-                    className={`${saved ? "text-white-500" : "text-black-500"}`}
-                  >
-                    {saved ? "Saved!" : "Save"}
-                  </span>
-                </div>
-              </button>
-            </div>
+            <SaveButton slug={roadmap.slug} isSaved={roadmap.is_bookmarked} />
           )}
         </div>
 
@@ -178,6 +127,70 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         )}
       </div>
     </Link>
+  );
+};
+
+const SaveButton = ({ slug, isSaved }: { slug: string; isSaved: boolean }) => {
+  const [saved, setSaved] = useState(isSaved);
+  const [loading, setLoading] = useState(false);
+
+  const toggleSave = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      if (saved) {
+        await roadmapService.unbookmarkRoadmap(slug);
+        setSaved(false);
+      } else {
+        await roadmapService.bookmarkRoadmap(slug);
+        setSaved(true);
+      }
+    } catch (error) {
+      console.error("Failed to toggle bookmark:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className='shrink-0'>
+      <button
+        onClick={toggleSave}
+        disabled={loading}
+        className={`${
+          saved
+            ? "bg-blue-500 text-white-500"
+            : "text-gray-400 hover:text-blue-500"
+        } transition-all ease-out duration-300 rounded-lg`}
+        aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
+      >
+        <div
+          className={`flex w-24 h-10 justify-center items-center gap-1 border ${
+            saved ? "border-blue-500" : "border-[#E5E5E5] hover:border-blue-500"
+          } rounded-lg p-2`}
+        >
+          {loading && (
+            <RotatingLoader className='size-4 border-[3px] border-blue-500' />
+          )}
+          {!loading && (
+            <>
+              <span role='img' aria-label='folder'>
+                🗂️
+              </span>
+              <span
+                className={`${saved ? "text-white-500" : "text-black-500"}`}
+              >
+                {saved ? "Saved!" : "Save"}
+              </span>
+            </>
+          )}
+        </div>
+      </button>
+    </div>
   );
 };
 
