@@ -1,6 +1,6 @@
 "use client";
+import { regenerateRoadmap } from "@/app/roadmap/[slug]/actions";
 import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
@@ -8,8 +8,6 @@ import { useEffect, useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
 import Button from "../ui/button";
 import { toast } from "../ui/toast-sonner";
-
-const roadmapService = new RoadmapService();
 
 interface RegenerateDialogProps {
   slug: string;
@@ -145,7 +143,7 @@ const RegenerateDialog = ({
         },
       };
 
-      const response = await roadmapService.regenerateRoadmap(slug, data);
+      const response = await regenerateRoadmap(slug, data);
       if (!response.success) {
         toast({
           type: "error",
@@ -161,7 +159,7 @@ const RegenerateDialog = ({
         description: "Your roadmap has been regenerated successfully!",
       });
       const result = response.data;
-      router.push(`/roadmap/${result.slug}`);
+      router.push(`/roadmap/${result?.slug}`);
     } catch (error) {
       const err = handleCurionaError(error);
       setReasonError(

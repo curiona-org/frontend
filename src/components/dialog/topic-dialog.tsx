@@ -1,11 +1,12 @@
 "use client";
+import {
+  getRoadmapTopicBySlug,
+  markTopicAs,
+} from "@/app/roadmap/[slug]/actions";
 import Loader from "@/components/loader/loader";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { GetTopicBySlugOutput } from "@/types/api-topic";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
-
-const roadmapService = new RoadmapService();
 
 interface TopicDialogProps {
   slug: string | null;
@@ -26,7 +27,7 @@ const TopicDialog = ({
 
   const fetchTopic = async (slug: string) => {
     setLoading(true);
-    const res = await roadmapService.getRoadmapTopicBySlug(slug);
+    const res = await getRoadmapTopicBySlug(slug);
     setData(res.data);
     setLoading(false);
   };
@@ -40,13 +41,8 @@ const TopicDialog = ({
     if (!slug || !data) return;
     setLoading(true);
     try {
-      if (data.is_finished) {
-        await roadmapService.markTopicAsIncomplete(slug);
-        updateTopicStatus(slug, false);
-      } else {
-        await roadmapService.markTopicAsFinished(slug);
-        updateTopicStatus(slug, true);
-      }
+      await markTopicAs({ slug, completed: !data.is_finished });
+      updateTopicStatus(slug, !data.is_finished);
       await fetchTopic(slug);
       // window.location.reload();
     } finally {

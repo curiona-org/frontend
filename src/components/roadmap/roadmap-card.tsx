@@ -1,12 +1,13 @@
-import { RoadmapService } from "@/lib/services/roadmap.service";
+import {
+  bookmarkRoadmap,
+  unbookmarkRoadmap,
+} from "@/app/roadmap/[slug]/actions";
 import { useAuth } from "@/providers/auth-provider";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import Link from "next/link";
 import { Progress } from "radix-ui";
 import { useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
-
-const roadmapService = new RoadmapService();
 
 interface RoadmapCardProps {
   roadmap: RoadmapSummary;
@@ -143,10 +144,10 @@ const SaveButton = ({ slug, isSaved }: { slug: string; isSaved: boolean }) => {
     setLoading(true);
     try {
       if (saved) {
-        await roadmapService.unbookmarkRoadmap(slug);
+        await unbookmarkRoadmap(slug);
         setSaved(false);
       } else {
-        await roadmapService.bookmarkRoadmap(slug);
+        await bookmarkRoadmap(slug);
         setSaved(true);
       }
     } catch (error) {

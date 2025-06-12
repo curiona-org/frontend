@@ -173,11 +173,13 @@ export class RoadmapService {
   }
 
   async unbookmarkRoadmap(slug: string) {
-    return this.instance.delete(`/roadmaps/${slug}/bookmark`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    });
+    return this.instance
+      .delete(`/roadmaps/${slug}/bookmark`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .then((res) => res?.data);
   }
 
   async rateRoadmap(slug: string, rating: number, comment: string) {

@@ -1,7 +1,7 @@
 "use client";
+import { rateRoadmap } from "@/app/roadmap/[slug]/actions";
 import Button from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { GetRoadmapOutput } from "@/types/api-roadmap";
 import { DotLottiePlayer } from "@dotlottie/react-player";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -9,8 +9,6 @@ import dayjs from "dayjs";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
-
-const roadmapService = new RoadmapService();
 
 interface FinishedDialogProps {
   open: boolean;
@@ -58,7 +56,7 @@ const FinishedDialog = ({
     }
     setLoading(true);
     try {
-      await roadmapService.rateRoadmap(slug, rating, thoughts);
+      await rateRoadmap(slug, rating, thoughts);
       onRated(rating, thoughts);
       onClose();
     } catch (err) {

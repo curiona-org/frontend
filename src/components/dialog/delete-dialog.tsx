@@ -1,15 +1,12 @@
 "use clinet";
+import { deleteRoadmapBySlug } from "@/app/roadmap/[slug]/actions";
 import RotatingLoader from "@/components/loader/rotating-loader";
 import Button from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-sonner";
 import { handleCurionaError } from "@/lib/error";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
 import { useState } from "react";
-
-const roadmapService = new RoadmapService();
-
 interface DeleteDialogProps {
   slug: string;
   open: boolean;
@@ -24,7 +21,7 @@ const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
   const handleDeleteRoadmap = async () => {
     setLoading(true);
     try {
-      const response = await roadmapService.deleteRoadmapBySlug(slug);
+      const response = await deleteRoadmapBySlug(slug);
 
       if (!response.success) {
         toast({

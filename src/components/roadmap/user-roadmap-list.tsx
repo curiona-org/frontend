@@ -1,12 +1,15 @@
 "use client";
+import {
+  listUserBookmarkedRoadmaps,
+  listUserFinishedRoadmaps,
+  listUserOnProgressRoadmaps,
+  listUserRoadmaps,
+} from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import Loader from "../loader/loader";
-
-const roadmapService = new RoadmapService();
 
 interface UserRoadmapListProps {
   filter?: "all" | "onprogress" | "saved" | "finished";
@@ -70,35 +73,37 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
           let current_page = 1;
           let items: RoadmapSummary[] = [];
           if (filter === "all") {
-            const res = await roadmapService.listUserRoadmap(currentPage);
-            total = res.data.total;
-            total_pages = res.data.total_pages;
-            current_page = res.data.current_page;
-            items = res.data.items;
+            const res = await listUserRoadmaps({ page: currentPage });
+            if (res.data) {
+              total = res.data.total;
+              total_pages = res.data.total_pages;
+              current_page = res.data.current_page;
+              items = res.data.items;
+            }
           } else if (filter === "onprogress") {
-            const res = await roadmapService.listUserOnProgressRoadmap(
-              currentPage
-            );
-            total = res.data.total;
-            total_pages = res.data.total_pages;
-            current_page = res.data.current_page;
-            items = res.data.items;
+            const res = await listUserOnProgressRoadmaps({ page: currentPage });
+            if (res.data) {
+              total = res.data.total;
+              total_pages = res.data.total_pages;
+              current_page = res.data.current_page;
+              items = res.data.items;
+            }
           } else if (filter === "saved") {
-            const res = await roadmapService.listBookmarkedRoadmaps(
-              currentPage
-            );
-            total = res.data.total;
-            total_pages = res.data.total_pages;
-            current_page = res.data.current_page;
-            items = res.data.items;
+            const res = await listUserBookmarkedRoadmaps({ page: currentPage });
+            if (res.data) {
+              total = res.data.total;
+              total_pages = res.data.total_pages;
+              current_page = res.data.current_page;
+              items = res.data.items;
+            }
           } else if (filter === "finished") {
-            const res = await roadmapService.listUserFinishedRoadmap(
-              currentPage
-            );
-            total = res.data.total;
-            total_pages = res.data.total_pages;
-            current_page = res.data.current_page;
-            items = res.data.items;
+            const res = await listUserFinishedRoadmaps({ page: currentPage });
+            if (res.data) {
+              total = res.data.total;
+              total_pages = res.data.total_pages;
+              current_page = res.data.current_page;
+              items = res.data.items;
+            }
           }
 
           const mapped = items.map((item) => ({
@@ -161,7 +166,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
             <RoadmapCard key={roadmap.id} roadmap={roadmap} />
           ))
         ) : (
-          <p className="text-center col-span-full text-gray-500">
+          <p className='text-center col-span-full text-gray-500'>
             No Data Available
           </p>
         )}
@@ -169,24 +174,24 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
       {/* Pagination Controls */}
       {showPagination && (
-        <div className="flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-mobile-body-1-regular lg:text-body-1-regular mt-6">
+        <div className='flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-mobile-body-1-regular lg:text-body-1-regular mt-6'>
           <div>
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
             results
           </div>
-          <div className="flex items-center space-x-0">
+          <div className='flex items-center space-x-0'>
             <button
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
-              className="py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50"
+              className='py-2 px-4 bg-white-500 border border-gray-300 rounded-l hover:bg-gray-100 disabled:opacity-50'
             >
               ⏪
             </button>
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+              className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50'
             >
               ◀️
             </button>
@@ -196,7 +201,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
                 <button
                   key={i}
                   onClick={handleCustomPage}
-                  className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100"
+                  className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100'
                 >
                   ...
                 </button>
@@ -218,14 +223,14 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+              className='py-2 px-4 bg-white-500 border border-gray-300 hover:bg-gray-100 disabled:opacity-50'
             >
               ▶️
             </button>
             <button
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50"
+              className='py-2 px-4 bg-white-500 border border-gray-300 rounded-r hover:bg-gray-100 disabled:opacity-50'
             >
               ⏩
             </button>

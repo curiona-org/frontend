@@ -1,4 +1,10 @@
 "use client";
+import {
+  bookmarkRoadmap,
+  getRoadmapBySlug,
+  rateRoadmap,
+  unbookmarkRoadmap,
+} from "@/app/roadmap/[slug]/actions";
 import ChatbotWidget from "@/components/chatbot/chatbot";
 import { ConfettiSideCannons } from "@/components/confetti-side-cannon";
 import DeleteDialog from "@/components/dialog/delete-dialog";
@@ -6,18 +12,18 @@ import FinishedDialog from "@/components/dialog/finished-dialog";
 import RegenerateDialog from "@/components/dialog/regenerate-dialog";
 import RoadmapChart from "@/components/roadmap/roadmap-chart";
 import Button from "@/components/ui/button";
+import { handleCurionaError } from "@/lib/error";
 import {
   getGoogleCalendarURL,
   GoogleCalendarEvent,
 } from "@/lib/google_calendar";
-import { RoadmapService } from "@/lib/services/roadmap.service";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import { GetRoadmapOutput } from "@/types/api-roadmap";
 import { Progress } from "radix-ui";
 import { useEffect, useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
-
-const roadmapService = new RoadmapService();
+import { toast } from "../ui/toast-sonner";
 
 type RoadmapDetailClientProps = {
   initialRoadmap: GetRoadmapOutput;
@@ -33,7 +39,7 @@ export default function RoadmapDetailClient({
   const [showDetails, setShowDetails] = useState(true);
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [saved, setSaved] = useState(roadmap.is_bookmarked);
-  const [loading, setLoading] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
   const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -85,7 +91,7 @@ export default function RoadmapDetailClient({
   // Fungsi untuk fetch ulang data roadmap (dipanggil setelah dialog rating ditutup)
   const fetchRoadmap = async () => {
     try {
-      const res = await roadmapService.getRoadmapBySlug(slug);
+      const res = await getRoadmapBySlug(slug);
       if (res.data) {
         setRoadmap(res.data);
         setSaved(res.data.is_bookmarked);
@@ -149,21 +155,28 @@ export default function RoadmapDetailClient({
     e.preventDefault();
     e.stopPropagation();
 
-    if (loading) return;
+    if (bookmarkLoading) return;
 
-    setLoading(true);
+    setBookmarkLoading(true);
     try {
       if (saved) {
-        await roadmapService.unbookmarkRoadmap(roadmap.slug);
+        await unbookmarkRoadmap(roadmap.slug);
         setSaved(false);
       } else {
-        await roadmapService.bookmarkRoadmap(roadmap.slug);
+        await bookmarkRoadmap(roadmap.slug);
         setSaved(true);
       }
     } catch (error) {
-      console.error("Failed to toggle bookmark:", error);
+      const err = handleCurionaError(error);
+      toast({
+        type: "error",
+        title: "Error",
+        description:
+          err.message ||
+          "There was a problem on our end. Please try again later.",
+      });
     } finally {
-      setLoading(false);
+      setBookmarkLoading(false);
     }
   };
 
@@ -292,11 +305,7 @@ export default function RoadmapDetailClient({
     setRatingLoading(true);
     try {
       // kirim rating dengan comment kosong
-      await roadmapService.rateRoadmap(
-        slug,
-        localRating,
-        roadmap.rating.comment
-      );
+      await rateRoadmap(slug, localRating, roadmap.rating.comment);
       // update state awal
       setInitialRating(localRating);
       setIsRated(true);
@@ -426,29 +435,43 @@ export default function RoadmapDetailClient({
               </a>
               <Button
                 onClick={toggleSave}
-                disabled={loading}
+                disabled={bookmarkLoading}
                 className={`${
                   saved
                     ? "bg-blue-500 text-white-500"
                     : "text-gray-400 hover:text-blue-500"
-                } transition-all ease-out duration-300 rounded-lg`}
+                } transition-all ease-out duration-300 rounded-lg w-24 h-10`}
                 aria-label={saved ? "Unsave roadmap" : "Save roadmap"}
               >
                 <div
-                  className={`text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 rounded-lg ${
+                  className={`text-mobile-heading-4-regular md:text-body-1-regular flex justify-center items-center gap-1 border-2 rounded-lg ${
                     saved
                       ? "border-blue-500"
                       : "border-[#E5E5E5] hover:border-blue-500"
                   } p-2`}
                 >
-                  <span role='img' aria-label='folder'>
-                    🗂️
-                  </span>
-                  <span
-                    className={`${saved ? "text-white-500" : "text-black-500"}`}
-                  >
-                    {saved ? "Saved!" : "Save"}
-                  </span>
+                  {bookmarkLoading && (
+                    <RotatingLoader
+                      className={cn(
+                        "size-4 border-[3px]",
+                        saved ? "border-white-500" : "border-blue-500"
+                      )}
+                    />
+                  )}
+                  {!bookmarkLoading && (
+                    <>
+                      <span role='img' aria-label='folder'>
+                        🗂️
+                      </span>
+                      <span
+                        className={`${
+                          saved ? "text-white-500" : "text-black-500"
+                        }`}
+                      >
+                        {saved ? "Saved!" : "Save"}
+                      </span>
+                    </>
+                  )}
                 </div>
               </Button>
               <Button

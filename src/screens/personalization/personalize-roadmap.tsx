@@ -1,16 +1,14 @@
 "use client";
 
+import { generateRoadmap } from "@/app/roadmap/[slug]/actions";
 import Loader from "@/components/loader/loader";
 import Button from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-sonner";
 import { handleCurionaError } from "@/lib/error";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { SkillLevel, TimeUnit } from "@/types/personalization-options";
 import { useRouter } from "next/navigation";
 import { Progress } from "radix-ui";
 import React, { useState } from "react";
-
-const roadmapService = new RoadmapService();
 
 interface PersonalizeRoadmapProps {
   topic: string;
@@ -162,7 +160,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       },
     };
     try {
-      const response = await roadmapService.generateRoadmap(payload);
+      const response = await generateRoadmap(payload);
       if (!response.success) {
         toast({
           type: "error",
@@ -176,7 +174,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
         title: "Success",
         description: "Roadmap generated successfully!",
       });
-      router.push(`/roadmap/${result.slug}`);
+      router.push(`/roadmap/${result?.slug}`);
     } catch (error) {
       const err = handleCurionaError(error);
       toast({

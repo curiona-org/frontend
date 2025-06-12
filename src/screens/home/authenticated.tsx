@@ -1,13 +1,11 @@
 "use client";
+import { listUserRoadmaps } from "@/app/roadmap/[slug]/actions";
 import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
-import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const roadmapService = new RoadmapService();
 
 export default function HomeAuthenticated() {
   const { session } = useAuth();
@@ -26,8 +24,10 @@ export default function HomeAuthenticated() {
     }
 
     const checkUserRoadmaps = async () => {
-      const roadmaps = await roadmapService.listUserRoadmap();
-      setUserHasRoadmaps(roadmaps.data.items.length > 0);
+      const roadmaps = await listUserRoadmaps({});
+      setUserHasRoadmaps(
+        roadmaps.data !== null && roadmaps.data.items.length > 0
+      );
     };
     checkUserRoadmaps();
   }, [session]);
