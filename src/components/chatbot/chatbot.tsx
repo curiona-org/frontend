@@ -429,7 +429,7 @@ export default function Chatbot({ slug }: { slug: string }) {
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-gray-400"
+              "w-full bg-transparent px-5 border-2 rounded-lg resize-none hide-scrollbar focus:outline-none focus:ring-2 focus:border-blue-500 bg-white placeholder-blue-500"
             )}
             value={input}
             onChange={handleInput}
