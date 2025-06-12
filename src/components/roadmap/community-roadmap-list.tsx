@@ -62,10 +62,39 @@ const CommunityRoadmap = ({
   };
 
   const generatePageNumbers = () => {
-    if (totalPages <= 3) {
+    const maxVisiblePages = 3; // Jumlah maksimal halaman yang ditampilkan (tidak termasuk ellipsis)
+
+    if (totalPages <= maxVisiblePages) {
+      // Jika total halaman <= 3, tampilkan semua halaman
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     } else {
-      return [1, 2, 3, "...", totalPages];
+      const pages = [];
+
+      // Logika untuk menentukan halaman yang ditampilkan
+      if (currentPage <= 2) {
+        // Jika halaman saat ini adalah 1 atau 2, tampilkan 1, 2, ..., totalPages
+        pages.push(1, 2);
+        if (totalPages > 3) {
+          pages.push("...");
+        }
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 1) {
+        // Jika halaman saat ini adalah totalPages atau totalPages-1, tampilkan 1, ..., totalPages-1, totalPages
+        pages.push(1);
+        if (totalPages > 3) {
+          pages.push("...");
+        }
+        pages.push(totalPages - 1, totalPages);
+      } else {
+        // Jika halaman saat ini di tengah, tampilkan currentPage-1, currentPage, ..., totalPages
+        pages.push(currentPage - 1, currentPage);
+        if (currentPage < totalPages - 1) {
+          pages.push("...");
+        }
+        pages.push(totalPages);
+      }
+
+      return pages;
     }
   };
 
