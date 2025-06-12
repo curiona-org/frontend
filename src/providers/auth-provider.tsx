@@ -14,7 +14,7 @@ type AuthContextType = {
   authError: string | null;
   authIsLoading: boolean;
   isLoggedIn: boolean;
-  updateProfile: (name: string) => void;
+  updateProfile: (name: string) => Promise<void>;
   signUp: (params: {
     name: string;
     email: string;
@@ -37,7 +37,7 @@ const AuthContext = createContext<AuthContextType>({
   authError: null,
   authIsLoading: true,
   isLoggedIn: false,
-  updateProfile: () => {},
+  updateProfile: async () => {},
   signUp: async () => {},
   signIn: async () => {},
   signInGoogle: async () => {},

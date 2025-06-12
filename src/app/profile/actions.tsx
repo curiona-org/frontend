@@ -11,6 +11,35 @@ import { Session } from "@/lib/session";
 import { cookies } from "next/headers";
 
 const service = new ProfileService();
+
+export async function getProfile() {
+  try {
+    const result = await service.profile();
+    if (!result.success || !result.data) {
+      return {
+        success: false,
+        message: result.message,
+        code: result.code,
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+    };
+  } catch (error) {
+    const err = handleCurionaError(error);
+    return {
+      success: false,
+      message: err.message,
+      code: err.code,
+      data: null,
+    };
+  }
+}
+
 export async function updateProfileAction(newName: string) {
   try {
     const result = await service.updateProfile(newName);

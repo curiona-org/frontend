@@ -1,35 +1,28 @@
 import { useAuth } from "@/providers/auth-provider";
+import { GetProfileOutput } from "@/types/api-profile";
 import React, { useState } from "react";
 import RotatingLoader from "../loader/rotating-loader";
 import Button from "../ui/button";
 
 interface PersonalInformationProps {
-  name: string;
-  email: string;
-  joinedAt: Date;
-  avatar: string;
-  editing: boolean;
-  newName: string;
-  setNewName: (name: string) => void;
-  onEditClick: () => void;
-  onSaveClick: () => void;
-  onCancelClick: () => void;
+  data: GetProfileOutput;
 }
 
-const PersonalInformation: React.FC<PersonalInformationProps> = ({
-  name,
-  email,
-  joinedAt,
-  avatar,
-  editing,
-  newName,
-  setNewName,
-  onEditClick,
-  onSaveClick,
-  onCancelClick,
-}) => {
-  const { authIsLoading } = useAuth();
+const PersonalInformation: React.FC<PersonalInformationProps> = ({ data }) => {
+  const { updateProfile, authIsLoading } = useAuth();
+  const [newName, setNewName] = useState<string>(data.name || "");
+  const [editing, setEditing] = useState<boolean>(false);
   const [editNameError, setEditNameError] = useState("");
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setEditing(false);
+    setNewName(data.name || "");
+    setEditNameError("");
+  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -42,7 +35,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
     setNewName(e.target.value);
   };
 
-  const handleSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSaveClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (newName.trim() === "") {
       setEditNameError("Name cannot be empty.");
@@ -56,16 +49,26 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
       setEditNameError("");
     }
 
-    onSaveClick();
+    if (!newName || newName === data.name) {
+      setEditing(false);
+      return;
+    }
+
+    try {
+      await updateProfile(newName);
+      setEditing(false);
+    } catch (error) {
+      console.error("Error updating profile", error);
+    }
     setEditNameError(""); // Clear error on save
   };
 
   return (
     <div className='flex flex-wrap md:flex-nowrap gap-4 md:gap-8 items-center justify-between'>
       <img
-        src={avatar}
-        alt={name}
-        className='w-28 h-28 rounded-full object-cover border-4 border-blue-500'
+        src={data.avatar}
+        alt={data.name}
+        className='size-28 select-none rounded-full object-cover border-4 border-blue-500'
       />
 
       <div className='w-full flex flex-col gap-4'>
@@ -93,7 +96,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                     />
                   </>
                 ) : (
-                  name
+                  data.name
                 )}
               </p>
             </div>
@@ -106,7 +109,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 Email
               </p>
               <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                {email}
+                {data.email}
               </p>
             </div>
 
@@ -118,7 +121,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 Joined On
               </p>
               <p className='text-mobile-body-1-regular lg:text-body-1-regular'>
-                {new Date(joinedAt).toLocaleDateString("en-GB", {
+                {new Date(data.joined_at).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",
@@ -156,10 +159,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               )}
             </Button>
             <Button
-              onClick={() => {
-                onCancelClick();
-                setEditNameError(""); // Clear error on cancel
-              }}
+              onClick={handleCancelClick}
               className='flex md:flex-col w-full md:w-20 justify-center border-2 border-red-500 px-4 py-2 text-mobile-body-1-regular lg:text-body-1-regular hover:bg-red-100'
             >
               <span role='img' aria-label='cancel'>
@@ -170,7 +170,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
           </>
         ) : (
           <Button
-            onClick={onEditClick}
+            onClick={handleEditClick}
             className='w-full md:w-32 py-3 border-2 border-[#E5E5E5] text-mobile-body-1-regular lg:text-body-1-regular hover:bg-gray-100'
           >
             <span role='img' aria-label='pencil'>
