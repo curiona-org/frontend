@@ -156,7 +156,7 @@ const CommunityRoadmap = ({
             {generatePageNumbers().map((page, index) => (
               <button
                 key={index}
-                className={`py-2 px-4 ${
+                className={`w-8 h-8 ${
                   page === currentPage
                     ? "bg-blue-500 text-white-500 border-none"
                     : page === "..."
