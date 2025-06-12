@@ -102,7 +102,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
 
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular">
-                <span className="hidden md:block">🏃 Learning Progress</span>
+                <span className="hidden lg:block">🏃 Learning Progress</span>
                 <span>{`${finishedTopics}/${totalTopics} Topics Completed`}</span>
               </div>
               <Progress.Root
