@@ -19,7 +19,7 @@ export async function generateRoadmap(
   data: GenerateRoadmapInput
 ): Promise<APIResponse<GenerateRoadmapOutput | null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -48,7 +48,7 @@ export async function regenerateRoadmap(
   data: RegenerateRoadmapInput
 ): Promise<APIResponse<GenerateRoadmapOutput | null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -76,7 +76,7 @@ export async function promptModeration(
   prompt: string
 ): Promise<APIResponse<RoadmapModerationOuput | null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -104,7 +104,7 @@ export async function getRoadmapBySlug(
   slug: string
 ): Promise<APIResponse<GetRoadmapOutput | null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -144,15 +144,16 @@ export async function listCommunityRoadmaps({
   orderBy = "oldest",
 }: APIFilters) {
   try {
-    const session = await getSession();
+    const { ok, session } = await getSession();
 
-    if (!session || !session.tokens?.access_token) {
-      return {
-        success: false,
-        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
-        code: CurionaErrorCodes.UNAUTHORIZED,
-        data: null,
-      };
+    if (!ok || !session) {
+      const roadmapService = new RoadmapService("");
+      return await roadmapService.listCommunityRoadmap(
+        page,
+        limit,
+        search,
+        orderBy
+      );
     }
 
     const roadmapService = new RoadmapService(session.tokens.access_token);
@@ -178,7 +179,7 @@ export async function listUserRoadmaps({
   limit = 6,
 }: Partial<APIFilters>) {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
     if (!session || !session.tokens?.access_token) {
       return {
         success: false,
@@ -205,7 +206,7 @@ export async function listUserOnProgressRoadmaps({
   limit = 6,
 }: Partial<APIFilters>) {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
     if (!session || !session.tokens?.access_token) {
       return {
         success: false,
@@ -232,7 +233,7 @@ export async function listUserFinishedRoadmaps({
   limit = 6,
 }: Partial<APIFilters>) {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
     if (!session || !session.tokens?.access_token) {
       return {
         success: false,
@@ -259,7 +260,7 @@ export async function listUserBookmarkedRoadmaps({
   limit = 6,
 }: Partial<APIFilters>) {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
     if (!session || !session.tokens?.access_token) {
       return {
         success: false,
@@ -285,7 +286,7 @@ export async function bookmarkRoadmap(
   slug: string
 ): Promise<APIResponse<null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -313,7 +314,7 @@ export async function unbookmarkRoadmap(
   slug: string
 ): Promise<APIResponse<null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -341,7 +342,7 @@ export async function deleteRoadmapBySlug(
   slug: string
 ): Promise<APIResponse<null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -373,7 +374,7 @@ export async function rateRoadmap(
   comment: string
 ): Promise<APIResponse<null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -414,7 +415,7 @@ export async function getRoadmapTopicBySlug(
   slug: string
 ): Promise<APIResponse<GetTopicBySlugOutput | null>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {
@@ -446,7 +447,7 @@ export async function markTopicAs({
   completed: boolean;
 }): Promise<APIResponse<unknown>> {
   try {
-    const session = await getSession();
+    const { session } = await getSession();
 
     if (!session || !session.tokens?.access_token) {
       return {

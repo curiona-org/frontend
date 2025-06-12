@@ -1,34 +1,21 @@
 "use server";
+import { getSession } from "@/app/actions";
 import config from "@/lib/config";
 import {
   CurionaErrorCodes,
   ERROR_MESSAGES,
   handleCurionaError,
 } from "@/lib/error";
-import { decrypt, encrypt } from "@/lib/helpers/crypto.helper";
+import { encrypt } from "@/lib/helpers/crypto.helper";
 import { ProfileService } from "@/lib/services/profile.service";
 import { Session } from "@/lib/session";
 import { cookies } from "next/headers";
 
 export async function getProfile() {
   try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get(config.SESSION_COOKIE_NAME);
+    const { ok, session } = await getSession();
 
-    if (!sessionCookie?.value) {
-      return {
-        success: false,
-        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
-        code: CurionaErrorCodes.UNAUTHORIZED,
-        data: null,
-      };
-    }
-
-    const session = await decrypt<Session>(
-      decodeURIComponent(sessionCookie.value)
-    );
-
-    if (!session) {
+    if (!ok || !session) {
       return {
         success: false,
         message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
@@ -66,28 +53,13 @@ export async function getProfile() {
 
 export async function updateProfileAction(newName: string) {
   try {
-    // update session cookie user details
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get(config.SESSION_COOKIE_NAME);
+    const { ok, session } = await getSession();
 
-    if (!sessionCookie?.value) {
+    if (!ok || !session) {
       return {
         success: false,
-        message: ERROR_MESSAGES[CurionaErrorCodes.INTERNAL_ERROR],
-        code: CurionaErrorCodes.INTERNAL_ERROR,
-        data: null,
-      };
-    }
-
-    const session = await decrypt<Session>(
-      decodeURIComponent(sessionCookie.value)
-    );
-
-    if (!session) {
-      return {
-        success: false,
-        message: ERROR_MESSAGES[CurionaErrorCodes.INTERNAL_ERROR],
-        code: CurionaErrorCodes.INTERNAL_ERROR,
+        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
+        code: CurionaErrorCodes.UNAUTHORIZED,
         data: null,
       };
     }
@@ -97,6 +69,9 @@ export async function updateProfileAction(newName: string) {
 
     session.user.name = newName;
     const payload = await encrypt<Session>(session);
+
+    // Set the updated session cookie
+    const cookieStore = await cookies();
     cookieStore.set(config.SESSION_COOKIE_NAME, encodeURIComponent(payload), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

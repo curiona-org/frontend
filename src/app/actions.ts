@@ -1,12 +1,7 @@
 "use server";
 
 import config from "@/lib/config";
-import {
-  CurionaError,
-  CurionaErrorCodes,
-  ERROR_MESSAGES,
-  handleCurionaError,
-} from "@/lib/error";
+import { handleCurionaError } from "@/lib/error";
 import { decrypt } from "@/lib/helpers/crypto.helper";
 import { Session } from "@/lib/session";
 import { cookies } from "next/headers";
@@ -17,17 +12,17 @@ export async function getSession() {
     const sessionCookie = cookieStore.get(config.SESSION_COOKIE_NAME);
 
     if (!sessionCookie?.value) {
-      throw new CurionaError(
-        CurionaErrorCodes.INTERNAL_ERROR,
-        ERROR_MESSAGES[CurionaErrorCodes.INTERNAL_ERROR]
-      );
+      return {
+        ok: false,
+        session: null,
+      };
     }
 
     const session = await decrypt<Session>(
       decodeURIComponent(sessionCookie.value)
     );
 
-    return session;
+    return { ok: true, session };
   } catch (error) {
     throw handleCurionaError(error);
   }
