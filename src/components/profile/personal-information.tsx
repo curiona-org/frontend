@@ -70,8 +70,9 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
         title: "Error",
         description: authError || "Failed to update profile",
       });
+    } finally {
+      setEditNameError(""); // Clear error on save
     }
-    setEditNameError(""); // Clear error on save
   };
 
   return (
@@ -107,7 +108,7 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
                     />
                   </>
                 ) : (
-                  data.name
+                  newName
                 )}
               </p>
             </div>

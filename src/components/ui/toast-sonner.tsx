@@ -37,7 +37,7 @@ function Toast(props: ToastProps) {
   return (
     <div
       className={cn(
-        "grid grid-cols-[auto_max-content] items-center text-white bg-white-500 border-[3px] rounded-2xl shadow-lg duration-200 hover:brightness-90 data-[swipe=cancel]:translate-x-0 data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[state=closed]:animate-hide data-[state=open]:animate-fadeIn data-[swipe=end]:animate-swipeOut data-[swipe=cancel]:transition-[transform_200ms_ease-out]",
+        "grid grid-cols-[auto_max-content] items-center text-white bg-white-500 border-[3px] rounded-2xl shadow-lg duration-200 hover:brightness-90",
         {
           "border-blue-500 bg-blue-50": type === "info",
           "border-green-500 bg-green-50": type === "success",
