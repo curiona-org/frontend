@@ -1,5 +1,6 @@
 "use client";
 import ButtonSignOut from "@/components/button-sign-out";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import Image from "next/image";
 import Link from "next/link";
@@ -263,8 +264,10 @@ const NavigationBarAuthenticated = () => {
                       </Link>
                     </DropdownMenu.Item>
 
+                    <DropdownMenu.Separator className='border border-gray-200' />
+
                     <DropdownMenu.Item className='focus:outline-none'>
-                      <div className='px-3 text-red-500 bg-red-50 w-full rounded-b-lg'>
+                      <div className='px-3 text-red-500 bg-red-50 hover:bg-red-100 w-full rounded-b-lg'>
                         <ButtonSignOut className='py-2 text-body-1-medium' />
                       </div>
                     </DropdownMenu.Item>
@@ -284,27 +287,68 @@ const NavigationBarAuthenticated = () => {
             isMobileMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
           }`}
         >
-          <div className='bg-white-500 rounded-lg border border-gray-100 overflow-hidden'>
+          <div className='bg-white-500 rounded-lg border-2 border-gray-200 overflow-hidden'>
             <div className='flex flex-col'>
-              <div className='p-4 border-b'>
-                <div className='flex items-center gap-3'>
-                  <Image
-                    src={session.user.avatar}
-                    alt='User Avatar'
-                    width={50}
-                    height={50}
-                    className='rounded-full bg-gray-300'
-                  />
-                  <div>
-                    <p className='font-semibold text-black-500'>
-                      {session.user.name}
-                    </p>
-                    <p className='text-sm text-gray-500'>
-                      {session.user.email || "User"}
-                    </p>
+              <Link href='/profile'>
+                <div
+                  className={cn(
+                    pathname === "/profile" && "bg-blue-50",
+                    "p-4 border-b"
+                  )}
+                >
+                  <div className='flex items-center gap-3'>
+                    <Image
+                      src={session.user.avatar}
+                      alt='User Avatar'
+                      width={50}
+                      height={50}
+                      className='rounded-full bg-gray-300'
+                    />
+                    <div>
+                      <p
+                        className={cn(
+                          pathname === "/profile"
+                            ? "text-blue-500"
+                            : "text-black-500",
+                          "font-semibold"
+                        )}
+                      >
+                        {session.user.name}
+                      </p>
+                      <div className='flex flex-row gap-1 items-center'>
+                        <p
+                          className={cn(
+                            pathname === "/profile"
+                              ? "text-blue-500"
+                              : "text-gray-500",
+                            "text-sm"
+                          )}
+                        >
+                          My Profile
+                        </p>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                          stroke='currentColor'
+                          stroke-width='2'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                          className={cn(
+                            pathname === "/profile"
+                              ? "stroke-blue-500"
+                              : "stroke-gray-500",
+                            "size-4"
+                          )}
+                        >
+                          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                          <path d='M9 6l6 6l-6 6' />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
               <Link
                 href='/'
                 className={`px-4 py-3 ${
@@ -325,17 +369,8 @@ const NavigationBarAuthenticated = () => {
               >
                 Community Roadmap
               </Link>
-              <Link
-                href='/profile'
-                className={`px-4 py-3 ${
-                  pathname === "/profile"
-                    ? "text-blue-500 text-body-1-bold bg-blue-50"
-                    : "text-body-1-medium"
-                }`}
-              >
-                My Profile
-              </Link>
-              <div className='text-start px-4 bg-red-50 text-red-500 text-body-1-regular'>
+              <div className='w-full border border-gray-200' />
+              <div className='text-start px-4 text-red-500 text-body-1-regular'>
                 <ButtonSignOut className='py-3 text-body-1-medium' />
               </div>
             </div>

@@ -15,11 +15,15 @@ export class ProfileService {
 
   async profile() {
     return this.instance
-      .get<GetProfileOutput>("/profile", {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
+      .get<GetProfileOutput>(
+        "/profile",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
       .then((res) => res?.data);
   }
 
