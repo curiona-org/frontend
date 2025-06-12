@@ -56,28 +56,28 @@ export default function Chatbot({ slug }: { slug: string }) {
   const adjustInputHeight = useCallback(() => {
     const ta = inputRef.current;
     if (!ta) return;
-    // Reset height agar dapat ukur scrollHeight dengan benar
+    // Reset height untuk ukur scrollHeight
     ta.style.height = "auto";
 
-    // Baca computed style
+    // Baca computed style untuk line-height dan padding horizontal
     const computed = window.getComputedStyle(ta);
-    const lineH = parseFloat(computed.lineHeight); // px, misal 24
+    const lineH = parseFloat(computed.lineHeight); // px, misal 24px
     const paddingTop = parseFloat(computed.paddingTop); // px
     const paddingBottom = parseFloat(computed.paddingBottom); // px
 
-    // Hitung maxHeight: 2 baris konten + padding
+    // Hitung tinggi maksimal konten = 2 baris
     const maxContentHeight = lineH * 2;
+    // Total tinggi maksimal textarea = 2 baris + padding-vertikal
     const maxHeight = maxContentHeight + paddingTop + paddingBottom;
-
-    // Ukur tinggi konten
+    // Tinggi konten saat ini (termasuk padding)
     const scrollH = ta.scrollHeight;
 
     if (scrollH <= maxContentHeight + 1) {
-      // konten 1 atau 2 baris (termasuk toleransi 1px)
+      // jika isi ≤2 baris, set height sesuai scrollHeight → auto-grow/shrink
       ta.style.height = `${scrollH}px`;
       ta.style.overflowY = "hidden";
     } else {
-      // konten lebih dari 2 baris
+      // isi >2 baris, batasi height ke maxHeight, tampilkan scrollbar vertikal
       ta.style.height = `${maxHeight}px`;
       ta.style.overflowY = "auto";
     }
@@ -100,12 +100,8 @@ export default function Chatbot({ slug }: { slug: string }) {
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
-    if (val.length > 300) {
-      setInputError(true);
-    } else {
-      setInputError(false);
-    }
     setInput(val);
+    setInputError(val.length > 300);
   };
 
   // Process chunks from queue with delay
@@ -421,14 +417,15 @@ export default function Chatbot({ slug }: { slug: string }) {
       </div>
       {/* Input box */}
       <div className="p-3">
+        {/* Container relatif agar tombol posisinya absolut di dalam area input */}
         <div className="relative w-full">
           <textarea
             ref={inputRef}
-            placeholder="Try asking about your roadmap..."
+            placeholder="Try ask our chatbot"
             className={cn(
               inputError && "border-red-500 focus:ring-red-400",
               !inputError && "border-blue-500 focus:ring-blue-400",
-              "w-full border-2 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 resize-none overflow-y-auto bg-white"
+              "w-full border-2 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 resize-none overflow-y-auto bg-white placeholder-gray-400"
             )}
             value={input}
             onChange={handleInput}
@@ -439,7 +436,13 @@ export default function Chatbot({ slug }: { slug: string }) {
               }
             }}
             rows={1}
-            style={{ lineHeight: "1.5", transition: "height 0.2s ease" }}
+            style={{
+              lineHeight: "1.5",
+              transition: "height 0.2s ease",
+              paddingTop: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
+              paddingBottom: input ? undefined : `calc((2.5rem - 1.5rem) / 2)`,
+              minHeight: "2.5rem",
+            }}
           />
           <button
             onClick={handleSend}
@@ -448,12 +451,20 @@ export default function Chatbot({ slug }: { slug: string }) {
               isConnected && !isBotResponding && !inputError
                 ? "text-white bg-blue-600 hover:bg-blue-700"
                 : "text-white bg-blue-300 cursor-not-allowed",
-              "absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded z-10"
+              "absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full"
             )}
             aria-label="Send message"
           >
-            <svg /* ikon send */ viewBox="0 0 256 256" width="20" height="20">
-              <path fill="currentColor" d="M225.88 30.12a13.83 13.83..." />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 256 256"
+            >
+              <path
+                fill="currentColor"
+                d="M225.88 30.12a13.83 13.83 0 0 0-13.7-3.58h-.11L20.14 84.77A14 14 0 0 0 18 110.85l85.56 41.64L145.12 238a13.87 13.87 0 0 0 12.61 8c.4 0 .81 0 1.21-.05a13.9 13.9 0 0 0 12.29-10.09l58.2-191.93v-.11a13.83 13.83 0 0 0-3.55-13.7m-8 10.4l-58.15 191.91v.11a2 2 0 0 1-3.76.26l-40.68-83.58l49-49a6 6 0 1 0-8.49-8.49l-49 49L23.15 100a2 2 0 0 1 .31-3.74h.11l191.91-58.18a1.94 1.94 0 0 1 1.92.52a2 2 0 0 1 .52 1.92Z"
+              />
             </svg>
           </button>
         </div>
