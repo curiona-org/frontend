@@ -6,7 +6,7 @@ import { ERROR_MESSAGES, handleCurionaError } from "@/lib/error";
 import { RoadmapService } from "@/lib/services/roadmap.service";
 import { useAuth } from "@/providers/auth-provider";
 import { redirect, useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import RotatingLoader from "../loader/rotating-loader";
 import { ShineBorder } from "../magicui/shine-border";
 
