@@ -34,6 +34,7 @@ export class RoadmapService {
   async getRoadmapBySlug(slug: string) {
     const response = await this.instance.get<GetRoadmapOutput>(
       `/roadmaps/${slug}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${this.token}`,
@@ -66,6 +67,7 @@ export class RoadmapService {
   async getRoadmapTopicBySlug(slug: string) {
     const response = await this.instance.get<GetTopicBySlugOutput>(
       `/roadmaps/topic/${slug}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${this.token}`,
@@ -77,21 +79,29 @@ export class RoadmapService {
 
   async markTopicAsFinished(slug: string) {
     return this.instance
-      .patch(`/roadmaps/topic/${slug}/finish`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
+      .patch(
+        `/roadmaps/topic/${slug}/finish`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
       .then((res) => res?.data);
   }
 
   async markTopicAsIncomplete(slug: string) {
     return this.instance
-      .patch(`/roadmaps/topic/${slug}/incomplete`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
+      .patch(
+        `/roadmaps/topic/${slug}/incomplete`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
       .then((res) => res?.data);
   }
 
@@ -99,6 +109,7 @@ export class RoadmapService {
     return this.instance
       .get<ListRoadmapsOutput>(
         `/profile/roadmaps?page=${page}&limit=${limit}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -112,6 +123,7 @@ export class RoadmapService {
     return this.instance
       .get<ListRoadmapsOutput>(
         `/profile/roadmaps/finished?page=${page}&limit=${limit}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -125,6 +137,7 @@ export class RoadmapService {
     return this.instance
       .get<ListRoadmapsOutput>(
         `/profile/roadmaps/on-progress?page=${page}&limit=${limit}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -143,6 +156,7 @@ export class RoadmapService {
     return this.instance
       .get<ListRoadmapsOutput>(
         `/roadmaps?page=${page}&limit=${limit}&search=${search}&order_by=${orderBy}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -154,21 +168,29 @@ export class RoadmapService {
 
   async listBookmarkedRoadmaps(page = 1, limit = 6) {
     return this.instance
-      .get<ListRoadmapsOutput>(`/bookmarks?page=${page}&limit=${limit}`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
+      .get<ListRoadmapsOutput>(
+        `/bookmarks?page=${page}&limit=${limit}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
       .then((res) => res?.data);
   }
 
   async bookmarkRoadmap(slug: string) {
     return this.instance
-      .post(`/roadmaps/${slug}/bookmark`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
+      .post(
+        `/roadmaps/${slug}/bookmark`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      )
       .then((res) => res?.data);
   }
 

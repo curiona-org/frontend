@@ -2,6 +2,7 @@ import {
   bookmarkRoadmap,
   unbookmarkRoadmap,
 } from "@/app/roadmap/[slug]/actions";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import Link from "next/link";
@@ -175,7 +176,12 @@ const SaveButton = ({ slug, isSaved }: { slug: string; isSaved: boolean }) => {
           } rounded-lg p-2`}
         >
           {loading && (
-            <RotatingLoader className='size-4 border-[3px] border-blue-500' />
+            <RotatingLoader
+              className={cn(
+                "size-4 border-[3px]",
+                saved ? "border-white-500" : "border-blue-500"
+              )}
+            />
           )}
           {!loading && (
             <>
