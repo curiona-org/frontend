@@ -111,7 +111,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
                 max={totalTopics}
               >
                 <Progress.Indicator
-                  className="bg-blue-600 h-2 rounded-full"
+                  className="bg-blue-600 h-3 rounded-full"
                   style={{ width: `${completionPercent}%` }}
                 />
               </Progress.Root>
