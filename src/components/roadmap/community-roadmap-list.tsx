@@ -23,7 +23,7 @@ const CommunityRoadmap = ({
   const [totalPages, setTotalPages] = useState(1);
   const [totalData, setTotalData] = useState(0);
   const [isPending, startTransition] = useTransition();
-  const roadmapGridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const pageSize = 9;
 
   useEffect(() => {
@@ -53,30 +53,25 @@ const CommunityRoadmap = ({
     startTransition(() => fetchRoadmaps());
   }, [currentPage, search, orderBy, limit]);
 
-  // Pagination logic with scroll functionality
-  const handlePageChange = (pageNumber: number) => {
-    if (
-      pageNumber >= 1 &&
-      pageNumber <= totalPages &&
-      pageNumber !== currentPage
-    ) {
-      setCurrentPage(pageNumber);
-
-      // Scroll to roadmap grid with a small delay to ensure state updates
+  // Fungsi untuk scroll ke elemen grid
+  const scrollToGrid = () => {
+    if (gridRef.current) {
+      // Menambahkan sedikit delay untuk memastikan DOM telah diperbarui
       setTimeout(() => {
-        if (roadmapGridRef.current) {
-          const yOffset = -20; // Small offset above the grid for better visual
-          const y =
-            roadmapGridRef.current.getBoundingClientRect().top +
-            window.pageYOffset +
-            yOffset;
-
-          window.scrollTo({
-            top: y,
-            behavior: "smooth",
-          });
-        }
+        gridRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 100);
+    }
+  };
+
+  // Pagination logic: slice the roadmaps array based on the current page
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      // Scroll ke grid setelah perubahan halaman
+      scrollToGrid();
     }
   };
 
@@ -147,10 +142,22 @@ const CommunityRoadmap = ({
       : generateDesktopPageNumbers();
   };
 
+  const handleCustomPage = () => {
+    const customPage = prompt(`Enter a page number (1 to ${totalPages}):`);
+    const pageNumber = parseInt(customPage || "", 10);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      // Scroll ke grid setelah perubahan halaman kustom
+      scrollToGrid();
+    } else {
+      alert("Invalid page number.");
+    }
+  };
+
   return (
     <>
       <div
-        ref={roadmapGridRef}
+        ref={gridRef}
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
       >
         {isPending ? (
@@ -179,6 +186,7 @@ const CommunityRoadmap = ({
               results
             </span>
           </div>
+
           <div className="flex justify-center items-center mt-6 space-x-0">
             <button
               className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
@@ -207,7 +215,9 @@ const CommunityRoadmap = ({
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
                 }`}
                 onClick={() =>
-                  page !== "..." && handlePageChange(page as number)
+                  page === "..."
+                    ? handleCustomPage()
+                    : handlePageChange(page as number)
                 }
                 disabled={page === "..."}
               >
