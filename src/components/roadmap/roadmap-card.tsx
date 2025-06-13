@@ -31,13 +31,11 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
 
   return (
     <Link href={`/roadmap/${roadmap.slug}`}>
-      <div className="flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300">
+      <div className="flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300 h-full">
         <div className="flex justify-between items-center">
           <div className="flex-grow">
-            <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold truncate text-wrap">
-              {roadmap.title.length > 50
-                ? roadmap.title.slice(0, 50) + "..."
-                : roadmap.title}
+            <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold line-clamp-2 min-h-[2.5rem] lg:min-h-[3rem]">
+              {roadmap.title}
             </h3>
           </div>
           {isLoggedIn && (
@@ -52,10 +50,8 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Description */}
-        <p className="text-mobile-body-1-regular lg:text-body-1-regular">
-          {roadmap.description.length > 80
-            ? roadmap.description.slice(0, 80) + "..."
-            : roadmap.description}
+        <p className="text-mobile-body-1-regular lg:text-body-1-regular line-clamp-2 min-h-[2.5rem] lg:min-h-[3rem]">
+          {roadmap.description}
         </p>
 
         {/* Divider */}
@@ -99,7 +95,6 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
               <div className="dashedLine absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"></div>
               <div className="solidLine absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap justify-between text-mobile-body-1-regular lg:text-body-1-regular">
                 <span>🏃 Learning Progress</span>
@@ -130,9 +125,7 @@ const SaveButton = ({ slug, isSaved }: { slug: string; isSaved: boolean }) => {
   const toggleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (loading) return;
-
     setLoading(true);
     try {
       if (saved) {
