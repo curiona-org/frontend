@@ -23,7 +23,7 @@ const YourRoadmap = () => {
           className="w-full p-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option value="all">🗺️ All Roadmaps</option>
-          <option value="onprogress">🏃 On Progress Roadmaps</option>
+          <option value="onprogress">🏃 In Progress Roadmaps</option>
           <option value="finished">🏁 Finished Roadmaps</option>
           <option value="saved">📌 Saved Roadmaps</option>
         </select>
