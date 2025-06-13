@@ -34,7 +34,7 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
       <div className="flex flex-col gap-2 group relative bg-white-500 border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-transparent hover:ring hover:ring-blue-500 hover:cursor-pointer transition-all ease-out duration-300 h-full">
         <div className="flex justify-between items-center">
           <div className="flex-grow">
-            <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold line-clamp-2 min-h-[2.5rem] lg:min-h-[3rem]">
+            <h3 className="flex items-center text-mobile-heading-4-bold lg:text-heading-4-bold font-semibold line-clamp-2 min-h-[2.5rem] lg:min-h-[3rem]">
               {roadmap.title}
             </h3>
           </div>
@@ -50,9 +50,11 @@ const RoadmapCard: React.FC<RoadmapCardProps> = ({ roadmap }) => {
         </div>
 
         {/* Description */}
-        <p className="text-mobile-body-1-regular lg:text-body-1-regular line-clamp-2 min-h-[2.5rem] lg:min-h-[3rem]">
-          {roadmap.description}
-        </p>
+        <div className="flex-grow">
+          <p className="text-mobile-body-1-regular lg:text-body-1-regular line-clamp-2">
+            {roadmap.description}
+          </p>
+        </div>
 
         {/* Divider */}
         <div className="relative my-4 h-[1px]">
