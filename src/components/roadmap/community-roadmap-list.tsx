@@ -53,29 +53,32 @@ const CommunityRoadmap = ({
     startTransition(() => fetchRoadmaps());
   }, [currentPage, search, orderBy, limit]);
 
-  // Fungsi untuk scroll ke elemen grid
   const scrollToGrid = () => {
     if (gridRef.current) {
-      // Menambahkan sedikit delay untuk memastikan DOM telah diperbarui
       setTimeout(() => {
-        gridRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        const yOffset = -50;
+        const element = gridRef.current;
+
+        if (element) {
+          const y =
+            element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+          window.scrollTo({
+            top: y,
+            behavior: "smooth",
+          });
+        }
       }, 100);
     }
   };
 
-  // Pagination logic: slice the roadmaps array based on the current page
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
-      // Scroll ke grid setelah perubahan halaman
       scrollToGrid();
     }
   };
 
-  // Desktop pagination
   const generateDesktopPageNumbers = () => {
     if (totalPages <= 10) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -106,7 +109,6 @@ const CommunityRoadmap = ({
     }
   };
 
-  // Mobile pagination
   const generateMobilePageNumbers = () => {
     const maxVisiblePages = 3;
     if (totalPages <= maxVisiblePages) {
@@ -140,18 +142,6 @@ const CommunityRoadmap = ({
     return isMobile
       ? generateMobilePageNumbers()
       : generateDesktopPageNumbers();
-  };
-
-  const handleCustomPage = () => {
-    const customPage = prompt(`Enter a page number (1 to ${totalPages}):`);
-    const pageNumber = parseInt(customPage || "", 10);
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-      // Scroll ke grid setelah perubahan halaman kustom
-      scrollToGrid();
-    } else {
-      alert("Invalid page number.");
-    }
   };
 
   return (
@@ -214,11 +204,7 @@ const CommunityRoadmap = ({
                     ? "bg-white-500 border border-black-100"
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
                 }`}
-                onClick={() =>
-                  page === "..."
-                    ? handleCustomPage()
-                    : handlePageChange(page as number)
-                }
+                onClick={() => handlePageChange(page as number)}
                 disabled={page === "..."}
               >
                 {page}
