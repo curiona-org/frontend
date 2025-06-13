@@ -1,7 +1,7 @@
 import { listCommunityRoadmaps } from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapSummary } from "@/types/api-roadmap";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CommunityRoadmapListProps {
@@ -23,6 +23,7 @@ const CommunityRoadmap = ({
   const [totalPages, setTotalPages] = useState(1);
   const [totalData, setTotalData] = useState(0);
   const [isPending, startTransition] = useTransition();
+  const roadmapGridRef = useRef<HTMLDivElement>(null);
   const pageSize = 9;
 
   useEffect(() => {
@@ -49,15 +50,33 @@ const CommunityRoadmap = ({
         console.error("Error fetching data", error);
       }
     };
-
     startTransition(() => fetchRoadmaps());
   }, [currentPage, search, orderBy, limit]);
 
-  // Pagination logic: slice the roadmaps array based on the current page
-
+  // Pagination logic with scroll functionality
   const handlePageChange = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
+    if (
+      pageNumber >= 1 &&
+      pageNumber <= totalPages &&
+      pageNumber !== currentPage
+    ) {
       setCurrentPage(pageNumber);
+
+      // Scroll to roadmap grid with a small delay to ensure state updates
+      setTimeout(() => {
+        if (roadmapGridRef.current) {
+          const yOffset = -20; // Small offset above the grid for better visual
+          const y =
+            roadmapGridRef.current.getBoundingClientRect().top +
+            window.pageYOffset +
+            yOffset;
+
+          window.scrollTo({
+            top: y,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
     }
   };
 
@@ -67,7 +86,6 @@ const CommunityRoadmap = ({
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     } else {
       const pages = [];
-
       if (currentPage <= 5) {
         for (let i = 1; i <= 7; i++) {
           pages.push(i);
@@ -89,7 +107,6 @@ const CommunityRoadmap = ({
         pages.push("...");
         pages.push(totalPages);
       }
-
       return pages;
     }
   };
@@ -97,12 +114,10 @@ const CommunityRoadmap = ({
   // Mobile pagination
   const generateMobilePageNumbers = () => {
     const maxVisiblePages = 3;
-
     if (totalPages <= maxVisiblePages) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     } else {
       const pages = [];
-
       if (currentPage <= 2) {
         pages.push(1, 2);
         if (totalPages > 3) {
@@ -122,7 +137,6 @@ const CommunityRoadmap = ({
         }
         pages.push(totalPages);
       }
-
       return pages;
     }
   };
@@ -135,7 +149,10 @@ const CommunityRoadmap = ({
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <div
+        ref={roadmapGridRef}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+      >
         {isPending ? (
           <div className="col-span-full flex justify-center">
             <span className="loader"></span>
@@ -162,7 +179,6 @@ const CommunityRoadmap = ({
               results
             </span>
           </div>
-
           <div className="flex justify-center items-center mt-6 space-x-0">
             <button
               className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
