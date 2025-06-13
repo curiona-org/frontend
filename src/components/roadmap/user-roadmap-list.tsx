@@ -8,7 +8,7 @@ import {
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapSummary } from "@/types/api-roadmap";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import Loader from "../loader/loader";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -27,22 +27,31 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const gridRef = useRef<HTMLDivElement>(null);
   const pageSize = 6;
   const pathname = usePathname();
+
+  const scrollToGrid = () => {
+    if (gridRef.current) {
+      setTimeout(() => {
+        const yOffset = -100;
+        const element = gridRef.current;
+        if (element) {
+          const y =
+            element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({
+            top: y,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    }
+  };
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-  };
-
-  const handleCustomPage = () => {
-    const input = prompt(`Enter a page number (1 to ${totalPages}):`);
-    const num = parseInt(input || "", 10);
-    if (num >= 1 && num <= totalPages) {
-      setCurrentPage(num);
-    } else {
-      alert("Invalid page number.");
-    }
+    scrollToGrid();
   };
 
   // Desktop pagination
@@ -200,6 +209,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
   return (
     <>
       <div
+        ref={gridRef}
         className={`grid gap-4  ${
           pathname === "/profile" ? "lg:grid-cols-2" : "lg:grid-cols-3"
         } gap-6 mt-4`}
@@ -248,12 +258,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
                     ? "bg-white-500 border border-black-100"
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
                 }`}
-                onClick={() =>
-                  page === "..."
-                    ? handleCustomPage()
-                    : handlePageChange(page as number)
-                }
-                disabled={page === "..."}
+                onClick={() => handlePageChange(page as number)}
               >
                 {page}
               </button>

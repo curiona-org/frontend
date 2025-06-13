@@ -205,7 +205,6 @@ const CommunityRoadmap = ({
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
                 }`}
                 onClick={() => handlePageChange(page as number)}
-                disabled={page === "..."}
               >
                 {page}
               </button>
