@@ -1,7 +1,7 @@
 import { listCommunityRoadmaps } from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { RoadmapSummary } from "@/types/api-roadmap";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface CommunityRoadmapListProps {
@@ -23,6 +23,7 @@ const CommunityRoadmap = ({
   const [totalPages, setTotalPages] = useState(1);
   const [totalData, setTotalData] = useState(0);
   const [isPending, startTransition] = useTransition();
+  const roadmapGridRef = useRef<HTMLDivElement>(null);
   const pageSize = 9;
 
   useEffect(() => {
@@ -56,8 +57,28 @@ const CommunityRoadmap = ({
   // Pagination logic: slice the roadmaps array based on the current page
 
   const handlePageChange = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
+    if (
+      pageNumber >= 1 &&
+      pageNumber <= totalPages &&
+      pageNumber !== currentPage
+    ) {
       setCurrentPage(pageNumber);
+
+      // Scroll ke roadmap grid dengan delay kecil
+      setTimeout(() => {
+        if (roadmapGridRef.current) {
+          const yOffset = -20; // Offset kecil di atas grid
+          const y =
+            roadmapGridRef.current.getBoundingClientRect().top +
+            window.pageYOffset +
+            yOffset;
+
+          window.scrollTo({
+            top: y,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
     }
   };
 
@@ -133,19 +154,12 @@ const CommunityRoadmap = ({
       : generateDesktopPageNumbers();
   };
 
-  const handleCustomPage = () => {
-    const customPage = prompt(`Enter a page number (1 to ${totalPages}):`);
-    const pageNumber = parseInt(customPage || "", 10);
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    } else {
-      alert("Invalid page number.");
-    }
-  };
-
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <div
+        ref={roadmapGridRef}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+      >
         {isPending ? (
           <div className="col-span-full flex justify-center">
             <span className="loader"></span>
@@ -201,9 +215,7 @@ const CommunityRoadmap = ({
                     : "bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0"
                 }`}
                 onClick={() =>
-                  page === "..."
-                    ? handleCustomPage()
-                    : handlePageChange(page as number)
+                  page !== "..." && handlePageChange(page as number)
                 }
                 disabled={page === "..."}
               >
