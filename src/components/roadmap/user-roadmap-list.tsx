@@ -32,20 +32,25 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
   const pathname = usePathname();
 
   const scrollToGrid = () => {
-    if (gridRef.current) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (gridRef.current) {
         const yOffset = -100;
-        const element = gridRef.current;
-        if (element) {
-          const y =
-            element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({
-            top: y,
+
+        const scrollOptions = {
+          behavior: "smooth" as ScrollBehavior,
+          block: "start" as ScrollLogicalPosition,
+        };
+
+        gridRef.current.scrollIntoView(scrollOptions);
+
+        setTimeout(() => {
+          window.scrollBy({
+            top: yOffset,
             behavior: "smooth",
           });
-        }
-      }, 100);
-    }
+        }, 100);
+      }
+    }, 200);
   };
 
   const handlePageChange = (page: number) => {

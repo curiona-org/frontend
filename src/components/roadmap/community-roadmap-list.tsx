@@ -54,22 +54,25 @@ const CommunityRoadmap = ({
   }, [currentPage, search, orderBy, limit]);
 
   const scrollToGrid = () => {
-    if (gridRef.current) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (gridRef.current) {
         const yOffset = -100;
-        const element = gridRef.current;
 
-        if (element) {
-          const y =
-            element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        const scrollOptions = {
+          behavior: "smooth" as ScrollBehavior,
+          block: "start" as ScrollLogicalPosition,
+        };
 
-          window.scrollTo({
-            top: y,
+        gridRef.current.scrollIntoView(scrollOptions);
+
+        setTimeout(() => {
+          window.scrollBy({
+            top: yOffset,
             behavior: "smooth",
           });
-        }
-      }, 100);
-    }
+        }, 100);
+      }
+    }, 200);
   };
 
   const handlePageChange = (pageNumber: number) => {
