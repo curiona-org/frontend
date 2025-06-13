@@ -56,7 +56,7 @@ const CommunityRoadmap = ({
   const scrollToGrid = () => {
     if (gridRef.current) {
       setTimeout(() => {
-        const yOffset = -50;
+        const yOffset = -100;
         const element = gridRef.current;
 
         if (element) {
