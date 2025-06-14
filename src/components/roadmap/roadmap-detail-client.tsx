@@ -333,6 +333,11 @@ export default function RoadmapDetailClient({
       );
       // refresh data dari server agar semua field terbaru (termasuk created_at rating sebenarnya) ter-sync
       await fetchRoadmap();
+      toast({
+        type: "success",
+        title: "Rating saved!",
+        description: "Your rating has been successfully saved.",
+      });
     } catch (err) {
       console.error("Failed to save rating", err);
       // bisa tampilkan toast atau pesan error kecil
@@ -424,7 +429,7 @@ export default function RoadmapDetailClient({
                   aria-label="Import to Calendar"
                 >
                   <div
-                    className={`text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 rounded-lg border-white-600 hover:border-blue-500 p-2`}
+                    className={`text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 rounded-lg border-white-600 hover:bg-gray-100 hover:border-blue-500 p-2`}
                   >
                     <span role="img" aria-label="folder">
                       🗓️
@@ -447,7 +452,7 @@ export default function RoadmapDetailClient({
                   className={`text-mobile-heading-4-regular md:text-body-1-regular flex justify-center items-center gap-1 border-2 rounded-lg ${
                     saved
                       ? "border-blue-500"
-                      : "border-white-600 hover:border-blue-500"
+                      : "border-white-600 hover:bg-gray-100 hover:border-blue-500"
                   } p-2`}
                 >
                   {bookmarkLoading && (
@@ -478,7 +483,7 @@ export default function RoadmapDetailClient({
                 onClick={() => setRegenerateDialogOpen(true)}
                 aria-label="Regenerate roadmap"
               >
-                <div className="text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 border-white-600 hover:border-blue-500 rounded-lg p-2">
+                <div className="text-mobile-heading-4-regular md:text-body-1-regular flex items-center gap-1 border-2 border-white-600 hover:bg-gray-100 hover:border-blue-500 rounded-lg p-2">
                   <span role="img" aria-label="refresh">
                     🔄
                   </span>
@@ -616,6 +621,13 @@ export default function RoadmapDetailClient({
           setIsRated(true);
           // Callback dari dialog, kita fetch ulang supaya data konsisten
           fetchRoadmap();
+
+          toast({
+            type: "success",
+            title: "Thank you for your rating!",
+            description:
+              "Your feedback helps us improve the roadmap experience.",
+          });
         }}
       />
 

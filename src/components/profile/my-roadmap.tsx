@@ -35,7 +35,7 @@ const YourRoadmap = () => {
           className={`py-4 px-2 rounded-lg text-mobile-body-1-medium lg:text-body-1-medium ${
             filter === "all"
               ? "bg-blue-500 text-white-500 border-blue-500"
-              : "bg-white text-gray-700 dashedBorder hover:bg-gray-100"
+              : "bg-white text-gray-700 dashedBorder hover:bg-none hover:outline hover:outline-blue-500 hover:bg-gray-100"
           }`}
         >
           🗺️ All Roadmaps
@@ -45,7 +45,7 @@ const YourRoadmap = () => {
           className={`py-4 px-2 rounded-lg text-mobile-body-1-medium lg:text-body-1-medium ${
             filter === "onprogress"
               ? "bg-blue-500 text-white-500 border-blue-500"
-              : "bg-white text-gray-700 dashedBorder hover:bg-gray-100"
+              : "bg-white text-gray-700 dashedBorder hover:bg-none hover:outline hover:outline-blue-500 hover:bg-gray-100"
           }`}
         >
           🏃 In Progress Roadmaps
@@ -55,7 +55,7 @@ const YourRoadmap = () => {
           className={`py-4 px-2 rounded-lg text-mobile-body-1-medium lg:text-body-1-medium ${
             filter === "finished"
               ? "bg-blue-500 text-white-500 border-blue-500"
-              : "bg-white text-gray-700 dashedBorder hover:bg-gray-100"
+              : "bg-white text-gray-700 dashedBorder hover:bg-none hover:outline hover:outline-blue-500 hover:bg-gray-100"
           }`}
         >
           🏁 Finished Roadmaps
@@ -65,7 +65,7 @@ const YourRoadmap = () => {
           className={`py-4 px-2 rounded-lg text-mobile-body-1-medium lg:text-body-1-medium ${
             filter === "saved"
               ? "bg-blue-500 text-white-500 border-blue-500"
-              : "bg-white text-gray-700 dashedBorder hover:bg-gray-100"
+              : "bg-white text-gray-700 dashedBorder hover:bg-none hover:outline hover:outline-blue-500 hover:bg-gray-100"
           }`}
         >
           📌 Saved Roadmaps
