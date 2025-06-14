@@ -384,12 +384,25 @@ export default function Chatbot({ slug }: { slug: string }) {
           </div>
         </div>
         <button
-          className="w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold"
+          className="flex justify-center items-center w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 hover:bg-blue-100"
           onClick={() => setIsOpen(false)}
           aria-label="Close Chat"
           title="Close Chat"
         >
-          ✕
+          <svg
+            className="w-3"
+            viewBox="0 0 12 13"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.906738 1.51465L11.0919 11.6998M0.906738 11.6998L11.0919 1.51465"
+              stroke="#4B7CE8"
+              stroke-width="1.83333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
       <div className="dashedLine"></div>
