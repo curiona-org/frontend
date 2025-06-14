@@ -100,7 +100,7 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
                 Full Name
               </p>
               <p
-                className="text-mobile-body-1-regular lg:text-body-1-regular truncate"
+                className="text-mobile-body-1-regular lg:text-body-1-regular break-words"
                 title={editing ? undefined : newName}
               >
                 {editing ? (
@@ -130,7 +130,7 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
                 Email
               </p>
               <p
-                className="text-mobile-body-1-regular lg:text-body-1-regular truncate"
+                className="text-mobile-body-1-regular lg:text-body-1-regular break-words"
                 title={data.email}
               >
                 {data.email}
@@ -148,7 +148,7 @@ const PersonalInformation = ({ data }: PersonalInformationProps) => {
                 Joined On
               </p>
               <p
-                className="text-mobile-body-1-regular lg:text-body-1-regular truncate"
+                className="text-mobile-body-1-regular lg:text-body-1-regular break-words"
                 title={new Date(data.joined_at).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "long",
