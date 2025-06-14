@@ -351,8 +351,8 @@ export default function RoadmapDetailClient({
 
   const StarIcon = ({ filled }: { filled: boolean }) => (
     <svg
-      className="w-6 h-6"
-      viewBox="0 0 48 49"
+      className="w-[21px]"
+      viewBox="0 0 49 49"
       fill={filled ? "var(--yellow-500)" : "var(--black-100)"}
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -526,7 +526,7 @@ export default function RoadmapDetailClient({
                       year: "numeric",
                     })}
                   </span>
-                  <span className="flex flex-col items-end md:flex md:flex-row">
+                  <span className="flex flex-col md:flex md:flex-row">
                     <span>⌛ Time Available : </span>
                     {
                       roadmap.personalization_options.daily_time_availability
@@ -542,7 +542,7 @@ export default function RoadmapDetailClient({
                     <span>🤯 Skill Level : </span>
                     {roadmap.personalization_options.skill_level}
                   </span>
-                  <span className="flex flex-col items-end md:flex md:flex-row">
+                  <span className="flex flex-col md:flex md:flex-row">
                     <span>📆 Duration : </span>
                     {roadmap.personalization_options.total_duration.value}{" "}
                     {roadmap.personalization_options.total_duration.unit}
