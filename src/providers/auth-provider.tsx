@@ -19,8 +19,8 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
-  }) => Promise<void>;
-  signIn: (params: { email: string; password: string }) => Promise<void>;
+  }) => Promise<boolean>;
+  signIn: (params: { email: string; password: string }) => Promise<boolean>;
   signInGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
@@ -38,8 +38,8 @@ const AuthContext = createContext<AuthContextType>({
   authIsLoading: true,
   isLoggedIn: false,
   updateProfile: async () => {},
-  signUp: async () => {},
-  signIn: async () => {},
+  signUp: async () => false,
+  signIn: async () => false,
   signInGoogle: async () => {},
   signOut: async () => {},
   refreshSession: async () => {},
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
-        return;
+        return false;
       }
 
       setSession({
@@ -128,12 +128,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoading(false);
       setIsLoggedIn(true);
+      return true;
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign up");
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
@@ -147,7 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
-        return;
+        return false;
       }
 
       setSession({
@@ -161,12 +163,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoading(false);
       setIsLoggedIn(true);
+      return true;
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign in");
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
