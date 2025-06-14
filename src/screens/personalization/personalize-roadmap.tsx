@@ -168,7 +168,20 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           description: response.message || "Failed to generate roadmap.",
         });
       }
+
       const result = response.data;
+
+      if (result && result.flagged) {
+        toast({
+          type: "error",
+          title: "Error",
+          description: result.reason,
+        });
+        // go back to home if flagged
+        router.push("/");
+        return;
+      }
+
       toast({
         type: "success",
         title: "Success",

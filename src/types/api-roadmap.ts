@@ -79,7 +79,7 @@ export type RegenerateRoadmapInput = {
   };
 };
 
-export type GenerateRoadmapOutput = { slug: string };
+export type GenerateRoadmapOutput = { slug: string } & RoadmapModerationOuput;
 
 export type RoadmapModerationOuput = {
   flagged: boolean;
