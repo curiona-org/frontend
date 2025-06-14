@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
+import React, { useState } from "react";
 
 type FilterType = "all" | "onprogress" | "saved" | "finished";
 
@@ -11,25 +11,25 @@ const YourRoadmap = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-mobile-heading-4-bold lg:text-heading-4-bold">
+    <div className='flex flex-col gap-4'>
+      <h3 className='text-mobile-heading-4-bold lg:text-heading-4-bold'>
         My Roadmaps
       </h3>
 
-      <div className="md:hidden">
+      <div className='md:hidden'>
         <select
           value={filter}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className='w-full p-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400'
         >
-          <option value="all">🗺️ All Roadmaps</option>
-          <option value="onprogress">🏃 In Progress Roadmaps</option>
-          <option value="finished">🏁 Finished Roadmaps</option>
-          <option value="saved">📌 Saved Roadmaps</option>
+          <option value='all'>🗺️ All Roadmaps</option>
+          <option value='onprogress'>🏃 In Progress Roadmaps</option>
+          <option value='finished'>🏁 Finished Roadmaps</option>
+          <option value='saved'>📌 Saved Roadmaps</option>
         </select>
       </div>
 
-      <div className="hidden md:grid grid-cols-4 gap-8">
+      <div className='hidden md:grid grid-cols-4 gap-8'>
         <button
           onClick={() => setFilter("all")}
           className={`py-4 px-2 rounded-lg text-mobile-body-1-medium lg:text-body-1-medium ${
