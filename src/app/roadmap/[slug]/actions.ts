@@ -104,18 +104,7 @@ export async function getRoadmapBySlug(
   slug: string
 ): Promise<APIResponse<GetRoadmapOutput | null>> {
   try {
-    const { session } = await getSession();
-
-    if (!session || !session.tokens?.access_token) {
-      return {
-        success: false,
-        message: ERROR_MESSAGES[CurionaErrorCodes.UNAUTHORIZED],
-        code: CurionaErrorCodes.UNAUTHORIZED,
-        data: null,
-      };
-    }
-
-    const roadmapService = new RoadmapService(session.tokens.access_token);
+    const roadmapService = new RoadmapService("");
     const result = await roadmapService.getRoadmapBySlug(slug);
     if (!result?.data) {
       return {
@@ -142,7 +131,7 @@ export async function listCommunityRoadmaps({
   limit = 9,
   search = "",
   orderBy = "oldest",
-}: APIFilters) {
+}: Partial<APIFilters>) {
   try {
     const { ok, session } = await getSession();
 

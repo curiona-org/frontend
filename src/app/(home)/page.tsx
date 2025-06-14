@@ -1,14 +1,29 @@
-"use client";
-import { useAuth } from "@/providers/auth-provider";
+import {
+  listCommunityRoadmaps,
+  listUserRoadmaps,
+} from "@/app/roadmap/[slug]/actions";
+import { auth } from "@/lib/auth";
 import HomeAuthenticated from "@/screens/home/authenticated";
 import HomeGuest from "@/screens/home/guest";
 
-export default function HomePage() {
-  const { session } = useAuth();
+export default async function HomePage() {
+  const session = await auth();
+  const communityRoadmaps = await listCommunityRoadmaps({
+    orderBy: "newest",
+  });
 
-  if (session) {
-    return <HomeAuthenticated />;
+  if (!session) {
+    return <HomeGuest communityRoadmaps={communityRoadmaps.data} />;
   }
 
-  return <HomeGuest />;
+  const userRoadmaps = await listUserRoadmaps({
+    orderBy: "newest",
+  });
+
+  return (
+    <HomeAuthenticated
+      communityRoadmaps={communityRoadmaps.data}
+      userRoadmaps={userRoadmaps.data}
+    />
+  );
 }

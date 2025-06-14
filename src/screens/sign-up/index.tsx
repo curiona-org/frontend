@@ -69,7 +69,10 @@ export default function SignUpPage() {
 
   const onSubmit = handleSubmit(async ({ name, email, password }) => {
     toastDismissAll();
-    await signUp({ name, email, password });
+    const success = await signUp({ name, email, password });
+    if (success) {
+      window.location.reload();
+    }
   });
 
   return (
@@ -87,6 +90,7 @@ export default function SignUpPage() {
             aria-invalid={errors.name ? "true" : "false"}
             {...register("name")}
             required
+            maxLength={40}
           />
           {errors.name && (
             <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>

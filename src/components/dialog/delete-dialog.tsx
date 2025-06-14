@@ -66,7 +66,7 @@ const DeleteDialog = ({ slug, open, onClose }: DeleteDialogProps) => {
               won't be able to undo.`}
             </p>
 
-            <div className='flex flex-col-reverse md:flex-row justify-between gap-6 text-mobile-body-1-medium lg:text-body-1-medium'>
+            <div className='flex flex-col-reverse md:flex-row justify-between gap-2 md:gap-6 text-mobile-body-1-medium lg:text-body-1-medium'>
               <Button
                 className='w-full p-3 text-black-100 border-2 border-white-600'
                 onClick={onClose}

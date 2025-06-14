@@ -211,12 +211,6 @@ const NavigationBarAuthenticated = () => {
                       height={40}
                       className="rounded-full bg-gray-300 items-center justify-center w-8 h-8 sm:w-10 sm:h-10"
                     />
-                    <p
-                      className="text-body-1-medium text-black-500 truncate max-w-[120px] lg:max-w-[150px] xl:max-w-[200px]"
-                      title={session.user.name}
-                    >
-                      {session.user.name}
-                    </p>
                     <svg
                       width="12"
                       height="12"

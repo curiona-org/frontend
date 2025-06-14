@@ -187,7 +187,7 @@ const RegenerateDialog = ({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className='z-[100] fixed inset-0 bg-[#3C3C3C]/10 backdrop-blur-sm data-[state=open]:animate-fadeIn overflow-y-auto'>
-          <Dialog.Content className='flex flex-col gap-4 fixed left-1/2 top-1/2 w-80 h-fit md:w-[700px] lg:w-[800px] overflow-y-auto -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white-500 border-2 border-blue-500 p-10 text-blue-900 shadow-lg outline-none data-[state=open]:animate-fadeIn transition-all'>
+          <Dialog.Content className='flex flex-col gap-4 fixed left-1/2 top-1/2 w-80 h-fit max-h-[600px] md:w-[700px] md:max-h-[700px] lg:w-[800px] lg:max-h-[900px] overflow-y-auto -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white-500 border-2 border-blue-500 p-10 text-blue-900 shadow-lg outline-none data-[state=open]:animate-fadeIn transition-all'>
             <Dialog.Title className='text-mobile-heading-2 lg:text-heading-2'>
               Not happy with your roadmap?
             </Dialog.Title>
@@ -265,7 +265,7 @@ const RegenerateDialog = ({
               </button>
 
               {expanded && (
-                <div className='space-y-6'>
+                <div className='flex flex-col gap-6'>
                   {/* Time Availability */}
                   <div className='flex flex-col gap-4'>
                     <h4 className='text-mobile-body-1-regular lg:text-body-1-regular'>
@@ -312,7 +312,7 @@ const RegenerateDialog = ({
                     <h4 className='text-mobile-body-1-regular lg:text-body-1-regular'>
                       Familiarity 🧠
                     </h4>
-                    <div className='grid grid-cols-1 md:grid-cols-3 h-40 md:h-14 gap-4 text-mobile-body-2 lg:text-body-2'>
+                    <div className='grid grid-cols-1 md:grid-cols-3 h-fit md:h-14 gap-4 text-mobile-body-2 lg:text-body-2'>
                       <Button
                         onClick={() => setSkillLevel("beginner")}
                         className={`p-4 border ${
@@ -388,7 +388,7 @@ const RegenerateDialog = ({
             </div>
 
             {/* Actions */}
-            <div className='text-mobile-body-1-medium lg:text-body-1-medium flex justify-between'>
+            <div className='text-mobile-body-1-medium lg:text-body-1-medium flex justify-between gap-2'>
               <Button
                 className='p-3 text-black-100 border-2 border-white-600'
                 onClick={onClose}

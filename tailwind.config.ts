@@ -108,98 +108,98 @@ export default {
           },
         ],
         "mobile-display-1": [
-          "36px",
+          "40px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-display-2": [
-          "34px",
+          "38px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-heading-1": [
-          "27px",
+          "31px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-heading-1-bold": [
-          "27px",
+          "31px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-heading-2": [
-          "22px",
+          "24px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-heading-2-bold": [
-          "22px",
+          "24px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-heading-3": [
-          "18px",
+          "22px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-heading-4-regular": [
-          "14px",
+          "18px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-heading-4-bold": [
-          "14px",
+          "18px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-body-1-regular": [
-          "11px",
+          "14px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-body-1-medium": [
-          "11px",
+          "14px",
           {
             lineHeight: "120%",
             fontWeight: "500",
           },
         ],
         "mobile-body-1-bold": [
-          "11px",
+          "14px",
           {
             lineHeight: "120%",
             fontWeight: "700",
           },
         ],
         "mobile-body-2": [
-          "9px",
+          "13px",
           {
             lineHeight: "120%",
             fontWeight: "400",
           },
         ],
         "mobile-caption": [
-          "7px",
+          "11px",
           {
             lineHeight: "120%",
             fontWeight: "400",

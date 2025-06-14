@@ -4,6 +4,7 @@ import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
 import { signInAction, signInGoogleAction } from "@/app/(auth)/sign-in/actions";
 import { signUpAction } from "@/app/(auth)/sign-up/actions";
 import { updateProfileAction } from "@/app/profile/actions";
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
 import { APIResponse } from "@/lib/services/api.service";
 import { Session, shouldRefreshToken } from "@/lib/session";
@@ -19,8 +20,8 @@ type AuthContextType = {
     name: string;
     email: string;
     password: string;
-  }) => Promise<void>;
-  signIn: (params: { email: string; password: string }) => Promise<void>;
+  }) => Promise<boolean>;
+  signIn: (params: { email: string; password: string }) => Promise<boolean>;
   signInGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
@@ -38,8 +39,8 @@ const AuthContext = createContext<AuthContextType>({
   authIsLoading: true,
   isLoggedIn: false,
   updateProfile: async () => {},
-  signUp: async () => {},
-  signIn: async () => {},
+  signUp: async () => false,
+  signIn: async () => false,
   signInGoogle: async () => {},
   signOut: async () => {},
   refreshSession: async () => {},
@@ -64,10 +65,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     if (!session) return;
 
     const checkTokenInterval = setInterval(() => {
-      if (session && shouldRefreshToken(session, 5 * 60 * 1000)) {
+      if (session && shouldRefreshToken(session, config.SESSION_EXPIRY_MS)) {
         refreshSession();
       }
-    }, 60 * 1000); // Check every minute
+    }, 60 * 1000); // Check every minutes
 
     return () => clearInterval(checkTokenInterval);
   }, [session]);
@@ -114,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
-        return;
+        return false;
       }
 
       setSession({
@@ -128,12 +129,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoading(false);
       setIsLoggedIn(true);
+      return true;
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign up");
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 
@@ -147,7 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       if (!result.success || !result.data) {
         setError(result.message);
         setIsLoading(false);
-        return;
+        return false;
       }
 
       setSession({
@@ -161,12 +164,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           ...result.data.account,
         },
       });
+      setIsLoading(false);
       setIsLoggedIn(true);
+      return true;
     } catch (error) {
       const err = error as APIResponse;
       setError(err.message || "Failed to sign in");
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 

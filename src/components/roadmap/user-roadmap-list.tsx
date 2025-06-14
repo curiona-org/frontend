@@ -6,27 +6,29 @@ import {
   listUserRoadmaps,
 } from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
-import { RoadmapSummary } from "@/types/api-roadmap";
-import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition, useRef } from "react";
-import Loader from "../loader/loader";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ListRoadmapsOutput, RoadmapSummary } from "@/types/api-roadmap";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
+import Loader from "../loader/loader";
 
 interface UserRoadmapListProps {
+  initialData?: ListRoadmapsOutput;
   filter?: "all" | "onprogress" | "saved" | "finished";
   showPagination?: boolean;
 }
 
 const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
+  initialData = { items: [], total: 0, total_pages: 1, current_page: 1 },
   filter = "all",
   showPagination = true,
 }) => {
   const isMobile = useIsMobile();
-  const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>([]);
+  const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>(initialData.items);
   const [isPending, startTransition] = useTransition();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(initialData.current_page || 1);
+  const [totalPages, setTotalPages] = useState(initialData.total_pages || 1);
+  const [totalItems, setTotalItems] = useState(initialData.total || 0);
   const gridRef = useRef<HTMLDivElement>(null);
   const pageSize = 6;
   const pathname = usePathname();
@@ -128,6 +130,10 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
+      if (initialData.total > 0) {
+        return; // Use initial data if available
+      }
+
       try {
         // endpoint sudah mengembalikan data.pagination & nested progression
         startTransition(async () => {
@@ -204,7 +210,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
       }
     };
     fetchRoadmaps();
-  }, [currentPage, filter]);
+  }, [initialData.total, currentPage, filter]);
 
   // reset ke halaman 1 kalau filter berubah
   useEffect(() => {
@@ -220,36 +226,37 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
         } gap-6 mt-4`}
       >
         {isPending && <Loader />}
-        {!isPending && roadmaps.length > 0 ? (
+        {!isPending &&
+          roadmaps.length > 0 &&
           roadmaps.map((roadmap) => (
             <RoadmapCard key={roadmap.id} roadmap={roadmap} />
-          ))
-        ) : (
-          <p className="text-center col-span-full text-gray-500">
+          ))}
+        {!isPending && roadmaps.length == 0 && (
+          <p className='my-8 text-center col-span-full text-gray-500'>
             No Data Available
           </p>
         )}
       </div>
       {/* Pagination Controls */}
-      {showPagination && (
-        <div className="flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-mobile-body-1-regular lg:text-body-1-regular mt-6">
+      {showPagination && roadmaps.length > 0 && (
+        <div className='flex flex-wrap gap-4 md:gap-0 justify-center md:justify-between items-center text-mobile-body-1-regular lg:text-body-1-regular mt-6'>
           <div>
             Showing {(currentPage - 1) * pageSize + 1} to{" "}
             {(currentPage - 1) * pageSize + roadmaps.length} of {totalItems}{" "}
             results
           </div>
-          <div className="flex items-center space-x-0">
+          <div className='flex items-center space-x-0'>
             <button
               onClick={() => handlePageChange(1)}
               disabled={currentPage === 1}
-              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className='text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50'
             >
               ⏪
             </button>
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className='text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50'
             >
               ◀️
             </button>
@@ -271,14 +278,14 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className='text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50'
             >
               ▶️
             </button>
             <button
               onClick={() => handlePageChange(totalPages)}
               disabled={currentPage === totalPages}
-              className="text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50"
+              className='text-mobile-body-1-regular lg:text-body-1-regular w-8 h-8 md:w-10 md:h-10 bg-white-500 border border-black-100 rounded-r-lg hover:bg-gray-200 focus:outline-none focus:ring-0 disabled:opacity-50'
             >
               ⏩
             </button>

@@ -60,7 +60,7 @@ export async function refreshSessionAction(): Promise<
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
+    maxAge: config.SESSION_EXPIRY_MS, // 1 week
   });
 
   cookieStore.set("refresh_token", result.data.refresh_token, {

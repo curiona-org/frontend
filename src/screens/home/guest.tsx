@@ -1,9 +1,14 @@
 "use client";
 import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
+import { ListRoadmapsOutput } from "@/types/api-roadmap";
 import Link from "next/link";
 
-export default function HomeGuest() {
+type HomeGuestProps = {
+  communityRoadmaps: ListRoadmapsOutput | null;
+};
+
+export default function HomeGuest({ communityRoadmaps }: HomeGuestProps) {
   return (
     <div className='flex items-center justify-center min-h-screen px-6 lg:px-72 py-32'>
       <div className='w-full flex flex-col gap-10'>
@@ -48,11 +53,14 @@ export default function HomeGuest() {
             </Link>
           </div>
 
-          <CommunityRoadmapList
-            search=''
-            orderBy='newest'
-            showPagination={false}
-          />
+          {communityRoadmaps && (
+            <CommunityRoadmapList
+              initialData={communityRoadmaps}
+              search=''
+              orderBy='newest'
+              showPagination={false}
+            />
+          )}
         </div>
       </div>
     </div>

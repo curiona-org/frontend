@@ -361,7 +361,9 @@ export default function Chatbot({ slug }: { slug: string }) {
       {/* Header */}
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-2">
-          <div className="text-heading-1 text-white rounded-full p-1">🤖</div>
+          <div className="text-mobile-heading-1 lg:text-heading-1 text-white rounded-full p-1">
+            🤖
+          </div>
           <div>
             <h4 className="text-mobile-heading-4-bold lg:text-heading-4-bold text-blue-600">
               Eriona
@@ -369,26 +371,43 @@ export default function Chatbot({ slug }: { slug: string }) {
             <span className="text-mobile-body-1-regular lg:text-body-1-regular text-blue-400">
               Your Roadmap Assistant{" "}
               {isConnected && (
-                <span className="text-green-500">• Connected</span>
+                <span className="text-mobile-body-1-regular lg:text-body-1-regular text-green-500">
+                  • Connected
+                </span>
               )}
               {!isConnected && (
-                <span className="text-red-500">• Disconnected</span>
+                <span className="text-mobile-body-1-regular lg:text-body-1-regular text-red-500">
+                  • Disconnected
+                </span>
               )}
             </span>
           </div>
         </div>
         <button
-          className="w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 font-bold"
+          className="flex justify-center items-center w-9 h-9 bg-blue-50 rounded-lg text-blue-400 hover:text-blue-600 hover:bg-blue-100"
           onClick={() => setIsOpen(false)}
           aria-label="Close Chat"
           title="Close Chat"
         >
-          ✕
+          <svg
+            className="w-3"
+            viewBox="0 0 12 13"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0.906738 1.51465L11.0919 11.6998M0.906738 11.6998L11.0919 1.51465"
+              stroke="#4B7CE8"
+              stroke-width="1.83333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
       <div className="dashedLine"></div>
       {/* Chat messages */}
-      <div className="flex flex-col overflow-y-auto p-8 space-y-8 h-full">
+      <div className="flex flex-col overflow-y-auto p-2 space-y-8 h-full">
         {messages.map((msg, idx) => (
           <Message key={idx} message={msg} avatar={session.user.avatar} />
         ))}
@@ -505,7 +524,7 @@ const Message = memo(
           className={`p-4 rounded-md ${
             message.from === "bot"
               ? "bg-white-500 shadow-md text-black-500"
-              : "w-60 bg-blue-600 shadow-md text-white-500 text-end break-words"
+              : "w-fit max-w-[260px] break-words bg-blue-600 shadow-md text-white-500 text-start"
           }`}
         >
           <Markdown
@@ -515,7 +534,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h1
-                    className="text-heading-3 font-bold text-black-500 py-2"
+                    className="text-mobile-heading-3 lg:text-heading-3 font-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -525,7 +544,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h2
-                    className="text-heading-3 font-bold text-black-500 py-2"
+                    className="text-mobile-heading-3 lg:text-heading-3 font-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -535,7 +554,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h3
-                    className="text-heading-4-bold text-black-500 py-2"
+                    className="text-mobile-heading-4-bold lg:text-heading-4-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -545,7 +564,7 @@ const Message = memo(
                 const { node, ...rest } = props;
                 return (
                   <h4
-                    className="text-heading-4-bold text-black-500 py-2"
+                    className="text-mobile-heading-4-bold lg:text-heading-4-bold text-black-500 py-2"
                     {...rest}
                   />
                 );
@@ -554,7 +573,10 @@ const Message = memo(
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
                 return (
-                  <p className="text-body-1-regular py-2 leading-6" {...rest} />
+                  <p
+                    className="text-mobile-body-1-regular lg:text-body-1-regular py-2 leading-6"
+                    {...rest}
+                  />
                 );
               },
               pre: (props) => {
@@ -590,7 +612,12 @@ const Message = memo(
               li: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { node, ...rest } = props;
-                return <li className="text-body-1-regular" {...rest} />;
+                return (
+                  <li
+                    className="text-mobile-body-1-regular lg:text-body-1-regular"
+                    {...rest}
+                  />
+                );
               },
               a: (props) => {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars

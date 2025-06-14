@@ -1,6 +1,7 @@
 "use client";
 import TopicDialog from "@/components/dialog/topic-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/providers/auth-provider";
 import { GetRoadmapOutput } from "@/types/api-roadmap";
 import Topic from "@/types/topic";
 import {
@@ -14,6 +15,7 @@ import {
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { redirect } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import RoadmapNode from "./roadmap-nodes";
 
@@ -159,6 +161,7 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const { isLoggedIn } = useAuth();
 
   // Calculate dynamic height based on number of topics
   const flowHeight = useMemo(() => {
@@ -220,12 +223,19 @@ const RoadmapChart = ({ roadmap, updateTopicStatus }: ReactFlowProps) => {
   //   updateNodeFinishedStatus(slug, isFinished); // update node di lokal agar rerender
   // };
 
-  const handleNodeClick = useCallback((_: unknown, node: Node) => {
-    if (node.data?.slug) {
-      setSelectedSlug(node.data.slug as string);
-      setDialogOpen(true);
-    }
-  }, []);
+  const handleNodeClick = useCallback(
+    (_: unknown, node: Node) => {
+      if (!isLoggedIn) {
+        redirect("/sign-in");
+      }
+
+      if (isLoggedIn && node.data?.slug) {
+        setSelectedSlug(node.data.slug as string);
+        setDialogOpen(true);
+      }
+    },
+    [isLoggedIn]
+  );
 
   const onConnect = useCallback(
     (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
