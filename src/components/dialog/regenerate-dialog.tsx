@@ -153,12 +153,22 @@ const RegenerateDialog = ({
         return;
       }
 
+      const result = response.data;
+
+      if (result && result.flagged) {
+        toast({
+          type: "error",
+          title: "Error",
+          description: result.reason,
+        });
+        return;
+      }
+
       toast({
         type: "success",
         title: "Success",
         description: "Your roadmap has been regenerated successfully!",
       });
-      const result = response.data;
       router.push(`/roadmap/${result?.slug}`);
     } catch (error) {
       const err = handleCurionaError(error);
