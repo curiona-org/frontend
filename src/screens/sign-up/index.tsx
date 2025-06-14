@@ -70,6 +70,7 @@ export default function SignUpPage() {
   const onSubmit = handleSubmit(async ({ name, email, password }) => {
     toastDismissAll();
     await signUp({ name, email, password });
+    window.location.reload();
   });
 
   return (

@@ -67,6 +67,7 @@ export default function SignInPage() {
   const onSubmit = handleSubmit(async ({ email, password }) => {
     toastDismissAll();
     await signIn({ email, password });
+    window.location.reload();
   });
 
   return (

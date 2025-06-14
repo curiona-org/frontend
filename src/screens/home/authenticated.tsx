@@ -3,26 +3,13 @@ import { listUserRoadmaps } from "@/app/roadmap/[slug]/actions";
 import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
-import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function HomeAuthenticated() {
-  const { session } = useAuth();
   const [userHasRoadmaps, setUserHasRoadmaps] = useState(false);
 
   useEffect(() => {
-    if (!session || !session.user?.id) return;
-
-    const loginKey = `login_${session.user.id}`;
-
-    const hasRefreshed = sessionStorage.getItem(loginKey);
-    if (!hasRefreshed) {
-      // Belum pernah refresh untuk akun ini, lakukan refresh dan set flag
-      sessionStorage.setItem(loginKey, "true");
-      window.location.reload();
-    }
-
     const checkUserRoadmaps = async () => {
       const roadmaps = await listUserRoadmaps({});
       setUserHasRoadmaps(
@@ -30,7 +17,7 @@ export default function HomeAuthenticated() {
       );
     };
     checkUserRoadmaps();
-  }, [session]);
+  }, []);
 
   return (
     <div className='flex justify-center min-h-screen px-6 lg:px-40 xl:px-64 2xl:px-72 py-32'>
