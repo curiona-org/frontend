@@ -4,6 +4,7 @@ import { refreshSessionAction, signOutAction } from "@/app/(auth)/actions";
 import { signInAction, signInGoogleAction } from "@/app/(auth)/sign-in/actions";
 import { signUpAction } from "@/app/(auth)/sign-up/actions";
 import { updateProfileAction } from "@/app/profile/actions";
+import config from "@/lib/config";
 import { handleCurionaError } from "@/lib/error";
 import { APIResponse } from "@/lib/services/api.service";
 import { Session, shouldRefreshToken } from "@/lib/session";
@@ -64,10 +65,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     if (!session) return;
 
     const checkTokenInterval = setInterval(() => {
-      if (session && shouldRefreshToken(session, 5 * 60 * 1000)) {
+      if (session && shouldRefreshToken(session, config.SESSION_EXPIRY_MS)) {
         refreshSession();
       }
-    }, 60 * 1000); // Check every minute
+    }, 60 * 1000); // Check every minutes
 
     return () => clearInterval(checkTokenInterval);
   }, [session]);

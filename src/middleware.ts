@@ -1,11 +1,11 @@
+import { config as appConfig } from "@/lib/config";
 import {
-  destroySession,
   getSession,
   isSessionExpired,
   shouldRefreshToken,
 } from "@/lib/session";
 import { NextRequest, NextResponse } from "next/server";
-import { refreshSessionAction } from "./app/(auth)/actions";
+import { refreshSessionAction, signOutAction } from "./app/(auth)/actions";
 import { handleCurionaError } from "./lib/error";
 
 // Routes that don't require authentication
@@ -35,7 +35,11 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(signInURL);
     }
 
-    if (session?.tokens && shouldRefreshToken(session, 5 * 60 * 1000)) {
+    // refresh token before it's expiry (24 hours)
+    if (
+      session?.tokens &&
+      shouldRefreshToken(session, appConfig.SESSION_EXPIRY_MS - 60 * 60 * 1000) // 1 hour before expiry
+    ) {
       const refreshResult = await refreshSessionAction();
       if (!refreshResult.success) {
         return NextResponse.redirect(signInURL);
@@ -45,13 +49,13 @@ export default async function middleware(request: NextRequest) {
     }
 
     if (isSessionExpired(session)) {
-      await destroySession(response);
+      await signOutAction();
       return NextResponse.redirect(signInURL);
     }
   } catch (error) {
     const err = handleCurionaError(error);
     console.error("[MIDDLEWARE] Error:", err);
-    await destroySession(response);
+    await signOutAction();
     return NextResponse.redirect(signInURL);
   }
 }

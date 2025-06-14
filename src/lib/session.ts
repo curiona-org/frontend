@@ -29,7 +29,7 @@ export async function createSession(response: Response, data: Session) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: config.SESSION_EXPIRY_MS, // 1 week
     }
   );
 
