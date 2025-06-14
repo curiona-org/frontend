@@ -1,24 +1,19 @@
 "use client";
-import { listUserRoadmaps } from "@/app/roadmap/[slug]/actions";
 import CommunityRoadmapList from "@/components/roadmap/community-roadmap-list";
 import GenerateRoadmap from "@/components/roadmap/generate-roadmap";
 import UserRoadmapList from "@/components/roadmap/user-roadmap-list";
+import { ListRoadmapsOutput } from "@/types/api-roadmap";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function HomeAuthenticated() {
-  const [userHasRoadmaps, setUserHasRoadmaps] = useState(false);
+type HomeAuthenticatedProps = {
+  userRoadmaps: ListRoadmapsOutput | null;
+  communityRoadmaps: ListRoadmapsOutput | null;
+};
 
-  useEffect(() => {
-    const checkUserRoadmaps = async () => {
-      const roadmaps = await listUserRoadmaps({});
-      setUserHasRoadmaps(
-        roadmaps.data !== null && roadmaps.data.items.length > 0
-      );
-    };
-    checkUserRoadmaps();
-  }, []);
-
+export default function HomeAuthenticated({
+  userRoadmaps,
+  communityRoadmaps,
+}: HomeAuthenticatedProps) {
   return (
     <div className='flex justify-center min-h-screen px-6 lg:px-40 xl:px-64 2xl:px-72 py-32'>
       <div className='w-full flex flex-col gap-10'>
@@ -36,7 +31,7 @@ export default function HomeAuthenticated() {
           <GenerateRoadmap />
         </div>
 
-        {userHasRoadmaps && (
+        {userRoadmaps && userRoadmaps.total > 0 && (
           <div className='flex flex-col'>
             <div className='flex justify-between items-center'>
               <h4 className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
@@ -63,7 +58,10 @@ export default function HomeAuthenticated() {
                 </span>
               </Link>
             </div>
-            <UserRoadmapList showPagination={false} />
+            <UserRoadmapList
+              initialData={userRoadmaps}
+              showPagination={false}
+            />
           </div>
         )}
 
@@ -94,12 +92,15 @@ export default function HomeAuthenticated() {
             </Link>
           </div>
 
-          <CommunityRoadmapList
-            search=''
-            orderBy='newest'
-            showPagination={false}
-            limit={6}
-          />
+          {communityRoadmaps && (
+            <CommunityRoadmapList
+              initialData={communityRoadmaps}
+              search=''
+              orderBy='newest'
+              showPagination={false}
+              limit={6}
+            />
+          )}
         </div>
       </div>
     </div>

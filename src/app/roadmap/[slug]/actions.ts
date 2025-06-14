@@ -142,7 +142,7 @@ export async function listCommunityRoadmaps({
   limit = 9,
   search = "",
   orderBy = "oldest",
-}: APIFilters) {
+}: Partial<APIFilters>) {
   try {
     const { ok, session } = await getSession();
 

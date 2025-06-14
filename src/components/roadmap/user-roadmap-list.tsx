@@ -7,26 +7,28 @@ import {
 } from "@/app/roadmap/[slug]/actions";
 import RoadmapCard from "@/components/roadmap/roadmap-card";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { RoadmapSummary } from "@/types/api-roadmap";
+import { ListRoadmapsOutput, RoadmapSummary } from "@/types/api-roadmap";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import Loader from "../loader/loader";
 
 interface UserRoadmapListProps {
+  initialData?: ListRoadmapsOutput;
   filter?: "all" | "onprogress" | "saved" | "finished";
   showPagination?: boolean;
 }
 
 const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
+  initialData = { items: [], total: 0, total_pages: 1, current_page: 1 },
   filter = "all",
   showPagination = true,
 }) => {
   const isMobile = useIsMobile();
-  const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>([]);
+  const [roadmaps, setRoadmaps] = useState<RoadmapSummary[]>(initialData.items);
   const [isPending, startTransition] = useTransition();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(initialData.current_page || 1);
+  const [totalPages, setTotalPages] = useState(initialData.total_pages || 1);
+  const [totalItems, setTotalItems] = useState(initialData.total || 0);
   const gridRef = useRef<HTMLDivElement>(null);
   const pageSize = 6;
   const pathname = usePathname();
@@ -128,6 +130,10 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
+      if (initialData.total > 0) {
+        return; // Use initial data if available
+      }
+
       try {
         // endpoint sudah mengembalikan data.pagination & nested progression
         startTransition(async () => {
@@ -204,7 +210,7 @@ const UserRoadmapList: React.FC<UserRoadmapListProps> = ({
       }
     };
     fetchRoadmaps();
-  }, [currentPage, filter]);
+  }, [initialData.total, currentPage, filter]);
 
   // reset ke halaman 1 kalau filter berubah
   useEffect(() => {
