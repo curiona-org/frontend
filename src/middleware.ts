@@ -9,7 +9,13 @@ import { refreshSessionAction } from "./app/(auth)/actions";
 import { handleCurionaError } from "./lib/error";
 
 // Routes that don't require authentication
-const publicRoutes = ["/", "/sign-in", "/sign-up", "/sign-in/callback/google"];
+const publicRoutes = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/sign-in/callback/google",
+  "/roadmap",
+];
 
 export default async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -17,7 +23,8 @@ export default async function middleware(request: NextRequest) {
 
   const signInURL = new URL("/sign-in", request.url);
 
-  if (publicRoutes.includes(pathname)) {
+  // If the request is for a public route, skip authentication
+  if (publicRoutes.some((route) => pathname.startsWith(route))) {
     return response;
   }
 
