@@ -169,7 +169,7 @@ const CommunityRoadmap = ({
       </div>
 
       {/* Pagination Controls */}
-      {showPagination && (
+      {showPagination && roadmaps.length > 0 && (
         <div className="flex flex-wrap justify-center md:justify-between items-center text-mobile-body-1-regular lg:text-body-1-regular">
           {/* Showing page info */}
           <div className="text-center mt-4">
