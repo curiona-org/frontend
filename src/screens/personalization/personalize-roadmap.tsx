@@ -28,7 +28,6 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
   // Error messages
   const [timeError, setTimeError] = useState<string | null>(null);
-  const [familiarityError, setFamiliarityError] = useState<string | null>(null);
   const [durationError, setDurationError] = useState<string | null>(null);
 
   const [step1Error, setStep1Error] = useState<string | null>(null);
@@ -69,8 +68,6 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
     setFormData({ ...formData, timeAvailability: num });
   };
-
-  const handleFamiliarityChange = (value: string) => {};
 
   const handleDurationChange = (value: number | "") => {
     const max = getMaxDuration();
