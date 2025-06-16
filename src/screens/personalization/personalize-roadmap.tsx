@@ -28,15 +28,15 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
   // Error messages
   const [timeError, setTimeError] = useState<string | null>(null);
+  const [familiarityError, setFamiliarityError] = useState<string | null>(null);
   const [durationError, setDurationError] = useState<string | null>(null);
 
   const [step1Error, setStep1Error] = useState<string | null>(null);
+  const [step2Error, setStep2Error] = useState<string | null>(null);
   const [step3Error, setStep3Error] = useState<string | null>(null);
 
-  // Fungsi max time berdasarkan unit
   const getMaxTime = () => (formData.timeUnit === "hours" ? 12 : 720);
 
-  // Fungsi max duration berdasarkan unit
   const getMaxDuration = () => {
     switch (formData.durationUnit) {
       case "months":
@@ -69,6 +69,8 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
     setFormData({ ...formData, timeAvailability: num });
   };
+
+  const handleFamiliarityChange = (value: string) => {};
 
   const handleDurationChange = (value: number | "") => {
     const max = getMaxDuration();
@@ -105,8 +107,10 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       setStep(step + 1);
     } else if (step === 2) {
       if (!formData.familiarity) {
-        alert("Please select your familiarity level.");
+        setStep2Error("Please select your familiarity level.");
         return;
+      } else {
+        setStep2Error(null);
       }
       setStep(step + 1);
     }
@@ -308,6 +312,11 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                 Tell us how well you know the topic—so we can match the content
                 to your skill level 😉 <span className="text-red-500">*</span>
               </p>
+              {step2Error && (
+                <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
+                  {step2Error}
+                </p>
+              )}
               <div className="text-mobile-body-1-medium lg:text-body-1-medium grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
                   {
@@ -350,7 +359,8 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
             <div className="space-y-6">
               <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
                 Set how long you want your learning journey to take—short and
-                focused or paced and steady 🧘 <span className="text-red-500">*</span>
+                focused or paced and steady 🧘{" "}
+                <span className="text-red-500">*</span>
               </p>
               {step3Error && (
                 <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
