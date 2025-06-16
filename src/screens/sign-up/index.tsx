@@ -84,12 +84,14 @@ export default function SignUpPage() {
         </p>
 
         <form className="space-y-4" onSubmit={onSubmit}>
-          <div className="flex flex-col gap-2">
-            <label>
-              Full Name<label className="text-red-500">*</label>
+          <div className="text-mobile-body-1-medium lg:text-body-1-medium flex flex-col gap-2">
+            {/* Full Name */}
+            <label htmlFor="name">
+              Full Name <span className="text-red-500">*</span>
             </label>
             <input
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              id="name"
+              className="w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="John Doe"
               aria-invalid={errors.name ? "true" : "false"}
               {...register("name", { required: true })}
@@ -103,12 +105,14 @@ export default function SignUpPage() {
             )}
           </div>
           <div className="text-mobile-body-1-medium lg:text-body-1-medium flex flex-col gap-2">
-            <label>
-              Email<label className="text-red-500">*</label>
+            {/* Email */}
+            <label htmlFor="email">
+              Email <span className="text-red-500">*</span>
             </label>
             <input
+              id="email"
               type="email"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               placeholder="john.doe@gmail.com"
               aria-invalid={errors.email ? "true" : "false"}
               {...register("email")}
@@ -121,12 +125,14 @@ export default function SignUpPage() {
             )}
           </div>
           <div className="text-mobile-body-1-medium lg:text-body-1-medium flex flex-col gap-2">
-            <label>
-              Password<label className="text-red-500">*</label>
+            {/* Password */}
+            <label htmlFor="password" className="font-medium">
+              Password <span className="text-red-500">*</span>
             </label>
             <input
+              id="password"
               type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               aria-invalid={errors.password ? "true" : "false"}
               placeholder="******"
               {...register("password")}
@@ -139,12 +145,14 @@ export default function SignUpPage() {
             )}
           </div>
           <div className="text-mobile-body-1-medium lg:text-body-1-medium flex flex-col gap-2">
-            <label>
-              Confirm Password<label className="text-red-500">*</label>
+            {/* Confirm Password */}
+            <label htmlFor="confirmPassword" className="font-medium">
+              Confirm Password <span className="text-red-500">*</span>
             </label>
             <input
+              id="confirmPassword"
               type="password"
-              className="text-mobile-body-1-medium lg:text-body-1-medium w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
+              className="w-full px-3 h-[53px] border border-black-200 rounded-lg focus:outline-none focus:ring focus:border-blue-500 focus:ring-blue-500"
               aria-invalid={errors.confirmPassword ? "true" : "false"}
               placeholder="******"
               {...register("confirmPassword")}
