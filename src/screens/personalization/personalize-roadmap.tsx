@@ -256,8 +256,9 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           {step === 1 && (
             <div className="space-y-6">
               <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
-                How much time can you learn each day? We'll fit the plan to your
-                schedule 😌 <span className="text-red-500">*</span>
+                {`How much time can you learn each day? We'll fit the plan to your
+                schedule 😌 `}
+                <span className="text-red-500">*</span>
               </p>
               {step1Error && (
                 <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
