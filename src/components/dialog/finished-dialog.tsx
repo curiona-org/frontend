@@ -187,6 +187,7 @@ const FinishedDialog = ({
               className='text-mobile-body-1-regular lg:text-body-1-regular w-full p-4 border-2 border-white-600 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
               value={thoughts}
               onChange={(e) => setThoughts(e.target.value)}
+              maxLength={500}
             />
             {/* Button submit */}
             <div className='w-full text-mobile-body-1-medium lg:text-body-1-medium'>
