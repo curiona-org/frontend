@@ -28,15 +28,15 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
   // Error messages
   const [timeError, setTimeError] = useState<string | null>(null);
+  const [familiarityError, setFamiliarityError] = useState<string | null>(null);
   const [durationError, setDurationError] = useState<string | null>(null);
 
   const [step1Error, setStep1Error] = useState<string | null>(null);
+  const [step2Error, setStep2Error] = useState<string | null>(null);
   const [step3Error, setStep3Error] = useState<string | null>(null);
 
-  // Fungsi max time berdasarkan unit
   const getMaxTime = () => (formData.timeUnit === "hours" ? 12 : 720);
 
-  // Fungsi max duration berdasarkan unit
   const getMaxDuration = () => {
     switch (formData.durationUnit) {
       case "months":
@@ -69,6 +69,8 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
 
     setFormData({ ...formData, timeAvailability: num });
   };
+
+  const handleFamiliarityChange = (value: string) => {};
 
   const handleDurationChange = (value: number | "") => {
     const max = getMaxDuration();
@@ -105,8 +107,10 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
       setStep(step + 1);
     } else if (step === 2) {
       if (!formData.familiarity) {
-        alert("Please select your familiarity level.");
+        setStep2Error("Please select your familiarity level.");
         return;
+      } else {
+        setStep2Error(null);
       }
       setStep(step + 1);
     }
@@ -214,60 +218,60 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
   return (
     <>
       {isLoading && (
-        <div className='fixed inset-0 z-[999] bg-white-500 flex items-center justify-center'>
+        <div className="fixed inset-0 z-[999] bg-white-500 flex items-center justify-center">
           <Loader />
         </div>
       )}
-      <div className='w-full bg-white-500 rounded-xl shadow-xl px-4 py-8 space-y-10'>
+      <div className="w-full bg-white-500 rounded-xl shadow-xl px-4 py-8 space-y-10">
         {/* Header */}
-        <div className='text-mobile-heading-1-bold lg:text-heading-1-bold flex flex-wrap items-center gap-2'>
+        <div className="text-mobile-heading-1-bold lg:text-heading-1-bold flex flex-wrap items-center gap-2">
           <h1>Personalize Your</h1>
           {step === 1 && (
-            <span className='text-blue-500 dashedBorder px-2 md:px-4 py-2'>
+            <span className="text-blue-500 dashedBorder px-2 md:px-4 py-2">
               ⏳ Time Availability
             </span>
           )}
           {step === 2 && (
-            <span className='text-blue-500 dashedBorder px-6 py-2'>
+            <span className="text-blue-500 dashedBorder px-6 py-2">
               🤯 Familiarity
             </span>
           )}
           {step === 3 && (
-            <span className='text-blue-500 dashedBorder px-6 py-2'>
+            <span className="text-blue-500 dashedBorder px-6 py-2">
               📅 Learning Duration
             </span>
           )}
         </div>
         {/* Progress Bar */}
         <Progress.Root
-          className='w-full h-[5px] bg-gray-200 rounded-full overflow-hidden'
+          className="w-full h-[5px] bg-gray-200 rounded-full overflow-hidden"
           value={step}
           max={3}
         >
           <Progress.Indicator
-            className='bg-blue-500 h-full transition-all duration-500'
+            className="bg-blue-500 h-full transition-all duration-500"
             style={{ width: `${(step / 3) * 100}%` }}
           />
         </Progress.Root>
         {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-10 text-left'>
+        <form onSubmit={handleSubmit} className="space-y-10 text-left">
           {/* Step 1 */}
           {step === 1 && (
-            <div className='space-y-6'>
-              <p className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
-                {`How much time can you learn each day? We'll fit the plan
-                to your schedule 😌`}
+            <div className="space-y-6">
+              <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
+                How much time can you learn each day? We'll fit the plan to your
+                schedule 😌 <span className="text-red-500">*</span>
               </p>
               {step1Error && (
-                <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+                <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
                   {step1Error}
                 </p>
               )}
-              <div className='grid grid-cols-3 gap-4'>
+              <div className="grid grid-cols-3 gap-4">
                 <input
-                  type='number'
+                  type="number"
                   step={1}
-                  inputMode='numeric'
+                  inputMode="numeric"
                   value={
                     formData.timeAvailability === 0
                       ? ""
@@ -279,7 +283,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                   className={`text-mobile-body-1-medium lg:text-body-1-medium dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-none focus:ring-2 focus:bg-none ${
                     step1Error ? "ring-red-500" : "ring-blue-500"
                   }`}
-                  placeholder='0'
+                  placeholder="0"
                 />
                 {/* Select Unit */}
                 <select
@@ -290,12 +294,12 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                       timeUnit: e.target.value as "hours" | "minutes",
                     })
                   }
-                  className='text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500'
+                  className="text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
                 >
-                  <option value='hours'>Hour(s)</option>
-                  <option value='minutes'>Minute(s)</option>
+                  <option value="hours">Hour(s)</option>
+                  <option value="minutes">Minute(s)</option>
                 </select>
-                <div className='text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3'>
+                <div className="text-mobile-body-1-medium lg:text-body-1-medium flex items-center justify-center dashedBorder_2 bg-white-400 text-white-800 rounded-lg px-4 py-3">
                   Per day
                 </div>
               </div>
@@ -303,12 +307,17 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           )}
           {/* Step 2 */}
           {step === 2 && (
-            <div className='space-y-6'>
-              <p className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
+            <div className="space-y-6">
+              <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
                 Tell us how well you know the topic—so we can match the content
-                to your skill level 😉
+                to your skill level 😉 <span className="text-red-500">*</span>
               </p>
-              <div className='text-mobile-body-1-medium lg:text-body-1-medium grid grid-cols-1 md:grid-cols-3 gap-4'>
+              {step2Error && (
+                <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
+                  {step2Error}
+                </p>
+              )}
+              <div className="text-mobile-body-1-medium lg:text-body-1-medium grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
                   {
                     label: "beginner",
@@ -327,7 +336,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                   },
                 ].map(({ label, emoji, text }) => (
                   <Button
-                    type='button'
+                    type="button"
                     key={label}
                     className={`border-2 border-transparent p-4 text-sm flex items-center justify-center text-center ${
                       formData.familiarity === label
@@ -338,7 +347,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                       setFormData({ ...formData, familiarity: label })
                     }
                   >
-                    <span className='text-lg mr-2'>{emoji}</span>
+                    <span className="text-lg mr-2">{emoji}</span>
                     {text}
                   </Button>
                 ))}
@@ -347,22 +356,23 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
           )}
           {/* Step 3 */}
           {step === 3 && (
-            <div className='space-y-6'>
-              <p className='text-mobile-heading-4-regular lg:text-heading-4-regular'>
+            <div className="space-y-6">
+              <p className="text-mobile-heading-4-regular lg:text-heading-4-regular">
                 Set how long you want your learning journey to take—short and
-                focused or paced and steady 🧘
+                focused or paced and steady 🧘{" "}
+                <span className="text-red-500">*</span>
               </p>
               {step3Error && (
-                <p className='text-red-500 text-mobile-body-1-regular lg:text-body-1-regular'>
+                <p className="text-red-500 text-mobile-body-1-regular lg:text-body-1-regular">
                   {step3Error}
                 </p>
               )}
-              <div className='grid grid-cols-2 gap-4'>
+              <div className="grid grid-cols-2 gap-4">
                 {/* Input duration */}
                 <input
-                  type='number'
+                  type="number"
                   step={1}
-                  inputMode='numeric'
+                  inputMode="numeric"
                   min={1}
                   value={formData.duration === 0 ? "" : formData.duration}
                   onKeyDown={preventDecimalInput}
@@ -375,7 +385,7 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                   className={`text-mobile-body-1-medium lg:text-body-1-medium dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-none focus:ring-2 focus:bg-none ${
                     step3Error ? "ring-red-500" : "ring-blue-500"
                   }`}
-                  placeholder='0'
+                  placeholder="0"
                 />
 
                 {/* Select duration unit */}
@@ -390,53 +400,53 @@ export default function PersonalizeRoadmap({ topic }: PersonalizeRoadmapProps) {
                         | "days",
                     })
                   }
-                  className='dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500'
+                  className="dashedBorder_2 rounded-lg px-4 py-3 text-center focus:outline-blue-500 focus:bg-none focus:outline-none focus:ring focus:ring-blue-500"
                 >
-                  <option value='days'>Day(s)</option>
-                  <option value='weeks'>Week(s)</option>
-                  <option value='months'>Month(s)</option>
+                  <option value="days">Day(s)</option>
+                  <option value="weeks">Week(s)</option>
+                  <option value="months">Month(s)</option>
                 </select>
               </div>
             </div>
           )}
           {/* Navigation Buttons */}
-          <div className='grid grid-cols-2 gap-4 pt-4'>
+          <div className="grid grid-cols-2 gap-4 pt-4">
             {step === 1 ? (
-              <div className='col-span-12 w-full text-mobile-body-1-bold lg:text-body-1-bold'>
+              <div className="col-span-12 w-full text-mobile-body-1-bold lg:text-body-1-bold">
                 <Button
-                  type='button'
+                  type="button"
                   onClick={handleNext}
-                  className='lg:text-body-1-bold w-full text-white-500 py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700'
+                  className="lg:text-body-1-bold w-full text-white-500 py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
                 >
                   Next
                 </Button>
               </div>
             ) : (
               <>
-                <div className='text-mobile-body-1-bold lg:text-body-1-bold'>
+                <div className="text-mobile-body-1-bold lg:text-body-1-bold">
                   <Button
-                    type='button'
+                    type="button"
                     onClick={handleBack}
-                    className='w-full py-4 border border-black-200 text-gray-700 hover:bg-gray-100'
+                    className="w-full py-4 border border-black-200 text-gray-700 hover:bg-gray-100"
                   >
                     Back
                   </Button>
                 </div>
                 {step < 3 ? (
-                  <div className='text-mobile-body-1-bold lg:text-body-1-bold'>
+                  <div className="text-mobile-body-1-bold lg:text-body-1-bold">
                     <Button
-                      type='button'
+                      type="button"
                       onClick={handleNext}
-                      className='w-full py-4 text-white-500 bg-blue-500 hover:bg-blue-600 active:bg-blue-700'
+                      className="w-full py-4 text-white-500 bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
                     >
                       Next
                     </Button>
                   </div>
                 ) : (
-                  <div className='text-mobile-body-1-bold lg:text-body-1-bold'>
+                  <div className="text-mobile-body-1-bold lg:text-body-1-bold">
                     <Button
-                      type='submit'
-                      className='w-full px-2 py-4 text-white-500 bg-blue-500 hover:bg-blue-600 active:bg-blue-700'
+                      type="submit"
+                      className="w-full px-2 py-4 text-white-500 bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
                     >
                       Generate My Learning Plan
                     </Button>
