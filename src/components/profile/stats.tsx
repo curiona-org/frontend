@@ -14,7 +14,7 @@ const Stats = ({ data }: StatsProps) => {
       <div className='grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6 mb-4'>
         <div className='flex flex-col gap-2 p-4 md:p-6 w-full bg-white-500 border-2 border-blue-500 shadow-lg rounded-xl'>
           <p className='text-mobile-heading-1 lg:text-heading-1'>
-            {data.total_generated_roadmaps - data.total_finished_roadmaps}{" "}
+            {data.total_generated_roadmaps - data.total_finished_owned_roadmaps}{" "}
             <span className='text-base text-gray-400'>/ 5</span>
           </p>
           <p className='text-mobile-body-1-medium lg:text-body-1-medium'>

@@ -9,6 +9,7 @@ export type GetProfileOutput = {
     total_generated_roadmaps: number;
     total_in_progress_roadmaps: number;
     total_finished_roadmaps: number;
+    total_finished_owned_roadmaps: number;
     total_bookmarked_roadmaps: number;
   };
 };
