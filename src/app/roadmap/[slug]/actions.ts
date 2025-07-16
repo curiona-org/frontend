@@ -104,7 +104,15 @@ export async function getRoadmapBySlug(
   slug: string
 ): Promise<APIResponse<GetRoadmapOutput | null>> {
   try {
-    const roadmapService = new RoadmapService("");
+    let roadmapService: RoadmapService;
+
+    const { ok, session } = await getSession();
+    if (!ok || !session) {
+      roadmapService = new RoadmapService("");
+    } else {
+      roadmapService = new RoadmapService(session.tokens.access_token);
+    }
+
     const result = await roadmapService.getRoadmapBySlug(slug);
     if (!result?.data) {
       return {
